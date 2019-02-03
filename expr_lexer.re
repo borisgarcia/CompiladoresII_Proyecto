@@ -18,7 +18,7 @@ bool ExprLexer::Context::fill(size_t need)
     tok -= free;
     in.read(buf,free);
     lim += in.gcount();
-        
+    
     if(lim < buf + free)
     {
         eof = true;
@@ -73,6 +73,8 @@ Token ExprLexer::getNextToken() {
             "void"                      {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::KwVoid);}
             "while"                     {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::KwWhile);}
             
+            
+            
             "+"                         {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::OpAdd);}
             "-"                         {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::OpSub);}
             "*"                         {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::OpMul);}
@@ -99,12 +101,10 @@ Token ExprLexer::getNextToken() {
             "=="                        {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::OpEqual);}
             "<<"                        {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::SLL);}
             ">>"                        {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::SLR);}
-            
-            [0-9.]+                      {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::Number);}
+            [0-9]+                      {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::Number);}
             [_a-zA-Z][_a-zA-Z0-9]*      {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::Id);}
-            
-            *                           {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::Error);}
             "\x00"                      {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::Eof);}    
+            *                           {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::Error);}
         */
         linecomment:
         /*!re2c
@@ -122,3 +122,8 @@ Token ExprLexer::getNextToken() {
     }
 
 }
+
+/*
+"\""[\x20-\x7F]"\""         {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::CharConstant);}
+[System]"\x2E"[out]"\x2E"[println]      {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::KwPrint);}
+*/

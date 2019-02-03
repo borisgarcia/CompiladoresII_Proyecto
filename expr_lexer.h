@@ -24,6 +24,7 @@ enum class Token {
     KwTrue              = 14,
     KwVoid              = 15,
     KwWhile             = 16,
+    KwPrint             = 17,
     
     OpenBrace           = 100,
     CloseBrace          = 101,
