@@ -42,7 +42,6 @@ Token ExprLexer::getNextToken() {
         re2c:define:YYLIMIT = ctx.lim;
         re2c:define:YYFILL = "if (!ctx.fill(@@)) makeToken(ctx.tok,ctx.cur-ctx.tok,Token::Eof);";
         re2c:define:YYFILL:naked = 1;
-
         */
 
         if(state == 0){goto init;}
@@ -150,9 +149,6 @@ Token ExprLexer::getNextToken() {
         */
         print:
         /*!re2c
-            "\." {state = 5; continue;}
-            "out" {state = 5; continue;}
-            "println" {text = "System.out.println";return Token::KwPrint;}
             * {state = 2; continue;}
             "\x00" {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::Eof);} 
 
