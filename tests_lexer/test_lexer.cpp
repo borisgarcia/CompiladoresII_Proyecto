@@ -29,6 +29,7 @@ const char *test10 = "void main() { }";
 const char *test11 = "if(x > 5){}";
 const char *test12 = "for(int x = 0;x>5;x = x + 1){}";
 const char *test13 = "while(true) { }";
+const char *test14 = "\"Hola\" \'L\'";
 
 TEST_CASE("Operations with Numbers") {
     std::istringstream in;
@@ -396,5 +397,19 @@ TEST_CASE("while Statement") {
     tk = l.getNextToken();
     CHECK( tk == Token::CloseBrace );
     CHECK( l.getText() == "}" );
+    tk = l.getNextToken();
+}
+TEST_CASE("String and Char") {
+    std::istringstream in;
+
+    in.str(test14);
+    ExprLexer l(in);
+    Token tk = l.getNextToken();
+
+    CHECK( tk == Token::StringConstant);
+    std::cout<<l.getText()<<"\n";
+    tk = l.getNextToken();
+    CHECK( tk == Token::CharConstant);
+    CHECK( l.getText() == "L" );
     tk = l.getNextToken();
 }

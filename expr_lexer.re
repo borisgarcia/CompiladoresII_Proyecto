@@ -48,12 +48,18 @@ Token ExprLexer::getNextToken() {
         if(state == 0){goto init;}
         else if(state == 1){goto linecomment;}
         else if(state == 2){goto blockcomment;}
+        else if(state == 3){goto char_c;}
+        else if(state == 4){goto string_c;}
+        else if(state == 5){goto print;}
 
         init:
         /*!re2c        
             "/*"                        {state = 2; continue;}
             "//"                        {state = 1; continue;}
             [ \t\n]                     {state = 0; continue;}
+            "\'"                        {state = 3; continue;}
+            "\""                        {state = 4; continue;}
+            "System"                    {state = 5; continue;}
 
             "bool"                      {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::KwBool);}
             "break"                     {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::KwBreak);}
@@ -101,6 +107,7 @@ Token ExprLexer::getNextToken() {
             "=="                        {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::OpEqual);}
             "<<"                        {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::SLL);}
             ">>"                        {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::SLR);}
+
             [0-9]+                      {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::Number);}
             [_a-zA-Z][_a-zA-Z0-9]*      {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::Id);}
             "\x00"                      {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::Eof);}    
@@ -119,11 +126,41 @@ Token ExprLexer::getNextToken() {
             "\x00" {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::Eof);} 
 
         */
+        char_c:
+        /*!re2c
+            "\'"                            {state = 0;return Token::CharConstant;}
+            [\x20\x21\x23-\x26\x28-\x7F]    {   
+                                                std::string temp(ctx.tok, ctx.cur-ctx.tok);
+                                                text = std::move(temp);
+                                                state = 3; 
+                                                continue;
+                                            }
+            "\x00"                          {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::Eof);} 
+        */
+        string_c:
+        /*!re2c
+            "\""                            {state = 0;return Token::StringConstant;}
+            [\x20\x21\x23-\x26\x28-\x7F]+   {   
+                                                std::string temp(ctx.tok, ctx.cur-ctx.tok);
+                                                text += std::move(temp);
+                                                state = 4; 
+                                                continue;
+                                            }
+            "\x00"                          {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::Eof);} 
+        */
+        print:
+        /*!re2c
+            "\." {state = 5; continue;}
+            "out" {state = 5; continue;}
+            "println" {text = "System.out.println";return Token::KwPrint;}
+            * {state = 2; continue;}
+            "\x00" {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::Eof);} 
+
+        */
     }
 
 }
 
 /*
-"\""[\x20-\x7F]"\""         {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::CharConstant);}
-[System]"\x2E"[out]"\x2E"[println]      {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::KwPrint);}
+
 */
