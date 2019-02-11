@@ -100,6 +100,7 @@ Token ExprLexer::getNextToken() {
             "<"                         {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::OpLess);}
             ">="                        {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::OpGreaterEqual);}
             "<="                        {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::OpLessEqual);}
+            "!"                         {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::Not);}
             "!="                        {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::NotEqual);}
             "&&"                        {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::OpAnd);}
             "||"                        {return makeToken(ctx.tok,ctx.cur-ctx.tok,Token::OpOr);}

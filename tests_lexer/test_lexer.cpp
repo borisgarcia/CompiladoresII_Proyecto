@@ -23,13 +23,150 @@ const char *test7 = "/* Block comment ### \n"
                     " Block comment !!! ### */ + 10/* Block comment ### \n"
                     " Block comment !!! ### */";
 const char *test8 = "int a = 10;int b = 20;";
-const char *test9 = "System.out.println ( z ) ;";
+const char *keywords = "else extends false bool break continue class for if int new null return rot true void while";
+const char *operators = "{}[],;()=-!+*/<<>><>%<=>===!=&&||";
+const char *stringConst = "\"hola\"\"h\\no\\tl\\ra\"\"\\\"hola\\\"\"\"ho\\la\"";
 
-const char *test10 = "void main() { }";
-const char *test11 = "if(x > 5){}";
-const char *test12 = "for(int x = 0;x>5;x = x + 1){}";
-const char *test13 = "while(true) { }";
-const char *test14 = "\"Hola\" \'L\'";
+TEST_CASE("String Constant")
+{
+    std::istringstream in;
+
+    in.str(stringConst);
+    ExprLexer l(in);
+
+    Token tk = l.getNextToken();
+    CHECK(tk == Token::StringConstant);
+    CHECK(l.getText() == "hola");
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::StringConstant);
+    CHECK(l.getText() == "h\no\tl\ra");
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::StringConstant);
+    CHECK(l.getText() == "\"hola\"");
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::Error);
+}
+
+TEST_CASE("Operators")
+{
+    std::istringstream in;
+
+    in.str(operators);
+    ExprLexer l(in);
+
+    Token tk = l.getNextToken();
+    CHECK(tk == Token::OpenBrace);
+    tk = l.getNextToken();
+    CHECK(tk == Token::CloseBrace);
+    tk = l.getNextToken();
+    CHECK(tk == Token::OpenBracket);
+    tk = l.getNextToken();
+    CHECK(tk == Token::CloseBracket);
+    tk = l.getNextToken();
+    CHECK(tk == Token::Comma);
+    tk = l.getNextToken();
+    CHECK(tk == Token::Semicolon);
+    tk = l.getNextToken();
+    CHECK(tk == Token::OpenPar);
+    tk = l.getNextToken();
+    CHECK(tk == Token::ClosePar);
+    tk = l.getNextToken();
+    CHECK(tk == Token::Assign);
+    tk = l.getNextToken();
+    CHECK(tk == Token::OpSub);
+    tk = l.getNextToken();
+    CHECK(tk == Token::Not);
+    tk = l.getNextToken();
+    CHECK(tk == Token::OpAdd);
+    tk = l.getNextToken();
+    CHECK(tk == Token::OpMul);
+    tk = l.getNextToken();
+    CHECK(tk == Token::OpDiv);
+    tk = l.getNextToken();
+    CHECK(tk == Token::SLL);
+    tk = l.getNextToken();
+    CHECK(tk == Token::SLR);
+    tk = l.getNextToken();
+    CHECK(tk == Token::OpLess);
+    tk = l.getNextToken();
+    CHECK(tk == Token::OpGreater);
+    tk = l.getNextToken();
+    CHECK(tk == Token::OpMod);
+    tk = l.getNextToken();
+    CHECK(tk == Token::OpLessEqual);
+    tk = l.getNextToken();
+    CHECK(tk == Token::OpGreaterEqual);
+    tk = l.getNextToken();
+    CHECK(tk == Token::OpEqual);
+    tk = l.getNextToken();
+    CHECK(tk == Token::NotEqual);
+    tk = l.getNextToken();
+    CHECK(tk == Token::OpAnd);
+    tk = l.getNextToken();
+    CHECK(tk == Token::OpOr);
+}
+
+TEST_CASE("Keywords")
+{
+    std::istringstream in;
+
+    in.str(keywords);
+    ExprLexer l(in);
+
+    Token tk = l.getNextToken();
+    CHECK(tk == Token::KwElse);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwExtends);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwFalse);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwBool);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwBreak);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwContinue);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwClass);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwFor);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwIf);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwInt);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwNew);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwNull);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwReturn);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwRot);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwTrue);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwVoid);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwWhile);
+}
 
 TEST_CASE("Operations with Numbers") {
     std::istringstream in;
@@ -222,194 +359,4 @@ TEST_CASE("Declar Statement") {
     CHECK( l.getText() == ";" );
     tk = l.getNextToken();
     CHECK( tk == Token::Eof );
-}
-
-/*TEST_CASE("Print Statement") {
-    std::istringstream in;
-
-    in.str(test9);
-    ExprLexer l(in);
-    Token tk = l.getNextToken();
-
-    CHECK( tk == Token::KwPrint );
-    CHECK( l.getText() == "System.out.println" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::OpenPar );
-    CHECK( l.getText() == "(" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Id );
-    CHECK( l.getText() == "z" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::ClosePar );
-    CHECK( l.getText() == ")" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Semicolon );
-    CHECK( l.getText() == ";" );
-    tk = l.getNextToken();
-}*/
-
-TEST_CASE("fn Statement") {
-    std::istringstream in;
-
-    in.str(test10);
-    ExprLexer l(in);
-    Token tk = l.getNextToken();
-
-    CHECK( tk == Token::KwVoid);
-    CHECK( l.getText() == "void" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Id );
-    CHECK( l.getText() == "main" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::OpenPar);
-    CHECK( l.getText() == "(" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::ClosePar );
-    CHECK( l.getText() == ")" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::OpenBrace );
-    CHECK( l.getText() == "{" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::CloseBrace );
-    CHECK( l.getText() == "}" );
-    tk = l.getNextToken();
-}
-TEST_CASE("if Statement") {
-    std::istringstream in;
-
-    in.str(test11);
-    ExprLexer l(in);
-    Token tk = l.getNextToken();
-
-    CHECK( tk == Token::KwIf);
-    CHECK( l.getText() == "if" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::OpenPar);
-    CHECK( l.getText() == "(" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Id );
-    CHECK( l.getText() == "x" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::OpGreater );
-    CHECK( l.getText() == ">" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Number );
-    CHECK( l.getText() == "5" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::ClosePar );
-    CHECK( l.getText() == ")" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::OpenBrace );
-    CHECK( l.getText() == "{" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::CloseBrace );
-    CHECK( l.getText() == "}" );
-    tk = l.getNextToken();
-}
-TEST_CASE("for Statement") {
-    std::istringstream in;
-
-    in.str(test12);
-    ExprLexer l(in);
-    Token tk = l.getNextToken();
-
-    CHECK( tk == Token::KwFor);
-    CHECK( l.getText() == "for" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::OpenPar);
-    CHECK( l.getText() == "(" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::KwInt );
-    CHECK( l.getText() == "int" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Id );
-    CHECK( l.getText() == "x" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Assign );
-    CHECK( l.getText() == "=" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Number );
-    CHECK( l.getText() == "0" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Semicolon );
-    CHECK( l.getText() == ";" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Id );
-    CHECK( l.getText() == "x" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::OpGreater );
-    CHECK( l.getText() == ">" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Number );
-    CHECK( l.getText() == "5" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Semicolon );
-    CHECK( l.getText() == ";" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Id );
-    CHECK( l.getText() == "x" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Assign );
-    CHECK( l.getText() == "=" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Id );
-    CHECK( l.getText() == "x" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::OpAdd );
-    CHECK( l.getText() == "+" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Number );
-    CHECK( l.getText() == "1" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::ClosePar );
-    CHECK( l.getText() == ")" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::OpenBrace );
-    CHECK( l.getText() == "{" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::CloseBrace );
-    CHECK( l.getText() == "}" );
-    tk = l.getNextToken();
-}
-TEST_CASE("while Statement") {
-    std::istringstream in;
-
-    in.str(test13);
-    ExprLexer l(in);
-    Token tk = l.getNextToken();
-
-    CHECK( tk == Token::KwWhile);
-    CHECK( l.getText() == "while" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::OpenPar);
-    CHECK( l.getText() == "(" );
-    tk = l.getNextToken();
-
-    CHECK( tk == Token::KwTrue);
-    CHECK( l.getText() == "true" );
-    tk = l.getNextToken();
-
-    CHECK( tk == Token::ClosePar );
-    CHECK( l.getText() == ")" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::OpenBrace );
-    CHECK( l.getText() == "{" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::CloseBrace );
-    CHECK( l.getText() == "}" );
-    tk = l.getNextToken();
-}
-TEST_CASE("String and Char") {
-    std::istringstream in;
-
-    in.str(test14);
-    ExprLexer l(in);
-    Token tk = l.getNextToken();
-
-    CHECK( tk == Token::StringConstant);
-    std::cout<<l.getText()<<"\n";
-    tk = l.getNextToken();
-    CHECK( tk == Token::CharConstant);
-    CHECK( l.getText() == "L" );
-    tk = l.getNextToken();
 }
