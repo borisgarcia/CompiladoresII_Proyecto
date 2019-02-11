@@ -25,9 +25,8 @@ const char *test7 = "/* Block comment ### \n"
 const char *test8 = "int a = 10;int b = 20;";
 const char *keywords = "else extends false bool break continue class for if int new null return rot true void while";
 const char *operators = "{}[],;()=-!+*/<<>><>%<=>===!=&&||";
-const char *stringConst = "\"hola\"\"h\\no\\tl\\ra\"\"\\\"hola\\\"\"\"ho\\la\"";
 
-TEST_CASE("String Constant")
+/*TEST_CASE("String Constant")
 {
     std::istringstream in;
 
@@ -48,7 +47,7 @@ TEST_CASE("String Constant")
 
     tk = l.getNextToken();
     CHECK(tk == Token::Error);
-}
+}*/
 
 TEST_CASE("Operators")
 {

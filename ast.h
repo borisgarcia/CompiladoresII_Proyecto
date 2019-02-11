@@ -78,8 +78,6 @@ class ArrayExpr : public Expr {
         int eval() override;
         string id;
         int pos;
-
-    private:
 };
 
 class StringConstantExpr: public Expr{
@@ -89,15 +87,10 @@ class StringConstantExpr: public Expr{
         int eval() override{return 0};
 
         string getStr(){return str;};
-        string str;
-        
+        string str;      
 };
 
-class MulNumExpr: public Expr{
-    public:
-        MulNumExpr(){};
 
-};
 
 DEFINE_EXPR(Add, +);
 DEFINE_EXPR(Sub, -);
@@ -211,7 +204,54 @@ class FieldDeclStmt: public Stmt{
         int value;
 };
 
-class MultipleDecStmt: public Stmt{
+class MethodDecStmt: public Stmt{
+    public:
+        MethodDecStmt(string type, unordered_map<string,string>ids,Stmt* block){}
+        
+        void exec() override;
+        string type;
+        unordered_map<string,string> ids;
+        Stmt * block;
 
 };
+
+class MethodCallStmt: public Stmt{
+    public:
+        MethodCallStmt(string id,list<int>parametros){}
+
+        string id;
+        list<int> parametros;
+};
+
+class WhileStmt: public Stmt{
+    public: 
+        WhileStmt(Expr * cond, Expr * block){
+            this->cond = cond;
+            this->block = block;
+        };
+
+        void exec() override{
+            while(cond->eval())
+            {
+                block->exec();
+            }
+        };
+        Expr * cond;
+        Stmt * block;
+};
+
+class ReturnStmt: public Stmt{
+    public:
+        ReturnStmt(Expr * return_){
+            this->return_ = return_;
+        };
+
+        void exec() override{
+            return return_->eval();
+        };
+
+        Expr * return_;
+
+};
+
 #endif /* _AST_H */
