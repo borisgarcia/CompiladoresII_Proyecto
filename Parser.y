@@ -56,7 +56,7 @@ method-decl:    type Id OpenPar method-decl_p ClosePar block {}
         |       KwVoid Id OpenPar method-decl_p ClosePar block {}
 ;
 
-method-decl_p:  method-decl_p Semicolon type Id   {}
+method-decl_p:  method-decl_p Comma type Id   {}
         |       type Id                 {}
         |                               {}
 ;

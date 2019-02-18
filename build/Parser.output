@@ -1,0 +1,3435 @@
+Terminals unused in grammar
+
+   KwExtends
+   KwNew
+   KwNull
+   KwRot
+   Not
+   "end of input"
+   Error
+
+
+State 5 conflicts: 3 shift/reduce
+State 43 conflicts: 14 shift/reduce
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: KwClass Id OpenBrace program_body CloseBrace
+
+    2 program_body: program_body field-decl
+    3             | program_body method-decl
+    4             | method-decl
+    5             | field-decl
+    6             | %empty
+
+    7 field-decl: type mult-field Semicolon
+    8           | type Id Assign constant Semicolon
+
+    9 mult-field: mult-field Comma Id
+   10           | mult-field Comma Id OpenBracket intConstant CloseBracket
+   11           | Id
+   12           | Id OpenBracket intConstant CloseBracket
+
+   13 method-decl: type Id OpenPar method-decl_p ClosePar block
+   14            | KwVoid Id OpenPar method-decl_p ClosePar block
+
+   15 method-decl_p: method-decl_p Comma type Id
+   16              | type Id
+   17              | %empty
+
+   18 type: KwInt
+   19     | KwBool
+
+   20 block: OpenBrace block_p CloseBrace
+
+   21 block_p: block_p var-decl
+   22        | block_p statement
+   23        | statement
+   24        | var-decl
+   25        | %empty
+
+   26 var-decl: type var-decl_p Semicolon
+
+   27 var-decl_p: var-decl_p Comma Id
+   28           | Id
+
+   29 statement: assign Semicolon
+   30          | method-call Semicolon
+   31          | KwIf OpenPar expr ClosePar block else_opt
+   32          | KwWhile OpenPar expr ClosePar block
+   33          | KwBreak Semicolon
+   34          | KwFor OpenPar for_assign Semicolon expr Semicolon for_assign ClosePar block
+   35          | KwReturn return_expr_opt Semicolon
+   36          | KwContinue Semicolon
+   37          | block
+
+   38 for_assign: for_assign Comma assign
+   39           | assign
+
+   40 return_expr_opt: expr
+   41                | %empty
+
+   42 method-call: Id OpenPar method-call_expr ClosePar
+   43            | KwRandom OpenPar expr ClosePar
+   44            | KwRead OpenPar ClosePar
+   45            | print
+
+   46 method-call_expr: method-call_expr Comma expr
+   47                 | expr
+
+   48 print: KwPrint OpenPar argument ClosePar
+   49      | KwPrintln OpenPar argument ClosePar
+
+   50 else_opt: KwElse block
+   51         | %empty
+
+   52 assign: lvalue Assign expr
+
+   53 argument: StringConstant
+   54         | expr
+
+   55 expr: cond-op
+   56     | '!' expr
+
+   57 cond-op: cond-op OpOr cond-op_2
+   58        | cond-op_2
+
+   59 cond-op_2: cond-op_2 OpAnd eq-op
+   60          | eq-op
+
+   61 eq-op: eq-op OpEqual rel-op
+   62      | eq-op NotEqual rel-op
+   63      | rel-op
+
+   64 rel-op: rel-op OpGreaterEqual arith-op
+   65       | rel-op OpLessEqual arith-op
+   66       | rel-op OpGreater arith-op
+   67       | rel-op OpLess arith-op
+   68       | arith-op
+
+   69 arith-op: arith-op SLR arith-op_2
+   70         | arith-op SLL arith-op_2
+   71         | arith-op_2
+
+   72 arith-op_2: arith-op_2 OpMod arith-op_3
+   73           | arith-op_3
+
+   74 arith-op_3: arith-op_3 OpAdd arith-op_4
+   75           | arith-op_3 OpSub arith-op_4
+   76           | arith-op_4
+
+   77 arith-op_4: arith-op_4 OpDiv factor
+   78           | arith-op_4 OpMul factor
+   79           | factor
+
+   80 factor: OpenPar expr ClosePar
+   81       | lvalue
+   82       | method-call
+   83       | constant
+
+   84 lvalue: Id
+   85       | Id OpenBracket expr CloseBracket
+
+   86 constant: intConstant
+   87         | CharConstant
+   88         | KwTrue
+   89         | KwFalse
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'!' (33) 56
+error (256)
+KwBool (258) 19
+KwBreak (259) 33
+KwContinue (260) 36
+KwClass (261) 1
+KwElse (262) 50
+KwExtends (263)
+KwFalse (264) 89
+KwFor (265) 34
+KwIf (266) 31
+KwInt (267) 18
+KwNew (268)
+KwNull (269)
+KwReturn (270) 35
+KwRot (271)
+KwTrue (272) 88
+KwVoid (273) 14
+KwWhile (274) 32
+KwPrint (275) 48
+KwPrintln (276) 49
+KwRead (277) 44
+KwRandom (278) 43
+OpenBrace (279) 1 20
+CloseBrace (280) 1 20
+OpenBracket (281) 10 12 85
+CloseBracket (282) 10 12 85
+Comma (283) 9 10 15 27 38 46
+Semicolon (284) 7 8 26 29 30 33 34 35 36
+OpenPar (285) 13 14 31 32 34 42 43 44 48 49 80
+ClosePar (286) 13 14 31 32 34 42 43 44 48 49 80
+Not (287)
+OpAdd (288) 74
+OpSub (289) 75
+OpDiv (290) 77
+OpMul (291) 78
+OpMod (292) 72
+Assign (293) 8 52
+OpGreater (294) 66
+OpLess (295) 67
+OpGreaterEqual (296) 64
+OpLessEqual (297) 65
+NotEqual (298) 62
+OpAnd (299) 59
+OpOr (300) 57
+OpEqual (301) 61
+SLL (302) 70
+SLR (303) 69
+intConstant (304) 10 12 86
+CharConstant (305) 87
+Id (306) 1 8 9 10 11 12 13 14 15 16 27 28 42 84 85
+StringConstant (307) 53
+"end of input" (308)
+Error (309)
+
+
+Nonterminals, with rules where they appear
+
+$accept (56)
+    on left: 0
+program (57)
+    on left: 1, on right: 0
+program_body (58)
+    on left: 2 3 4 5 6, on right: 1 2 3
+field-decl (59)
+    on left: 7 8, on right: 2 5
+mult-field (60)
+    on left: 9 10 11 12, on right: 7 9 10
+method-decl (61)
+    on left: 13 14, on right: 3 4
+method-decl_p (62)
+    on left: 15 16 17, on right: 13 14 15
+type (63)
+    on left: 18 19, on right: 7 8 13 15 16 26
+block (64)
+    on left: 20, on right: 13 14 31 32 34 37 50
+block_p (65)
+    on left: 21 22 23 24 25, on right: 20 21 22
+var-decl (66)
+    on left: 26, on right: 21 24
+var-decl_p (67)
+    on left: 27 28, on right: 26 27
+statement (68)
+    on left: 29 30 31 32 33 34 35 36 37, on right: 22 23
+for_assign (69)
+    on left: 38 39, on right: 34 38
+return_expr_opt (70)
+    on left: 40 41, on right: 35
+method-call (71)
+    on left: 42 43 44 45, on right: 30 82
+method-call_expr (72)
+    on left: 46 47, on right: 42 46
+print (73)
+    on left: 48 49, on right: 45
+else_opt (74)
+    on left: 50 51, on right: 31
+assign (75)
+    on left: 52, on right: 29 38 39
+argument (76)
+    on left: 53 54, on right: 48 49
+expr (77)
+    on left: 55 56, on right: 31 32 34 40 43 46 47 52 54 56 80 85
+cond-op (78)
+    on left: 57 58, on right: 55 57
+cond-op_2 (79)
+    on left: 59 60, on right: 57 58 59
+eq-op (80)
+    on left: 61 62 63, on right: 59 60 61 62
+rel-op (81)
+    on left: 64 65 66 67 68, on right: 61 62 63 64 65 66 67
+arith-op (82)
+    on left: 69 70 71, on right: 64 65 66 67 68 69 70
+arith-op_2 (83)
+    on left: 72 73, on right: 69 70 71 72
+arith-op_3 (84)
+    on left: 74 75 76, on right: 72 73 74 75
+arith-op_4 (85)
+    on left: 77 78 79, on right: 74 75 76 77 78
+factor (86)
+    on left: 80 81 82 83, on right: 77 78 79
+lvalue (87)
+    on left: 84 85, on right: 52 81
+constant (88)
+    on left: 86 87 88 89, on right: 8 83
+
+
+State 0
+
+    0 $accept: . program $end
+    1 program: . KwClass Id OpenBrace program_body CloseBrace
+
+    KwClass  shift, and go to state 1
+
+    program  go to state 2
+
+
+State 1
+
+    1 program: KwClass . Id OpenBrace program_body CloseBrace
+
+    Id  shift, and go to state 3
+
+
+State 2
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 4
+
+
+State 3
+
+    1 program: KwClass Id . OpenBrace program_body CloseBrace
+
+    OpenBrace  shift, and go to state 5
+
+
+State 4
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 5
+
+    1 program: KwClass Id OpenBrace . program_body CloseBrace
+    2 program_body: . program_body field-decl
+    3             | . program_body method-decl
+    4             | . method-decl
+    5             | . field-decl
+    6             | . %empty  [KwBool, KwInt, KwVoid, CloseBrace]
+    7 field-decl: . type mult-field Semicolon
+    8           | . type Id Assign constant Semicolon
+   13 method-decl: . type Id OpenPar method-decl_p ClosePar block
+   14            | . KwVoid Id OpenPar method-decl_p ClosePar block
+   18 type: . KwInt
+   19     | . KwBool
+
+    KwBool  shift, and go to state 6
+    KwInt   shift, and go to state 7
+    KwVoid  shift, and go to state 8
+
+    KwBool    [reduce using rule 6 (program_body)]
+    KwInt     [reduce using rule 6 (program_body)]
+    KwVoid    [reduce using rule 6 (program_body)]
+    $default  reduce using rule 6 (program_body)
+
+    program_body  go to state 9
+    field-decl    go to state 10
+    method-decl   go to state 11
+    type          go to state 12
+
+
+State 6
+
+   19 type: KwBool .
+
+    $default  reduce using rule 19 (type)
+
+
+State 7
+
+   18 type: KwInt .
+
+    $default  reduce using rule 18 (type)
+
+
+State 8
+
+   14 method-decl: KwVoid . Id OpenPar method-decl_p ClosePar block
+
+    Id  shift, and go to state 13
+
+
+State 9
+
+    1 program: KwClass Id OpenBrace program_body . CloseBrace
+    2 program_body: program_body . field-decl
+    3             | program_body . method-decl
+    7 field-decl: . type mult-field Semicolon
+    8           | . type Id Assign constant Semicolon
+   13 method-decl: . type Id OpenPar method-decl_p ClosePar block
+   14            | . KwVoid Id OpenPar method-decl_p ClosePar block
+   18 type: . KwInt
+   19     | . KwBool
+
+    KwBool      shift, and go to state 6
+    KwInt       shift, and go to state 7
+    KwVoid      shift, and go to state 8
+    CloseBrace  shift, and go to state 14
+
+    field-decl   go to state 15
+    method-decl  go to state 16
+    type         go to state 12
+
+
+State 10
+
+    5 program_body: field-decl .
+
+    $default  reduce using rule 5 (program_body)
+
+
+State 11
+
+    4 program_body: method-decl .
+
+    $default  reduce using rule 4 (program_body)
+
+
+State 12
+
+    7 field-decl: type . mult-field Semicolon
+    8           | type . Id Assign constant Semicolon
+    9 mult-field: . mult-field Comma Id
+   10           | . mult-field Comma Id OpenBracket intConstant CloseBracket
+   11           | . Id
+   12           | . Id OpenBracket intConstant CloseBracket
+   13 method-decl: type . Id OpenPar method-decl_p ClosePar block
+
+    Id  shift, and go to state 17
+
+    mult-field  go to state 18
+
+
+State 13
+
+   14 method-decl: KwVoid Id . OpenPar method-decl_p ClosePar block
+
+    OpenPar  shift, and go to state 19
+
+
+State 14
+
+    1 program: KwClass Id OpenBrace program_body CloseBrace .
+
+    $default  reduce using rule 1 (program)
+
+
+State 15
+
+    2 program_body: program_body field-decl .
+
+    $default  reduce using rule 2 (program_body)
+
+
+State 16
+
+    3 program_body: program_body method-decl .
+
+    $default  reduce using rule 3 (program_body)
+
+
+State 17
+
+    8 field-decl: type Id . Assign constant Semicolon
+   11 mult-field: Id .  [Comma, Semicolon]
+   12           | Id . OpenBracket intConstant CloseBracket
+   13 method-decl: type Id . OpenPar method-decl_p ClosePar block
+
+    OpenBracket  shift, and go to state 20
+    OpenPar      shift, and go to state 21
+    Assign       shift, and go to state 22
+
+    $default  reduce using rule 11 (mult-field)
+
+
+State 18
+
+    7 field-decl: type mult-field . Semicolon
+    9 mult-field: mult-field . Comma Id
+   10           | mult-field . Comma Id OpenBracket intConstant CloseBracket
+
+    Comma      shift, and go to state 23
+    Semicolon  shift, and go to state 24
+
+
+State 19
+
+   14 method-decl: KwVoid Id OpenPar . method-decl_p ClosePar block
+   15 method-decl_p: . method-decl_p Comma type Id
+   16              | . type Id
+   17              | . %empty  [Comma, ClosePar]
+   18 type: . KwInt
+   19     | . KwBool
+
+    KwBool  shift, and go to state 6
+    KwInt   shift, and go to state 7
+
+    $default  reduce using rule 17 (method-decl_p)
+
+    method-decl_p  go to state 25
+    type           go to state 26
+
+
+State 20
+
+   12 mult-field: Id OpenBracket . intConstant CloseBracket
+
+    intConstant  shift, and go to state 27
+
+
+State 21
+
+   13 method-decl: type Id OpenPar . method-decl_p ClosePar block
+   15 method-decl_p: . method-decl_p Comma type Id
+   16              | . type Id
+   17              | . %empty  [Comma, ClosePar]
+   18 type: . KwInt
+   19     | . KwBool
+
+    KwBool  shift, and go to state 6
+    KwInt   shift, and go to state 7
+
+    $default  reduce using rule 17 (method-decl_p)
+
+    method-decl_p  go to state 28
+    type           go to state 26
+
+
+State 22
+
+    8 field-decl: type Id Assign . constant Semicolon
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+
+    constant  go to state 33
+
+
+State 23
+
+    9 mult-field: mult-field Comma . Id
+   10           | mult-field Comma . Id OpenBracket intConstant CloseBracket
+
+    Id  shift, and go to state 34
+
+
+State 24
+
+    7 field-decl: type mult-field Semicolon .
+
+    $default  reduce using rule 7 (field-decl)
+
+
+State 25
+
+   14 method-decl: KwVoid Id OpenPar method-decl_p . ClosePar block
+   15 method-decl_p: method-decl_p . Comma type Id
+
+    Comma     shift, and go to state 35
+    ClosePar  shift, and go to state 36
+
+
+State 26
+
+   16 method-decl_p: type . Id
+
+    Id  shift, and go to state 37
+
+
+State 27
+
+   12 mult-field: Id OpenBracket intConstant . CloseBracket
+
+    CloseBracket  shift, and go to state 38
+
+
+State 28
+
+   13 method-decl: type Id OpenPar method-decl_p . ClosePar block
+   15 method-decl_p: method-decl_p . Comma type Id
+
+    Comma     shift, and go to state 35
+    ClosePar  shift, and go to state 39
+
+
+State 29
+
+   89 constant: KwFalse .
+
+    $default  reduce using rule 89 (constant)
+
+
+State 30
+
+   88 constant: KwTrue .
+
+    $default  reduce using rule 88 (constant)
+
+
+State 31
+
+   86 constant: intConstant .
+
+    $default  reduce using rule 86 (constant)
+
+
+State 32
+
+   87 constant: CharConstant .
+
+    $default  reduce using rule 87 (constant)
+
+
+State 33
+
+    8 field-decl: type Id Assign constant . Semicolon
+
+    Semicolon  shift, and go to state 40
+
+
+State 34
+
+    9 mult-field: mult-field Comma Id .  [Comma, Semicolon]
+   10           | mult-field Comma Id . OpenBracket intConstant CloseBracket
+
+    OpenBracket  shift, and go to state 41
+
+    $default  reduce using rule 9 (mult-field)
+
+
+State 35
+
+   15 method-decl_p: method-decl_p Comma . type Id
+   18 type: . KwInt
+   19     | . KwBool
+
+    KwBool  shift, and go to state 6
+    KwInt   shift, and go to state 7
+
+    type  go to state 42
+
+
+State 36
+
+   14 method-decl: KwVoid Id OpenPar method-decl_p ClosePar . block
+   20 block: . OpenBrace block_p CloseBrace
+
+    OpenBrace  shift, and go to state 43
+
+    block  go to state 44
+
+
+State 37
+
+   16 method-decl_p: type Id .
+
+    $default  reduce using rule 16 (method-decl_p)
+
+
+State 38
+
+   12 mult-field: Id OpenBracket intConstant CloseBracket .
+
+    $default  reduce using rule 12 (mult-field)
+
+
+State 39
+
+   13 method-decl: type Id OpenPar method-decl_p ClosePar . block
+   20 block: . OpenBrace block_p CloseBrace
+
+    OpenBrace  shift, and go to state 43
+
+    block  go to state 45
+
+
+State 40
+
+    8 field-decl: type Id Assign constant Semicolon .
+
+    $default  reduce using rule 8 (field-decl)
+
+
+State 41
+
+   10 mult-field: mult-field Comma Id OpenBracket . intConstant CloseBracket
+
+    intConstant  shift, and go to state 46
+
+
+State 42
+
+   15 method-decl_p: method-decl_p Comma type . Id
+
+    Id  shift, and go to state 47
+
+
+State 43
+
+   18 type: . KwInt
+   19     | . KwBool
+   20 block: . OpenBrace block_p CloseBrace
+   20      | OpenBrace . block_p CloseBrace
+   21 block_p: . block_p var-decl
+   22        | . block_p statement
+   23        | . statement
+   24        | . var-decl
+   25        | . %empty  [KwBool, KwBreak, KwContinue, KwFor, KwIf, KwInt, KwReturn, KwWhile, KwPrint, KwPrintln, KwRead, KwRandom, OpenBrace, CloseBrace, Id]
+   26 var-decl: . type var-decl_p Semicolon
+   29 statement: . assign Semicolon
+   30          | . method-call Semicolon
+   31          | . KwIf OpenPar expr ClosePar block else_opt
+   32          | . KwWhile OpenPar expr ClosePar block
+   33          | . KwBreak Semicolon
+   34          | . KwFor OpenPar for_assign Semicolon expr Semicolon for_assign ClosePar block
+   35          | . KwReturn return_expr_opt Semicolon
+   36          | . KwContinue Semicolon
+   37          | . block
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   52 assign: . lvalue Assign expr
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+
+    KwBool      shift, and go to state 6
+    KwBreak     shift, and go to state 48
+    KwContinue  shift, and go to state 49
+    KwFor       shift, and go to state 50
+    KwIf        shift, and go to state 51
+    KwInt       shift, and go to state 7
+    KwReturn    shift, and go to state 52
+    KwWhile     shift, and go to state 53
+    KwPrint     shift, and go to state 54
+    KwPrintln   shift, and go to state 55
+    KwRead      shift, and go to state 56
+    KwRandom    shift, and go to state 57
+    OpenBrace   shift, and go to state 43
+    Id          shift, and go to state 58
+
+    KwBool      [reduce using rule 25 (block_p)]
+    KwBreak     [reduce using rule 25 (block_p)]
+    KwContinue  [reduce using rule 25 (block_p)]
+    KwFor       [reduce using rule 25 (block_p)]
+    KwIf        [reduce using rule 25 (block_p)]
+    KwInt       [reduce using rule 25 (block_p)]
+    KwReturn    [reduce using rule 25 (block_p)]
+    KwWhile     [reduce using rule 25 (block_p)]
+    KwPrint     [reduce using rule 25 (block_p)]
+    KwPrintln   [reduce using rule 25 (block_p)]
+    KwRead      [reduce using rule 25 (block_p)]
+    KwRandom    [reduce using rule 25 (block_p)]
+    OpenBrace   [reduce using rule 25 (block_p)]
+    Id          [reduce using rule 25 (block_p)]
+    $default    reduce using rule 25 (block_p)
+
+    type         go to state 59
+    block        go to state 60
+    block_p      go to state 61
+    var-decl     go to state 62
+    statement    go to state 63
+    method-call  go to state 64
+    print        go to state 65
+    assign       go to state 66
+    lvalue       go to state 67
+
+
+State 44
+
+   14 method-decl: KwVoid Id OpenPar method-decl_p ClosePar block .
+
+    $default  reduce using rule 14 (method-decl)
+
+
+State 45
+
+   13 method-decl: type Id OpenPar method-decl_p ClosePar block .
+
+    $default  reduce using rule 13 (method-decl)
+
+
+State 46
+
+   10 mult-field: mult-field Comma Id OpenBracket intConstant . CloseBracket
+
+    CloseBracket  shift, and go to state 68
+
+
+State 47
+
+   15 method-decl_p: method-decl_p Comma type Id .
+
+    $default  reduce using rule 15 (method-decl_p)
+
+
+State 48
+
+   33 statement: KwBreak . Semicolon
+
+    Semicolon  shift, and go to state 69
+
+
+State 49
+
+   36 statement: KwContinue . Semicolon
+
+    Semicolon  shift, and go to state 70
+
+
+State 50
+
+   34 statement: KwFor . OpenPar for_assign Semicolon expr Semicolon for_assign ClosePar block
+
+    OpenPar  shift, and go to state 71
+
+
+State 51
+
+   31 statement: KwIf . OpenPar expr ClosePar block else_opt
+
+    OpenPar  shift, and go to state 72
+
+
+State 52
+
+   35 statement: KwReturn . return_expr_opt Semicolon
+   40 return_expr_opt: . expr
+   41                | . %empty  [Semicolon]
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   55 expr: . cond-op
+   56     | . '!' expr
+   57 cond-op: . cond-op OpOr cond-op_2
+   58        | . cond-op_2
+   59 cond-op_2: . cond-op_2 OpAnd eq-op
+   60          | . eq-op
+   61 eq-op: . eq-op OpEqual rel-op
+   62      | . eq-op NotEqual rel-op
+   63      | . rel-op
+   64 rel-op: . rel-op OpGreaterEqual arith-op
+   65       | . rel-op OpLessEqual arith-op
+   66       | . rel-op OpGreater arith-op
+   67       | . rel-op OpLess arith-op
+   68       | . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+    '!'           shift, and go to state 74
+
+    $default  reduce using rule 41 (return_expr_opt)
+
+    return_expr_opt  go to state 75
+    method-call      go to state 76
+    print            go to state 65
+    expr             go to state 77
+    cond-op          go to state 78
+    cond-op_2        go to state 79
+    eq-op            go to state 80
+    rel-op           go to state 81
+    arith-op         go to state 82
+    arith-op_2       go to state 83
+    arith-op_3       go to state 84
+    arith-op_4       go to state 85
+    factor           go to state 86
+    lvalue           go to state 87
+    constant         go to state 88
+
+
+State 53
+
+   32 statement: KwWhile . OpenPar expr ClosePar block
+
+    OpenPar  shift, and go to state 89
+
+
+State 54
+
+   48 print: KwPrint . OpenPar argument ClosePar
+
+    OpenPar  shift, and go to state 90
+
+
+State 55
+
+   49 print: KwPrintln . OpenPar argument ClosePar
+
+    OpenPar  shift, and go to state 91
+
+
+State 56
+
+   44 method-call: KwRead . OpenPar ClosePar
+
+    OpenPar  shift, and go to state 92
+
+
+State 57
+
+   43 method-call: KwRandom . OpenPar expr ClosePar
+
+    OpenPar  shift, and go to state 93
+
+
+State 58
+
+   42 method-call: Id . OpenPar method-call_expr ClosePar
+   84 lvalue: Id .  [CloseBracket, Comma, Semicolon, ClosePar, OpAdd, OpSub, OpDiv, OpMul, OpMod, Assign, OpGreater, OpLess, OpGreaterEqual, OpLessEqual, NotEqual, OpAnd, OpOr, OpEqual, SLL, SLR]
+   85       | Id . OpenBracket expr CloseBracket
+
+    OpenBracket  shift, and go to state 94
+    OpenPar      shift, and go to state 95
+
+    $default  reduce using rule 84 (lvalue)
+
+
+State 59
+
+   26 var-decl: type . var-decl_p Semicolon
+   27 var-decl_p: . var-decl_p Comma Id
+   28           | . Id
+
+    Id  shift, and go to state 96
+
+    var-decl_p  go to state 97
+
+
+State 60
+
+   37 statement: block .
+
+    $default  reduce using rule 37 (statement)
+
+
+State 61
+
+   18 type: . KwInt
+   19     | . KwBool
+   20 block: . OpenBrace block_p CloseBrace
+   20      | OpenBrace block_p . CloseBrace
+   21 block_p: block_p . var-decl
+   22        | block_p . statement
+   26 var-decl: . type var-decl_p Semicolon
+   29 statement: . assign Semicolon
+   30          | . method-call Semicolon
+   31          | . KwIf OpenPar expr ClosePar block else_opt
+   32          | . KwWhile OpenPar expr ClosePar block
+   33          | . KwBreak Semicolon
+   34          | . KwFor OpenPar for_assign Semicolon expr Semicolon for_assign ClosePar block
+   35          | . KwReturn return_expr_opt Semicolon
+   36          | . KwContinue Semicolon
+   37          | . block
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   52 assign: . lvalue Assign expr
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+
+    KwBool      shift, and go to state 6
+    KwBreak     shift, and go to state 48
+    KwContinue  shift, and go to state 49
+    KwFor       shift, and go to state 50
+    KwIf        shift, and go to state 51
+    KwInt       shift, and go to state 7
+    KwReturn    shift, and go to state 52
+    KwWhile     shift, and go to state 53
+    KwPrint     shift, and go to state 54
+    KwPrintln   shift, and go to state 55
+    KwRead      shift, and go to state 56
+    KwRandom    shift, and go to state 57
+    OpenBrace   shift, and go to state 43
+    CloseBrace  shift, and go to state 98
+    Id          shift, and go to state 58
+
+    type         go to state 59
+    block        go to state 60
+    var-decl     go to state 99
+    statement    go to state 100
+    method-call  go to state 64
+    print        go to state 65
+    assign       go to state 66
+    lvalue       go to state 67
+
+
+State 62
+
+   24 block_p: var-decl .
+
+    $default  reduce using rule 24 (block_p)
+
+
+State 63
+
+   23 block_p: statement .
+
+    $default  reduce using rule 23 (block_p)
+
+
+State 64
+
+   30 statement: method-call . Semicolon
+
+    Semicolon  shift, and go to state 101
+
+
+State 65
+
+   45 method-call: print .
+
+    $default  reduce using rule 45 (method-call)
+
+
+State 66
+
+   29 statement: assign . Semicolon
+
+    Semicolon  shift, and go to state 102
+
+
+State 67
+
+   52 assign: lvalue . Assign expr
+
+    Assign  shift, and go to state 103
+
+
+State 68
+
+   10 mult-field: mult-field Comma Id OpenBracket intConstant CloseBracket .
+
+    $default  reduce using rule 10 (mult-field)
+
+
+State 69
+
+   33 statement: KwBreak Semicolon .
+
+    $default  reduce using rule 33 (statement)
+
+
+State 70
+
+   36 statement: KwContinue Semicolon .
+
+    $default  reduce using rule 36 (statement)
+
+
+State 71
+
+   34 statement: KwFor OpenPar . for_assign Semicolon expr Semicolon for_assign ClosePar block
+   38 for_assign: . for_assign Comma assign
+   39           | . assign
+   52 assign: . lvalue Assign expr
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+
+    Id  shift, and go to state 104
+
+    for_assign  go to state 105
+    assign      go to state 106
+    lvalue      go to state 67
+
+
+State 72
+
+   31 statement: KwIf OpenPar . expr ClosePar block else_opt
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   55 expr: . cond-op
+   56     | . '!' expr
+   57 cond-op: . cond-op OpOr cond-op_2
+   58        | . cond-op_2
+   59 cond-op_2: . cond-op_2 OpAnd eq-op
+   60          | . eq-op
+   61 eq-op: . eq-op OpEqual rel-op
+   62      | . eq-op NotEqual rel-op
+   63      | . rel-op
+   64 rel-op: . rel-op OpGreaterEqual arith-op
+   65       | . rel-op OpLessEqual arith-op
+   66       | . rel-op OpGreater arith-op
+   67       | . rel-op OpLess arith-op
+   68       | . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+    '!'           shift, and go to state 74
+
+    method-call  go to state 76
+    print        go to state 65
+    expr         go to state 107
+    cond-op      go to state 78
+    cond-op_2    go to state 79
+    eq-op        go to state 80
+    rel-op       go to state 81
+    arith-op     go to state 82
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 73
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   55 expr: . cond-op
+   56     | . '!' expr
+   57 cond-op: . cond-op OpOr cond-op_2
+   58        | . cond-op_2
+   59 cond-op_2: . cond-op_2 OpAnd eq-op
+   60          | . eq-op
+   61 eq-op: . eq-op OpEqual rel-op
+   62      | . eq-op NotEqual rel-op
+   63      | . rel-op
+   64 rel-op: . rel-op OpGreaterEqual arith-op
+   65       | . rel-op OpLessEqual arith-op
+   66       | . rel-op OpGreater arith-op
+   67       | . rel-op OpLess arith-op
+   68       | . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   80       | OpenPar . expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+    '!'           shift, and go to state 74
+
+    method-call  go to state 76
+    print        go to state 65
+    expr         go to state 108
+    cond-op      go to state 78
+    cond-op_2    go to state 79
+    eq-op        go to state 80
+    rel-op       go to state 81
+    arith-op     go to state 82
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 74
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   55 expr: . cond-op
+   56     | . '!' expr
+   56     | '!' . expr
+   57 cond-op: . cond-op OpOr cond-op_2
+   58        | . cond-op_2
+   59 cond-op_2: . cond-op_2 OpAnd eq-op
+   60          | . eq-op
+   61 eq-op: . eq-op OpEqual rel-op
+   62      | . eq-op NotEqual rel-op
+   63      | . rel-op
+   64 rel-op: . rel-op OpGreaterEqual arith-op
+   65       | . rel-op OpLessEqual arith-op
+   66       | . rel-op OpGreater arith-op
+   67       | . rel-op OpLess arith-op
+   68       | . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+    '!'           shift, and go to state 74
+
+    method-call  go to state 76
+    print        go to state 65
+    expr         go to state 109
+    cond-op      go to state 78
+    cond-op_2    go to state 79
+    eq-op        go to state 80
+    rel-op       go to state 81
+    arith-op     go to state 82
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 75
+
+   35 statement: KwReturn return_expr_opt . Semicolon
+
+    Semicolon  shift, and go to state 110
+
+
+State 76
+
+   82 factor: method-call .
+
+    $default  reduce using rule 82 (factor)
+
+
+State 77
+
+   40 return_expr_opt: expr .
+
+    $default  reduce using rule 40 (return_expr_opt)
+
+
+State 78
+
+   55 expr: cond-op .  [CloseBracket, Comma, Semicolon, ClosePar]
+   57 cond-op: cond-op . OpOr cond-op_2
+
+    OpOr  shift, and go to state 111
+
+    $default  reduce using rule 55 (expr)
+
+
+State 79
+
+   58 cond-op: cond-op_2 .  [CloseBracket, Comma, Semicolon, ClosePar, OpOr]
+   59 cond-op_2: cond-op_2 . OpAnd eq-op
+
+    OpAnd  shift, and go to state 112
+
+    $default  reduce using rule 58 (cond-op)
+
+
+State 80
+
+   60 cond-op_2: eq-op .  [CloseBracket, Comma, Semicolon, ClosePar, OpAnd, OpOr]
+   61 eq-op: eq-op . OpEqual rel-op
+   62      | eq-op . NotEqual rel-op
+
+    NotEqual  shift, and go to state 113
+    OpEqual   shift, and go to state 114
+
+    $default  reduce using rule 60 (cond-op_2)
+
+
+State 81
+
+   63 eq-op: rel-op .  [CloseBracket, Comma, Semicolon, ClosePar, NotEqual, OpAnd, OpOr, OpEqual]
+   64 rel-op: rel-op . OpGreaterEqual arith-op
+   65       | rel-op . OpLessEqual arith-op
+   66       | rel-op . OpGreater arith-op
+   67       | rel-op . OpLess arith-op
+
+    OpGreater       shift, and go to state 115
+    OpLess          shift, and go to state 116
+    OpGreaterEqual  shift, and go to state 117
+    OpLessEqual     shift, and go to state 118
+
+    $default  reduce using rule 63 (eq-op)
+
+
+State 82
+
+   68 rel-op: arith-op .  [CloseBracket, Comma, Semicolon, ClosePar, OpGreater, OpLess, OpGreaterEqual, OpLessEqual, NotEqual, OpAnd, OpOr, OpEqual]
+   69 arith-op: arith-op . SLR arith-op_2
+   70         | arith-op . SLL arith-op_2
+
+    SLL  shift, and go to state 119
+    SLR  shift, and go to state 120
+
+    $default  reduce using rule 68 (rel-op)
+
+
+State 83
+
+   71 arith-op: arith-op_2 .  [CloseBracket, Comma, Semicolon, ClosePar, OpGreater, OpLess, OpGreaterEqual, OpLessEqual, NotEqual, OpAnd, OpOr, OpEqual, SLL, SLR]
+   72 arith-op_2: arith-op_2 . OpMod arith-op_3
+
+    OpMod  shift, and go to state 121
+
+    $default  reduce using rule 71 (arith-op)
+
+
+State 84
+
+   73 arith-op_2: arith-op_3 .  [CloseBracket, Comma, Semicolon, ClosePar, OpMod, OpGreater, OpLess, OpGreaterEqual, OpLessEqual, NotEqual, OpAnd, OpOr, OpEqual, SLL, SLR]
+   74 arith-op_3: arith-op_3 . OpAdd arith-op_4
+   75           | arith-op_3 . OpSub arith-op_4
+
+    OpAdd  shift, and go to state 122
+    OpSub  shift, and go to state 123
+
+    $default  reduce using rule 73 (arith-op_2)
+
+
+State 85
+
+   76 arith-op_3: arith-op_4 .  [CloseBracket, Comma, Semicolon, ClosePar, OpAdd, OpSub, OpMod, OpGreater, OpLess, OpGreaterEqual, OpLessEqual, NotEqual, OpAnd, OpOr, OpEqual, SLL, SLR]
+   77 arith-op_4: arith-op_4 . OpDiv factor
+   78           | arith-op_4 . OpMul factor
+
+    OpDiv  shift, and go to state 124
+    OpMul  shift, and go to state 125
+
+    $default  reduce using rule 76 (arith-op_3)
+
+
+State 86
+
+   79 arith-op_4: factor .
+
+    $default  reduce using rule 79 (arith-op_4)
+
+
+State 87
+
+   81 factor: lvalue .
+
+    $default  reduce using rule 81 (factor)
+
+
+State 88
+
+   83 factor: constant .
+
+    $default  reduce using rule 83 (factor)
+
+
+State 89
+
+   32 statement: KwWhile OpenPar . expr ClosePar block
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   55 expr: . cond-op
+   56     | . '!' expr
+   57 cond-op: . cond-op OpOr cond-op_2
+   58        | . cond-op_2
+   59 cond-op_2: . cond-op_2 OpAnd eq-op
+   60          | . eq-op
+   61 eq-op: . eq-op OpEqual rel-op
+   62      | . eq-op NotEqual rel-op
+   63      | . rel-op
+   64 rel-op: . rel-op OpGreaterEqual arith-op
+   65       | . rel-op OpLessEqual arith-op
+   66       | . rel-op OpGreater arith-op
+   67       | . rel-op OpLess arith-op
+   68       | . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+    '!'           shift, and go to state 74
+
+    method-call  go to state 76
+    print        go to state 65
+    expr         go to state 126
+    cond-op      go to state 78
+    cond-op_2    go to state 79
+    eq-op        go to state 80
+    rel-op       go to state 81
+    arith-op     go to state 82
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 90
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   48      | KwPrint OpenPar . argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   53 argument: . StringConstant
+   54         | . expr
+   55 expr: . cond-op
+   56     | . '!' expr
+   57 cond-op: . cond-op OpOr cond-op_2
+   58        | . cond-op_2
+   59 cond-op_2: . cond-op_2 OpAnd eq-op
+   60          | . eq-op
+   61 eq-op: . eq-op OpEqual rel-op
+   62      | . eq-op NotEqual rel-op
+   63      | . rel-op
+   64 rel-op: . rel-op OpGreaterEqual arith-op
+   65       | . rel-op OpLessEqual arith-op
+   66       | . rel-op OpGreater arith-op
+   67       | . rel-op OpLess arith-op
+   68       | . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse         shift, and go to state 29
+    KwTrue          shift, and go to state 30
+    KwPrint         shift, and go to state 54
+    KwPrintln       shift, and go to state 55
+    KwRead          shift, and go to state 56
+    KwRandom        shift, and go to state 57
+    OpenPar         shift, and go to state 73
+    intConstant     shift, and go to state 31
+    CharConstant    shift, and go to state 32
+    Id              shift, and go to state 58
+    StringConstant  shift, and go to state 127
+    '!'             shift, and go to state 74
+
+    method-call  go to state 76
+    print        go to state 65
+    argument     go to state 128
+    expr         go to state 129
+    cond-op      go to state 78
+    cond-op_2    go to state 79
+    eq-op        go to state 80
+    rel-op       go to state 81
+    arith-op     go to state 82
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 91
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   49      | KwPrintln OpenPar . argument ClosePar
+   53 argument: . StringConstant
+   54         | . expr
+   55 expr: . cond-op
+   56     | . '!' expr
+   57 cond-op: . cond-op OpOr cond-op_2
+   58        | . cond-op_2
+   59 cond-op_2: . cond-op_2 OpAnd eq-op
+   60          | . eq-op
+   61 eq-op: . eq-op OpEqual rel-op
+   62      | . eq-op NotEqual rel-op
+   63      | . rel-op
+   64 rel-op: . rel-op OpGreaterEqual arith-op
+   65       | . rel-op OpLessEqual arith-op
+   66       | . rel-op OpGreater arith-op
+   67       | . rel-op OpLess arith-op
+   68       | . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse         shift, and go to state 29
+    KwTrue          shift, and go to state 30
+    KwPrint         shift, and go to state 54
+    KwPrintln       shift, and go to state 55
+    KwRead          shift, and go to state 56
+    KwRandom        shift, and go to state 57
+    OpenPar         shift, and go to state 73
+    intConstant     shift, and go to state 31
+    CharConstant    shift, and go to state 32
+    Id              shift, and go to state 58
+    StringConstant  shift, and go to state 127
+    '!'             shift, and go to state 74
+
+    method-call  go to state 76
+    print        go to state 65
+    argument     go to state 130
+    expr         go to state 129
+    cond-op      go to state 78
+    cond-op_2    go to state 79
+    eq-op        go to state 80
+    rel-op       go to state 81
+    arith-op     go to state 82
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 92
+
+   44 method-call: KwRead OpenPar . ClosePar
+
+    ClosePar  shift, and go to state 131
+
+
+State 93
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   43            | KwRandom OpenPar . expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   55 expr: . cond-op
+   56     | . '!' expr
+   57 cond-op: . cond-op OpOr cond-op_2
+   58        | . cond-op_2
+   59 cond-op_2: . cond-op_2 OpAnd eq-op
+   60          | . eq-op
+   61 eq-op: . eq-op OpEqual rel-op
+   62      | . eq-op NotEqual rel-op
+   63      | . rel-op
+   64 rel-op: . rel-op OpGreaterEqual arith-op
+   65       | . rel-op OpLessEqual arith-op
+   66       | . rel-op OpGreater arith-op
+   67       | . rel-op OpLess arith-op
+   68       | . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+    '!'           shift, and go to state 74
+
+    method-call  go to state 76
+    print        go to state 65
+    expr         go to state 132
+    cond-op      go to state 78
+    cond-op_2    go to state 79
+    eq-op        go to state 80
+    rel-op       go to state 81
+    arith-op     go to state 82
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 94
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   55 expr: . cond-op
+   56     | . '!' expr
+   57 cond-op: . cond-op OpOr cond-op_2
+   58        | . cond-op_2
+   59 cond-op_2: . cond-op_2 OpAnd eq-op
+   60          | . eq-op
+   61 eq-op: . eq-op OpEqual rel-op
+   62      | . eq-op NotEqual rel-op
+   63      | . rel-op
+   64 rel-op: . rel-op OpGreaterEqual arith-op
+   65       | . rel-op OpLessEqual arith-op
+   66       | . rel-op OpGreater arith-op
+   67       | . rel-op OpLess arith-op
+   68       | . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   85       | Id OpenBracket . expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+    '!'           shift, and go to state 74
+
+    method-call  go to state 76
+    print        go to state 65
+    expr         go to state 133
+    cond-op      go to state 78
+    cond-op_2    go to state 79
+    eq-op        go to state 80
+    rel-op       go to state 81
+    arith-op     go to state 82
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 95
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   42            | Id OpenPar . method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   46 method-call_expr: . method-call_expr Comma expr
+   47                 | . expr
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   55 expr: . cond-op
+   56     | . '!' expr
+   57 cond-op: . cond-op OpOr cond-op_2
+   58        | . cond-op_2
+   59 cond-op_2: . cond-op_2 OpAnd eq-op
+   60          | . eq-op
+   61 eq-op: . eq-op OpEqual rel-op
+   62      | . eq-op NotEqual rel-op
+   63      | . rel-op
+   64 rel-op: . rel-op OpGreaterEqual arith-op
+   65       | . rel-op OpLessEqual arith-op
+   66       | . rel-op OpGreater arith-op
+   67       | . rel-op OpLess arith-op
+   68       | . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+    '!'           shift, and go to state 74
+
+    method-call       go to state 76
+    method-call_expr  go to state 134
+    print             go to state 65
+    expr              go to state 135
+    cond-op           go to state 78
+    cond-op_2         go to state 79
+    eq-op             go to state 80
+    rel-op            go to state 81
+    arith-op          go to state 82
+    arith-op_2        go to state 83
+    arith-op_3        go to state 84
+    arith-op_4        go to state 85
+    factor            go to state 86
+    lvalue            go to state 87
+    constant          go to state 88
+
+
+State 96
+
+   28 var-decl_p: Id .
+
+    $default  reduce using rule 28 (var-decl_p)
+
+
+State 97
+
+   26 var-decl: type var-decl_p . Semicolon
+   27 var-decl_p: var-decl_p . Comma Id
+
+    Comma      shift, and go to state 136
+    Semicolon  shift, and go to state 137
+
+
+State 98
+
+   20 block: OpenBrace block_p CloseBrace .
+
+    $default  reduce using rule 20 (block)
+
+
+State 99
+
+   21 block_p: block_p var-decl .
+
+    $default  reduce using rule 21 (block_p)
+
+
+State 100
+
+   22 block_p: block_p statement .
+
+    $default  reduce using rule 22 (block_p)
+
+
+State 101
+
+   30 statement: method-call Semicolon .
+
+    $default  reduce using rule 30 (statement)
+
+
+State 102
+
+   29 statement: assign Semicolon .
+
+    $default  reduce using rule 29 (statement)
+
+
+State 103
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   52 assign: lvalue Assign . expr
+   55 expr: . cond-op
+   56     | . '!' expr
+   57 cond-op: . cond-op OpOr cond-op_2
+   58        | . cond-op_2
+   59 cond-op_2: . cond-op_2 OpAnd eq-op
+   60          | . eq-op
+   61 eq-op: . eq-op OpEqual rel-op
+   62      | . eq-op NotEqual rel-op
+   63      | . rel-op
+   64 rel-op: . rel-op OpGreaterEqual arith-op
+   65       | . rel-op OpLessEqual arith-op
+   66       | . rel-op OpGreater arith-op
+   67       | . rel-op OpLess arith-op
+   68       | . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+    '!'           shift, and go to state 74
+
+    method-call  go to state 76
+    print        go to state 65
+    expr         go to state 138
+    cond-op      go to state 78
+    cond-op_2    go to state 79
+    eq-op        go to state 80
+    rel-op       go to state 81
+    arith-op     go to state 82
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 104
+
+   84 lvalue: Id .  [Assign]
+   85       | Id . OpenBracket expr CloseBracket
+
+    OpenBracket  shift, and go to state 94
+
+    $default  reduce using rule 84 (lvalue)
+
+
+State 105
+
+   34 statement: KwFor OpenPar for_assign . Semicolon expr Semicolon for_assign ClosePar block
+   38 for_assign: for_assign . Comma assign
+
+    Comma      shift, and go to state 139
+    Semicolon  shift, and go to state 140
+
+
+State 106
+
+   39 for_assign: assign .
+
+    $default  reduce using rule 39 (for_assign)
+
+
+State 107
+
+   31 statement: KwIf OpenPar expr . ClosePar block else_opt
+
+    ClosePar  shift, and go to state 141
+
+
+State 108
+
+   80 factor: OpenPar expr . ClosePar
+
+    ClosePar  shift, and go to state 142
+
+
+State 109
+
+   56 expr: '!' expr .
+
+    $default  reduce using rule 56 (expr)
+
+
+State 110
+
+   35 statement: KwReturn return_expr_opt Semicolon .
+
+    $default  reduce using rule 35 (statement)
+
+
+State 111
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   57 cond-op: cond-op OpOr . cond-op_2
+   59 cond-op_2: . cond-op_2 OpAnd eq-op
+   60          | . eq-op
+   61 eq-op: . eq-op OpEqual rel-op
+   62      | . eq-op NotEqual rel-op
+   63      | . rel-op
+   64 rel-op: . rel-op OpGreaterEqual arith-op
+   65       | . rel-op OpLessEqual arith-op
+   66       | . rel-op OpGreater arith-op
+   67       | . rel-op OpLess arith-op
+   68       | . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+
+    method-call  go to state 76
+    print        go to state 65
+    cond-op_2    go to state 143
+    eq-op        go to state 80
+    rel-op       go to state 81
+    arith-op     go to state 82
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 112
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   59 cond-op_2: cond-op_2 OpAnd . eq-op
+   61 eq-op: . eq-op OpEqual rel-op
+   62      | . eq-op NotEqual rel-op
+   63      | . rel-op
+   64 rel-op: . rel-op OpGreaterEqual arith-op
+   65       | . rel-op OpLessEqual arith-op
+   66       | . rel-op OpGreater arith-op
+   67       | . rel-op OpLess arith-op
+   68       | . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+
+    method-call  go to state 76
+    print        go to state 65
+    eq-op        go to state 144
+    rel-op       go to state 81
+    arith-op     go to state 82
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 113
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   62 eq-op: eq-op NotEqual . rel-op
+   64 rel-op: . rel-op OpGreaterEqual arith-op
+   65       | . rel-op OpLessEqual arith-op
+   66       | . rel-op OpGreater arith-op
+   67       | . rel-op OpLess arith-op
+   68       | . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+
+    method-call  go to state 76
+    print        go to state 65
+    rel-op       go to state 145
+    arith-op     go to state 82
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 114
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   61 eq-op: eq-op OpEqual . rel-op
+   64 rel-op: . rel-op OpGreaterEqual arith-op
+   65       | . rel-op OpLessEqual arith-op
+   66       | . rel-op OpGreater arith-op
+   67       | . rel-op OpLess arith-op
+   68       | . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+
+    method-call  go to state 76
+    print        go to state 65
+    rel-op       go to state 146
+    arith-op     go to state 82
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 115
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   66 rel-op: rel-op OpGreater . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+
+    method-call  go to state 76
+    print        go to state 65
+    arith-op     go to state 147
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 116
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   67 rel-op: rel-op OpLess . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+
+    method-call  go to state 76
+    print        go to state 65
+    arith-op     go to state 148
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 117
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   64 rel-op: rel-op OpGreaterEqual . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+
+    method-call  go to state 76
+    print        go to state 65
+    arith-op     go to state 149
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 118
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   65 rel-op: rel-op OpLessEqual . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+
+    method-call  go to state 76
+    print        go to state 65
+    arith-op     go to state 150
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 119
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   70 arith-op: arith-op SLL . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+
+    method-call  go to state 76
+    print        go to state 65
+    arith-op_2   go to state 151
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 120
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   69 arith-op: arith-op SLR . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+
+    method-call  go to state 76
+    print        go to state 65
+    arith-op_2   go to state 152
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 121
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   72 arith-op_2: arith-op_2 OpMod . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+
+    method-call  go to state 76
+    print        go to state 65
+    arith-op_3   go to state 153
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 122
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   74 arith-op_3: arith-op_3 OpAdd . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+
+    method-call  go to state 76
+    print        go to state 65
+    arith-op_4   go to state 154
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 123
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   75 arith-op_3: arith-op_3 OpSub . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+
+    method-call  go to state 76
+    print        go to state 65
+    arith-op_4   go to state 155
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 124
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   77 arith-op_4: arith-op_4 OpDiv . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+
+    method-call  go to state 76
+    print        go to state 65
+    factor       go to state 156
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 125
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   78 arith-op_4: arith-op_4 OpMul . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+
+    method-call  go to state 76
+    print        go to state 65
+    factor       go to state 157
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 126
+
+   32 statement: KwWhile OpenPar expr . ClosePar block
+
+    ClosePar  shift, and go to state 158
+
+
+State 127
+
+   53 argument: StringConstant .
+
+    $default  reduce using rule 53 (argument)
+
+
+State 128
+
+   48 print: KwPrint OpenPar argument . ClosePar
+
+    ClosePar  shift, and go to state 159
+
+
+State 129
+
+   54 argument: expr .
+
+    $default  reduce using rule 54 (argument)
+
+
+State 130
+
+   49 print: KwPrintln OpenPar argument . ClosePar
+
+    ClosePar  shift, and go to state 160
+
+
+State 131
+
+   44 method-call: KwRead OpenPar ClosePar .
+
+    $default  reduce using rule 44 (method-call)
+
+
+State 132
+
+   43 method-call: KwRandom OpenPar expr . ClosePar
+
+    ClosePar  shift, and go to state 161
+
+
+State 133
+
+   85 lvalue: Id OpenBracket expr . CloseBracket
+
+    CloseBracket  shift, and go to state 162
+
+
+State 134
+
+   42 method-call: Id OpenPar method-call_expr . ClosePar
+   46 method-call_expr: method-call_expr . Comma expr
+
+    Comma     shift, and go to state 163
+    ClosePar  shift, and go to state 164
+
+
+State 135
+
+   47 method-call_expr: expr .
+
+    $default  reduce using rule 47 (method-call_expr)
+
+
+State 136
+
+   27 var-decl_p: var-decl_p Comma . Id
+
+    Id  shift, and go to state 165
+
+
+State 137
+
+   26 var-decl: type var-decl_p Semicolon .
+
+    $default  reduce using rule 26 (var-decl)
+
+
+State 138
+
+   52 assign: lvalue Assign expr .
+
+    $default  reduce using rule 52 (assign)
+
+
+State 139
+
+   38 for_assign: for_assign Comma . assign
+   52 assign: . lvalue Assign expr
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+
+    Id  shift, and go to state 104
+
+    assign  go to state 166
+    lvalue  go to state 67
+
+
+State 140
+
+   34 statement: KwFor OpenPar for_assign Semicolon . expr Semicolon for_assign ClosePar block
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   55 expr: . cond-op
+   56     | . '!' expr
+   57 cond-op: . cond-op OpOr cond-op_2
+   58        | . cond-op_2
+   59 cond-op_2: . cond-op_2 OpAnd eq-op
+   60          | . eq-op
+   61 eq-op: . eq-op OpEqual rel-op
+   62      | . eq-op NotEqual rel-op
+   63      | . rel-op
+   64 rel-op: . rel-op OpGreaterEqual arith-op
+   65       | . rel-op OpLessEqual arith-op
+   66       | . rel-op OpGreater arith-op
+   67       | . rel-op OpLess arith-op
+   68       | . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+    '!'           shift, and go to state 74
+
+    method-call  go to state 76
+    print        go to state 65
+    expr         go to state 167
+    cond-op      go to state 78
+    cond-op_2    go to state 79
+    eq-op        go to state 80
+    rel-op       go to state 81
+    arith-op     go to state 82
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 141
+
+   20 block: . OpenBrace block_p CloseBrace
+   31 statement: KwIf OpenPar expr ClosePar . block else_opt
+
+    OpenBrace  shift, and go to state 43
+
+    block  go to state 168
+
+
+State 142
+
+   80 factor: OpenPar expr ClosePar .
+
+    $default  reduce using rule 80 (factor)
+
+
+State 143
+
+   57 cond-op: cond-op OpOr cond-op_2 .  [CloseBracket, Comma, Semicolon, ClosePar, OpOr]
+   59 cond-op_2: cond-op_2 . OpAnd eq-op
+
+    OpAnd  shift, and go to state 112
+
+    $default  reduce using rule 57 (cond-op)
+
+
+State 144
+
+   59 cond-op_2: cond-op_2 OpAnd eq-op .  [CloseBracket, Comma, Semicolon, ClosePar, OpAnd, OpOr]
+   61 eq-op: eq-op . OpEqual rel-op
+   62      | eq-op . NotEqual rel-op
+
+    NotEqual  shift, and go to state 113
+    OpEqual   shift, and go to state 114
+
+    $default  reduce using rule 59 (cond-op_2)
+
+
+State 145
+
+   62 eq-op: eq-op NotEqual rel-op .  [CloseBracket, Comma, Semicolon, ClosePar, NotEqual, OpAnd, OpOr, OpEqual]
+   64 rel-op: rel-op . OpGreaterEqual arith-op
+   65       | rel-op . OpLessEqual arith-op
+   66       | rel-op . OpGreater arith-op
+   67       | rel-op . OpLess arith-op
+
+    OpGreater       shift, and go to state 115
+    OpLess          shift, and go to state 116
+    OpGreaterEqual  shift, and go to state 117
+    OpLessEqual     shift, and go to state 118
+
+    $default  reduce using rule 62 (eq-op)
+
+
+State 146
+
+   61 eq-op: eq-op OpEqual rel-op .  [CloseBracket, Comma, Semicolon, ClosePar, NotEqual, OpAnd, OpOr, OpEqual]
+   64 rel-op: rel-op . OpGreaterEqual arith-op
+   65       | rel-op . OpLessEqual arith-op
+   66       | rel-op . OpGreater arith-op
+   67       | rel-op . OpLess arith-op
+
+    OpGreater       shift, and go to state 115
+    OpLess          shift, and go to state 116
+    OpGreaterEqual  shift, and go to state 117
+    OpLessEqual     shift, and go to state 118
+
+    $default  reduce using rule 61 (eq-op)
+
+
+State 147
+
+   66 rel-op: rel-op OpGreater arith-op .  [CloseBracket, Comma, Semicolon, ClosePar, OpGreater, OpLess, OpGreaterEqual, OpLessEqual, NotEqual, OpAnd, OpOr, OpEqual]
+   69 arith-op: arith-op . SLR arith-op_2
+   70         | arith-op . SLL arith-op_2
+
+    SLL  shift, and go to state 119
+    SLR  shift, and go to state 120
+
+    $default  reduce using rule 66 (rel-op)
+
+
+State 148
+
+   67 rel-op: rel-op OpLess arith-op .  [CloseBracket, Comma, Semicolon, ClosePar, OpGreater, OpLess, OpGreaterEqual, OpLessEqual, NotEqual, OpAnd, OpOr, OpEqual]
+   69 arith-op: arith-op . SLR arith-op_2
+   70         | arith-op . SLL arith-op_2
+
+    SLL  shift, and go to state 119
+    SLR  shift, and go to state 120
+
+    $default  reduce using rule 67 (rel-op)
+
+
+State 149
+
+   64 rel-op: rel-op OpGreaterEqual arith-op .  [CloseBracket, Comma, Semicolon, ClosePar, OpGreater, OpLess, OpGreaterEqual, OpLessEqual, NotEqual, OpAnd, OpOr, OpEqual]
+   69 arith-op: arith-op . SLR arith-op_2
+   70         | arith-op . SLL arith-op_2
+
+    SLL  shift, and go to state 119
+    SLR  shift, and go to state 120
+
+    $default  reduce using rule 64 (rel-op)
+
+
+State 150
+
+   65 rel-op: rel-op OpLessEqual arith-op .  [CloseBracket, Comma, Semicolon, ClosePar, OpGreater, OpLess, OpGreaterEqual, OpLessEqual, NotEqual, OpAnd, OpOr, OpEqual]
+   69 arith-op: arith-op . SLR arith-op_2
+   70         | arith-op . SLL arith-op_2
+
+    SLL  shift, and go to state 119
+    SLR  shift, and go to state 120
+
+    $default  reduce using rule 65 (rel-op)
+
+
+State 151
+
+   70 arith-op: arith-op SLL arith-op_2 .  [CloseBracket, Comma, Semicolon, ClosePar, OpGreater, OpLess, OpGreaterEqual, OpLessEqual, NotEqual, OpAnd, OpOr, OpEqual, SLL, SLR]
+   72 arith-op_2: arith-op_2 . OpMod arith-op_3
+
+    OpMod  shift, and go to state 121
+
+    $default  reduce using rule 70 (arith-op)
+
+
+State 152
+
+   69 arith-op: arith-op SLR arith-op_2 .  [CloseBracket, Comma, Semicolon, ClosePar, OpGreater, OpLess, OpGreaterEqual, OpLessEqual, NotEqual, OpAnd, OpOr, OpEqual, SLL, SLR]
+   72 arith-op_2: arith-op_2 . OpMod arith-op_3
+
+    OpMod  shift, and go to state 121
+
+    $default  reduce using rule 69 (arith-op)
+
+
+State 153
+
+   72 arith-op_2: arith-op_2 OpMod arith-op_3 .  [CloseBracket, Comma, Semicolon, ClosePar, OpMod, OpGreater, OpLess, OpGreaterEqual, OpLessEqual, NotEqual, OpAnd, OpOr, OpEqual, SLL, SLR]
+   74 arith-op_3: arith-op_3 . OpAdd arith-op_4
+   75           | arith-op_3 . OpSub arith-op_4
+
+    OpAdd  shift, and go to state 122
+    OpSub  shift, and go to state 123
+
+    $default  reduce using rule 72 (arith-op_2)
+
+
+State 154
+
+   74 arith-op_3: arith-op_3 OpAdd arith-op_4 .  [CloseBracket, Comma, Semicolon, ClosePar, OpAdd, OpSub, OpMod, OpGreater, OpLess, OpGreaterEqual, OpLessEqual, NotEqual, OpAnd, OpOr, OpEqual, SLL, SLR]
+   77 arith-op_4: arith-op_4 . OpDiv factor
+   78           | arith-op_4 . OpMul factor
+
+    OpDiv  shift, and go to state 124
+    OpMul  shift, and go to state 125
+
+    $default  reduce using rule 74 (arith-op_3)
+
+
+State 155
+
+   75 arith-op_3: arith-op_3 OpSub arith-op_4 .  [CloseBracket, Comma, Semicolon, ClosePar, OpAdd, OpSub, OpMod, OpGreater, OpLess, OpGreaterEqual, OpLessEqual, NotEqual, OpAnd, OpOr, OpEqual, SLL, SLR]
+   77 arith-op_4: arith-op_4 . OpDiv factor
+   78           | arith-op_4 . OpMul factor
+
+    OpDiv  shift, and go to state 124
+    OpMul  shift, and go to state 125
+
+    $default  reduce using rule 75 (arith-op_3)
+
+
+State 156
+
+   77 arith-op_4: arith-op_4 OpDiv factor .
+
+    $default  reduce using rule 77 (arith-op_4)
+
+
+State 157
+
+   78 arith-op_4: arith-op_4 OpMul factor .
+
+    $default  reduce using rule 78 (arith-op_4)
+
+
+State 158
+
+   20 block: . OpenBrace block_p CloseBrace
+   32 statement: KwWhile OpenPar expr ClosePar . block
+
+    OpenBrace  shift, and go to state 43
+
+    block  go to state 169
+
+
+State 159
+
+   48 print: KwPrint OpenPar argument ClosePar .
+
+    $default  reduce using rule 48 (print)
+
+
+State 160
+
+   49 print: KwPrintln OpenPar argument ClosePar .
+
+    $default  reduce using rule 49 (print)
+
+
+State 161
+
+   43 method-call: KwRandom OpenPar expr ClosePar .
+
+    $default  reduce using rule 43 (method-call)
+
+
+State 162
+
+   85 lvalue: Id OpenBracket expr CloseBracket .
+
+    $default  reduce using rule 85 (lvalue)
+
+
+State 163
+
+   42 method-call: . Id OpenPar method-call_expr ClosePar
+   43            | . KwRandom OpenPar expr ClosePar
+   44            | . KwRead OpenPar ClosePar
+   45            | . print
+   46 method-call_expr: method-call_expr Comma . expr
+   48 print: . KwPrint OpenPar argument ClosePar
+   49      | . KwPrintln OpenPar argument ClosePar
+   55 expr: . cond-op
+   56     | . '!' expr
+   57 cond-op: . cond-op OpOr cond-op_2
+   58        | . cond-op_2
+   59 cond-op_2: . cond-op_2 OpAnd eq-op
+   60          | . eq-op
+   61 eq-op: . eq-op OpEqual rel-op
+   62      | . eq-op NotEqual rel-op
+   63      | . rel-op
+   64 rel-op: . rel-op OpGreaterEqual arith-op
+   65       | . rel-op OpLessEqual arith-op
+   66       | . rel-op OpGreater arith-op
+   67       | . rel-op OpLess arith-op
+   68       | . arith-op
+   69 arith-op: . arith-op SLR arith-op_2
+   70         | . arith-op SLL arith-op_2
+   71         | . arith-op_2
+   72 arith-op_2: . arith-op_2 OpMod arith-op_3
+   73           | . arith-op_3
+   74 arith-op_3: . arith-op_3 OpAdd arith-op_4
+   75           | . arith-op_3 OpSub arith-op_4
+   76           | . arith-op_4
+   77 arith-op_4: . arith-op_4 OpDiv factor
+   78           | . arith-op_4 OpMul factor
+   79           | . factor
+   80 factor: . OpenPar expr ClosePar
+   81       | . lvalue
+   82       | . method-call
+   83       | . constant
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+   86 constant: . intConstant
+   87         | . CharConstant
+   88         | . KwTrue
+   89         | . KwFalse
+
+    KwFalse       shift, and go to state 29
+    KwTrue        shift, and go to state 30
+    KwPrint       shift, and go to state 54
+    KwPrintln     shift, and go to state 55
+    KwRead        shift, and go to state 56
+    KwRandom      shift, and go to state 57
+    OpenPar       shift, and go to state 73
+    intConstant   shift, and go to state 31
+    CharConstant  shift, and go to state 32
+    Id            shift, and go to state 58
+    '!'           shift, and go to state 74
+
+    method-call  go to state 76
+    print        go to state 65
+    expr         go to state 170
+    cond-op      go to state 78
+    cond-op_2    go to state 79
+    eq-op        go to state 80
+    rel-op       go to state 81
+    arith-op     go to state 82
+    arith-op_2   go to state 83
+    arith-op_3   go to state 84
+    arith-op_4   go to state 85
+    factor       go to state 86
+    lvalue       go to state 87
+    constant     go to state 88
+
+
+State 164
+
+   42 method-call: Id OpenPar method-call_expr ClosePar .
+
+    $default  reduce using rule 42 (method-call)
+
+
+State 165
+
+   27 var-decl_p: var-decl_p Comma Id .
+
+    $default  reduce using rule 27 (var-decl_p)
+
+
+State 166
+
+   38 for_assign: for_assign Comma assign .
+
+    $default  reduce using rule 38 (for_assign)
+
+
+State 167
+
+   34 statement: KwFor OpenPar for_assign Semicolon expr . Semicolon for_assign ClosePar block
+
+    Semicolon  shift, and go to state 171
+
+
+State 168
+
+   31 statement: KwIf OpenPar expr ClosePar block . else_opt
+   50 else_opt: . KwElse block
+   51         | . %empty  [KwBool, KwBreak, KwContinue, KwFor, KwIf, KwInt, KwReturn, KwWhile, KwPrint, KwPrintln, KwRead, KwRandom, OpenBrace, CloseBrace, Id]
+
+    KwElse  shift, and go to state 172
+
+    $default  reduce using rule 51 (else_opt)
+
+    else_opt  go to state 173
+
+
+State 169
+
+   32 statement: KwWhile OpenPar expr ClosePar block .
+
+    $default  reduce using rule 32 (statement)
+
+
+State 170
+
+   46 method-call_expr: method-call_expr Comma expr .
+
+    $default  reduce using rule 46 (method-call_expr)
+
+
+State 171
+
+   34 statement: KwFor OpenPar for_assign Semicolon expr Semicolon . for_assign ClosePar block
+   38 for_assign: . for_assign Comma assign
+   39           | . assign
+   52 assign: . lvalue Assign expr
+   84 lvalue: . Id
+   85       | . Id OpenBracket expr CloseBracket
+
+    Id  shift, and go to state 104
+
+    for_assign  go to state 174
+    assign      go to state 106
+    lvalue      go to state 67
+
+
+State 172
+
+   20 block: . OpenBrace block_p CloseBrace
+   50 else_opt: KwElse . block
+
+    OpenBrace  shift, and go to state 43
+
+    block  go to state 175
+
+
+State 173
+
+   31 statement: KwIf OpenPar expr ClosePar block else_opt .
+
+    $default  reduce using rule 31 (statement)
+
+
+State 174
+
+   34 statement: KwFor OpenPar for_assign Semicolon expr Semicolon for_assign . ClosePar block
+   38 for_assign: for_assign . Comma assign
+
+    Comma     shift, and go to state 139
+    ClosePar  shift, and go to state 176
+
+
+State 175
+
+   50 else_opt: KwElse block .
+
+    $default  reduce using rule 50 (else_opt)
+
+
+State 176
+
+   20 block: . OpenBrace block_p CloseBrace
+   34 statement: KwFor OpenPar for_assign Semicolon expr Semicolon for_assign ClosePar . block
+
+    OpenBrace  shift, and go to state 43
+
+    block  go to state 177
+
+
+State 177
+
+   34 statement: KwFor OpenPar for_assign Semicolon expr Semicolon for_assign ClosePar block .
+
+    $default  reduce using rule 34 (statement)
