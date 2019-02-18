@@ -1,201 +1,192 @@
-%code requires{
-    #include "ast.h"
-}
-
 %{
   #include <stdio.h>
+  #include <iostream>
+  #include <fstream>
+  #include <list>
+  #include <unordered_map>
+  #include "expr_lexer.h"
+  #include "tokens.h"
 
+  using namespace std;
+  extern int lineNo;
   extern int yylex();
-
-  extern char * yyfilename;
-  extern int yylineno;
   int errors;
   
   void yyerror(const char *msg) {
-        std::cerr << yylineno << ":" << msg << '\n';
+        std::cerr << "Parsing Error" <<"Line: "<<lineNo<<"-" <<msg<<'\n';
         errors++;
   }
 
   #define YYERROR_VERBOSE 1
 
+
+
 %}
 
-%union{
-        Stmt * stmt_t;
-        Expr * expr_t;
-        char * str_t;
-        int int_t;
-        list<string> list_str_t;
-        list<int> list_int_t;
-        unordered_map<string,string> mapa;
-}
-
-%type <stmt_t> assign else_opt method-call for_assign statement block_p block method-decl
-%type <stmt_t> field-decl program_body
-%type <expr_t> constant lvalue factor arith-op_4 arith-op_3 arith-op_2 arith-op
-%type <expr_t> rel-op eq-op cond-op_2 cond-op argument
-%type <str_t>   type
-%type <mapa> method-decl_p
-%type <list_str_t> mult-field var-decl_p
-%type <list_int_t> method-call_expr
-
-%token Add Sub Multi Div
-%token KwPrint KwIf KwElse
-%token Equal
-%token OpenPar ClosePar
-%token Number
-%token Ident
-%token Semicolon
-%token OpMenor OpMayor OpMenorIgual OpMayorIgual OpDistinto OpIgual
-%token OpenBraces CloseBraces
-%token Text
+%token KwBool KwBreak KwContinue KwClass KwElse KwExtends KwFalse KwFor KwIf KwInt KwNew KwNull KwReturn KwRot KwTrue KwVoid KwWhile KwPrint KwPrintln KwRead KwRandom  
+%token OpenBrace CloseBrace OpenBracket CloseBracket Comma Semicolon OpenPar ClosePar    
+%token Not OpAdd OpSub OpDiv OpMul OpMod Assign
+%token OpGreater OpLess OpGreaterEqual OpLessEqual NotEqual OpAnd OpOr OpEqual SLL SLR 
+%token intConstant CharConstant
+%token Id StringConstant                       
 %token Eof "end of input"
 %token Error
 
 %%
 
-program: KwClass Id ‘{’ program_body ‘}’ { ($4)->exec(); }
+program: KwClass Id OpenBrace program_body CloseBrace {}
+
 ;
 
-program_body: program_body field-decl   {$$ = $1; ((BlockStmt*)$$)->add($2);}
-            | program_body method-decl  {$$ = $1; ((BlockStmt*)$$)->add($2);}
-            | method-decl               {$$ = new BlockStmt();((BlockStmt*)$$)->addStmt($1)}
-            | field-decl                {$$ = new BlockStmt();((BlockStmt*)$$)->addStmt($1)}
-            |                           {$$ = NULL;} 
+program_body: program_body field-decl   {}
+            | program_body method-decl  {}
+            | method-decl               {}
+            | field-decl                {}
+            |                           {} 
 ;
 
-field-decl:   type mult-field ';'       {$$ = new }
-            | type Id ‘=’ constant ‘;’
+field-decl:   type mult-field Semicolon                 {}
+            | type Id Assign constant Semicolon         {}
 ;
 
-mult-field:     mult-field ',' Id                       {$1.push_back($3);$$=$1;}
-        |       mult-field ',' Id '[' intConstant ']'   {$1.push_back($3);$$=$1;}
-        |       Id                                      {list<string>temp; temp.push_back($1); $$=temp;}
-        |       Id '[' intConstant ']'                  {list<string>temp; temp.push_back($1); $$=temp;}
+mult-field:     mult-field Comma Id                                             {}
+        |       mult-field Comma Id OpenBracket intConstant CloseBracket        {}
+        |       Id                                                              {}
+        |       Id OpenBracket intConstant CloseBracket                         {}
 ;
 
-method-decl:    type    Id  '(' method-decl_p ')' block {$$=new MethodDecStmt($1,$2,$4);}
-        |       KwVoid  Id  '(' method-decl_p ')' block {$$=new MethodDecStmt($1,$2,$4);}
+method-decl:    type Id OpenPar method-decl_p ClosePar block {}
+        |       KwVoid Id OpenPar method-decl_p ClosePar block {}
 ;
 
-method-decl_p:  method-decl_p type Id   {$$.insert({std::string($2),$3});$$=$1;}
-        |       type Id                 {unordered_map<string,string>temp;temp.insert({std::string($1,$2)});$$=temp;}
+method-decl_p:  method-decl_p Semicolon type Id   {}
+        |       type Id                 {}
+        |                               {}
 ;
 
-type:           KwInt   {$$ = "int";}
-        |       KwBool  {$$ = "bool";}
+type:           KwInt   {}
+        |       KwBool  {}
 ;
 
-block:  '{' block_p '}'     {$$ = $2;}
+block:  OpenBrace block_p CloseBrace     {}
 ;
 
-block_p:    block_p var-decl    {$$ = $1; ((BlockStmt*)$$)->add($2);}
-        |   block_p statement   {$$ = $1; ((BlockStmt*)$$)->add($2);}
-        |   statement           {$$ = new BlockStmt();((BlockStmt*)$$)->addStmt($1)}
-        |   var-decl            {$$ = new BlockStmt();((BlockStmt*)$$)->addStmt($1)}
+block_p:    block_p var-decl    {}
+        |   block_p statement   {}
+        |   statement           {}
+        |   var-decl            {}
+        |
 ;
 
-var-decl:   KwInt  mult-field ';'   {$$ = new DeclarStmt($1,$2);}
-        |   KwBool mult-field ';'   {$$ = new DeclarStmt($1,$2);}
+var-decl:   type  var-decl_p Semicolon   {}
 ;
 
-var-decl_p:     mult-field ',' Id       {$1.push_back($3);$$=$1;}
-        |       Id                      {list<string>temp; temp.push_back($1); $$=temp;}
+var-decl_p:     var-decl_p Comma Id       {}
+        |       Id                        {}
 ;
 
-statement:  assign                                                      {$$ = $1;}
-        |   method-call                                                 {$$ = $1;}
-        |   KwIf '(' expr ')' block else_opt                            {$$ = new IfStmt($3,$5,$6);}
-        |   KwWhile '(' expr ')' block                                  {$$ = new WhileStmt($3,$5);}
-        |   KwBreak ';'                                                 {$$ = new BreakStmt();}
-        |   KwFor '(' for_assign ';' expr ';' for_assign ')' block      {$$ = new ForStmt($3,$5,$7,$9);}
-        |   KwReturn return_expr_opt ';'                                {$$ = new ReturnStmt($2);}
-        |   KwContinue ';'                                              {$$ = new ContinueStmt();}
-        |   block                                                       {$$ = $1;}
+statement:  assign Semicolon                                                                 {}
+        |   method-call Semicolon                                                            {}
+        |   KwIf OpenPar expr ClosePar block else_opt                                        {}
+        |   KwWhile OpenPar expr ClosePar block                                              {}
+        |   KwBreak Semicolon                                                                {}
+        |   KwFor OpenPar for_assign Semicolon expr Semicolon for_assign ClosePar block      {}
+        |   KwReturn return_expr_opt Semicolon                                               {}
+        |   KwContinue Semicolon                                                             {}
+        |   block                                                                            {} 
 ;
 
-for_assign: for_assign ',' assign   {$$ = $1; ($$)->add($3);}
-        |   assign                  {StmtList list; list.push_back($1); $$ = new BlockStmt(list);}
+for_assign: for_assign Comma assign   {}
+        |   assign                    {}
 ;
 
-method-call:    Id '(' method-call_expr ')'  {$$ = new MethodCallStmt($1,$3);}
-        |       
-        |       
-        |       
-        |       
+return_expr_opt:        expr   {}
+                |              {}
 ;
 
-method-call_expr:       method-call_expr ',' expr       {$1.push_back($3);$$=$1;}
-                |       expr                            {list<int>temp; temp.push_back($1->eval()); $$=temp;}
+method-call:    Id OpenPar method-call_expr ClosePar    {}
+        |       KwRandom OpenPar expr ClosePar          {}
+        |       KwRead OpenPar ClosePar                 {}
+        |       print                                   {}
 ;
 
-else_opt:   KwElse block    { $$ = $2; }
-            |               { $$ = NULL; }
+
+
+method-call_expr:       method-call_expr Comma expr       {}
+                |       expr                              {}
 ;
 
-assign: lvalue '=' expr { $$ = new AssignStmt($1,$3);}
+print:          KwPrint OpenPar argument ClosePar         {}      
+        |       KwPrintln OpenPar argument ClosePar       {}      
 ;
 
-argument:   stringConstant  {$$ = $1;}
-            expr            {$$ = $1;}
+else_opt:   KwElse block    {}
+            |               {}
 ;
 
-expr:   cond-op         {$$ = $1;}
+assign: lvalue Assign expr {}
 ;
 
-cond-op:    cond-op "||"  ond-op_2  {$$ = new OrExpr($1,$3);}
-        |   cond-op_2               {$$ = $1;}
+argument:   StringConstant  {}
+        |    expr            {}
 ;
 
-cond-op_2:    cond-op_2 "&&" eq-op  {$$ = new AndExpr($1,$3);}
-          |   eq-op                 {$$ = $1;}
+expr:   cond-op             {}
+        | '!' expr               {}
 ;
 
-eq-op:      eq-op "==" rel-op  {$$ = new EqualExpr($1,$3);}
-        |   eq-op "!=" rel-op  {$$ = new NotEquallExpr($1,$3);}
-        |   rel-op             {$$ = $1;}
+cond-op:    cond-op OpOr  cond-op_2  {}
+        |   cond-op_2                {}
 ;
 
-rel-op:     rel-op ">=" arith-op {$$ = new GEExpr($1,$3);}
-        |   rel-op "<=" arith-op {$$ = new LEExpr($1,$3);}
-        |   rel-op ">"  arith-op {$$ = new GExpr($1,$3);}
-        |   rel-op "<"  arith-op {$$ = new LExpr($1,$3);}
-        |   arith-op             {$$ = $1;}
+cond-op_2:    cond-op_2 OpAnd eq-op  {}
+          |   eq-op                  {}
 ;
 
-arith-op:     arith-op ">>" arith-op_2 {$$ = new SRLExpr($1,$3);}
-          |   arith-op "<<" arith-op_2 {$$ = new SLLExpr($1,$3);}
-          |   arith-op_2               {$$ = $1;}
+eq-op:      eq-op OpEqual  rel-op   {}
+        |   eq-op NotEqual rel-op  {}
+        |   rel-op                 {}
 ;
 
-arith-op_2:   arith-op_2 "%" arith-op_3  {$$ = new ModExpr($1,$3);}
-          |   arith-op_3                 {$$ = $1;}
+rel-op:     rel-op OpGreaterEqual arith-op      {}
+        |   rel-op OpLessEqual arith-op         {}
+        |   rel-op OpGreater arith-op           {}
+        |   rel-op OpLess arith-op              {}
+        |   arith-op                            {}
 ;
 
-arith-op_3:     arith-op_3 "+" arith-op_4 {$$ = new SumExpr($1,$3);}
-            |   arith-op_3 "-" arith-op_4 {$$ = new SubExpr($1,$3);}
-            |   arith-op_4                {$$ = $1;}
+arith-op:     arith-op SLR arith-op_2 {}
+          |   arith-op SLL arith-op_2 {}
+          |   arith-op_2              {}
 ;
 
-arith-op_4:     arith-op_4 "/" factor    {$$ = new DivExpr($1,$3);}
-            |   arith-op_4 "*" factor    {$$ = new MulExpr($1,$3);}
-            |   factor                   {$$ = $1;}
+arith-op_2:   arith-op_2 OpMod arith-op_3  {}
+          |   arith-op_3                   {}
 ;
 
-factor: '(' expr ')'    { $$ = $2; }
-        | lvalue        { $$ = $1; }
-        | method-call   { $$ = $1; }
-        | constant      { $$ = $1; }
-        | '!' expr      { $$ = new NotExpr($2); }
+arith-op_3:     arith-op_3 OpAdd arith-op_4 {}
+            |   arith-op_3 OpSub arith-op_4 {}
+            |   arith-op_4                  {}
 ;
 
-lvalue: Id              {$$ = new IdExpr($1);}
-        Id '[' expr ']' {$$ = new IdArrayExpr($1,$3);}
+arith-op_4:     arith-op_4 OpDiv factor    {}
+            |   arith-op_4 OpMul factor    {}
+            |   factor                     {}
 ;
 
-constant: intConstant   { $$ = new NumExpr($1);}
-        | CharConstant  { $$ = new NumExpr($1);}
-        | KwTrue        { $$ = new NumExpr(1);}
-        | KwFalse       { $$ = new NumExpr(0);}
+factor: OpenPar expr ClosePar    {}
+        | lvalue                 {}
+        | method-call            {}
+        | constant               {}
+;
+
+lvalue: Id                                       {}
+       | Id OpenBracket expr CloseBracket        {}
+;
+
+constant: intConstant   {}
+        | CharConstant  {}
+        | KwTrue        {}
+        | KwFalse       {}
 ;
 %%

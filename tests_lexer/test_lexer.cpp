@@ -23,10 +23,12 @@ const char *test7 = "/* Block comment ### \n"
                     " Block comment !!! ### */ + 10/* Block comment ### \n"
                     " Block comment !!! ### */";
 const char *test8 = "int a = 10;int b = 20;";
-const char *keywords = "else extends false bool break continue class for if int new null return rot true void while";
+const char *keywords = "else extends false bool break continue class for if int new null return rot true void while System.out.println System.out.print";
 const char *operators = "{}[],;()=-!+*/<<>><>%<=>===!=&&||";
+const char *stringConst = "\"hola\"";
 
-/*TEST_CASE("String Constant")
+
+TEST_CASE("String Constant")
 {
     std::istringstream in;
 
@@ -37,17 +39,7 @@ const char *operators = "{}[],;()=-!+*/<<>><>%<=>===!=&&||";
     CHECK(tk == Token::StringConstant);
     CHECK(l.getText() == "hola");
 
-    tk = l.getNextToken();
-    CHECK(tk == Token::StringConstant);
-    CHECK(l.getText() == "h\no\tl\ra");
-
-    tk = l.getNextToken();
-    CHECK(tk == Token::StringConstant);
-    CHECK(l.getText() == "\"hola\"");
-
-    tk = l.getNextToken();
-    CHECK(tk == Token::Error);
-}*/
+}
 
 TEST_CASE("Operators")
 {
@@ -165,32 +157,38 @@ TEST_CASE("Keywords")
 
     tk = l.getNextToken();
     CHECK(tk == Token::KwWhile);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwPrintln);
+
+    tk = l.getNextToken();
+    CHECK(tk == Token::KwPrint);
 }
 
-TEST_CASE("Operations with Numbers") {
+TEST_CASE("Operations with intConstants") {
     std::istringstream in;
 
     in.str(test1);
     ExprLexer l(in);
     Token tk = l.getNextToken();
     
-    CHECK( tk == Token::Number);
+    CHECK( tk == Token::intConstant);
     tk = l.getNextToken();
     CHECK( tk == Token::OpAdd);
     tk = l.getNextToken();
-    CHECK( tk == Token::Number);
+    CHECK( tk == Token::intConstant);
     tk = l.getNextToken();
     CHECK( tk == Token::OpDiv);
     tk = l.getNextToken();
-    CHECK( tk == Token::Number);
+    CHECK( tk == Token::intConstant);
     tk = l.getNextToken();
     CHECK( tk == Token::OpMul);
     tk = l.getNextToken();
-    CHECK( tk == Token::Number);
+    CHECK( tk == Token::intConstant);
     tk = l.getNextToken();
     CHECK( tk == Token::OpSub);
     tk = l.getNextToken();
-    CHECK( tk == Token::Number);
+    CHECK( tk == Token::intConstant);
     tk = l.getNextToken();
     CHECK( tk == Token::Eof);
 }
@@ -225,13 +223,13 @@ TEST_CASE("Complex expression") {
     CHECK( tk == Token::OpenPar );
     CHECK( l.getText() == "(" );
     tk = l.getNextToken();
-    CHECK( tk == Token::Number );
+    CHECK( tk == Token::intConstant );
     CHECK( l.getText() == "56" );
     tk = l.getNextToken();
     CHECK( tk == Token::OpDiv );
     CHECK( l.getText() == "/" );
     tk = l.getNextToken();
-    CHECK( tk == Token::Number );
+    CHECK( tk == Token::intConstant );
     CHECK( l.getText() == "54" );
     tk = l.getNextToken();
     CHECK( tk == Token::ClosePar );
@@ -244,13 +242,13 @@ TEST_CASE("Complex expression") {
     CHECK( tk == Token::OpenPar );
     CHECK( l.getText() == "(" );
     tk = l.getNextToken();
-    CHECK( tk == Token::Number );
+    CHECK( tk == Token::intConstant );
     CHECK( l.getText() == "34" );
     tk = l.getNextToken();
     CHECK( tk == Token::OpMul );
     CHECK( l.getText() == "*" );
     tk = l.getNextToken();
-    CHECK( tk == Token::Number );
+    CHECK( tk == Token::intConstant );
     CHECK( l.getText() == "789" );
     tk = l.getNextToken();
     CHECK( tk == Token::ClosePar );
@@ -269,13 +267,13 @@ TEST_CASE("Line comments") {
     ExprLexer l(in);
     Token tk = l.getNextToken();
 
-    CHECK( tk == Token::Number );
+    CHECK( tk == Token::intConstant );
     CHECK( l.getText() == "45" );
     tk = l.getNextToken();
     CHECK( tk == Token::OpAdd );
     CHECK( l.getText() == "+" );
     tk = l.getNextToken();
-    CHECK( tk == Token::Number );
+    CHECK( tk == Token::intConstant );
     CHECK( l.getText() == "10" );
     tk = l.getNextToken();
     CHECK( tk == Token::Eof );
@@ -288,13 +286,13 @@ TEST_CASE("Block comments 1") {
     ExprLexer l(in);
     Token tk = l.getNextToken();
 
-    CHECK( tk == Token::Number );
+    CHECK( tk == Token::intConstant );
     CHECK( l.getText() == "45" );
     tk = l.getNextToken();
     CHECK( tk == Token::OpAdd );
     CHECK( l.getText() == "+" );
     tk = l.getNextToken();
-    CHECK( tk == Token::Number );
+    CHECK( tk == Token::intConstant );
     CHECK( l.getText() == "10" );
     tk = l.getNextToken();
     CHECK( tk == Token::Eof );
@@ -307,13 +305,13 @@ TEST_CASE("Block comments 2") {
     ExprLexer l(in);
     Token tk = l.getNextToken();
 
-    CHECK( tk == Token::Number );
+    CHECK( tk == Token::intConstant );
     CHECK( l.getText() == "45" );
     tk = l.getNextToken();
     CHECK( tk == Token::OpAdd );
     CHECK( l.getText() == "+" );
     tk = l.getNextToken();
-    CHECK( tk == Token::Number );
+    CHECK( tk == Token::intConstant );
     CHECK( l.getText() == "10" );
     tk = l.getNextToken();
     CHECK( tk == Token::Eof );
@@ -335,7 +333,7 @@ TEST_CASE("Declar Statement") {
     CHECK( tk == Token::Assign );
     CHECK( l.getText() == "=" );
     tk = l.getNextToken();
-    CHECK( tk == Token::Number );
+    CHECK( tk == Token::intConstant );
     CHECK( l.getText() == "10" );
     tk = l.getNextToken();
     CHECK( tk == Token::Semicolon );
@@ -351,7 +349,7 @@ TEST_CASE("Declar Statement") {
     CHECK( tk == Token::Assign );
     CHECK( l.getText() == "=" );
     tk = l.getNextToken();
-    CHECK( tk == Token::Number );
+    CHECK( tk == Token::intConstant );
     CHECK( l.getText() == "20" );
     tk = l.getNextToken();
     CHECK( tk == Token::Semicolon );

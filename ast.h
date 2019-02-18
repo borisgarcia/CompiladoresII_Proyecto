@@ -4,19 +4,14 @@
 #include <memory>
 #include <list>
 #include <unordered_map>
+#include <stdlib.h> 
+#include <vector>
+
 
 using namespace std;
 
-class ASTNode{
-   public:
-    ASTNode(){};
-    ~ASTNode(){};
-};
 class Expr;
 class Stmt;
-
-#define YYSTYPE_IS_DECLARED 1
-typedef ASTNode *YYSTYPE;
 
 using StmtList = list<Stmt*>;
 
@@ -70,10 +65,32 @@ class IdExpr : public Expr {
     private:
 };
 
-class ArrayExpr : public Expr {
+class NotExpr : public Expr {
     public:
-        IdExpr(string id,int pos) : id(id),pos(pos) {};
-        ~IdExpr() {};
+        NotExpr(Expr * num){this->num = num;};
+        ~NotExpr() {};
+
+        int eval() override{
+            return !num->eval();
+        };
+        Expr * num;
+};
+
+class RandomExpr : public Expr {
+    public:
+        RandomExpr(Expr * num) {this->num = num;};
+        ~RandomExpr() {};
+
+        int eval() override{
+            return rand() % num->eval();
+        };
+        Expr * num;
+};
+
+class IdArrayExpr : public Expr {
+    public:
+        IdArrayExpr(string id,int pos) : id(id),pos(pos) {};
+        ~IdArrayExpr() {};
 
         int eval() override;
         string id;
@@ -84,13 +101,11 @@ class StringConstantExpr: public Expr{
     public:
         StringConstantExpr(string str):str(str){};
         ~StringConstantExpr(){};
-        int eval() override{return 0};
+        int eval() override{return 0;};
 
         string getStr(){return str;};
         string str;      
 };
-
-
 
 DEFINE_EXPR(Add, +);
 DEFINE_EXPR(Sub, -);
@@ -117,13 +132,51 @@ class Stmt{
 
 class AssignStmt : public Stmt {
     public:
-        AssignStmt(string id, Expr * expr) : id(id) { this->expr = expr; };
+        AssignStmt(Expr * id, Expr * expr) : id(id) { this->expr = expr; };
 
         void exec() override;
 
-        string id;
+        Expr * id;
         Expr * expr;
 };
+
+class MethodDecStmt : public Stmt {
+    public:
+        MethodDecStmt(string tipo,string id, unordered_map<string,string>parametros,Stmt * block) : tipo(tipo),id(id),parametros(parametros) {this->block = block;};
+        void exec() override;
+        string id;
+        string tipo;
+        unordered_map<string,string>parametros;
+        Stmt * block;
+};
+
+class DeclarStmt : public Stmt {
+    public:
+        DeclarStmt(string tipo, list<string>variables) : tipo(tipo),variables(variables) {};
+        void exec() override;
+        string tipo;
+        list<string>variables;
+};
+
+class FieldDeclStmt: public Stmt{
+    public:
+        FieldDeclStmt(string type,list<string> fields) : type(type),fields(fields){};
+        void exec() override;
+        string type;
+        list<string> fields;
+        int value;
+};
+
+class FieldDeclStmt_2: public Stmt{
+    public:
+        FieldDeclStmt_2(string type,string id,int value) : type(type), id(id), value(value) {};
+        
+        void exec() override;
+        string type;
+        string id;
+        int value;
+};
+
 
 class BlockStmt : public Stmt {
     public:
@@ -147,23 +200,40 @@ class BlockStmt : public Stmt {
 
 class PrintStmt : public Stmt {
     public:
-        PrintStmt(Expr * expr) { this->expr = expr; };
-        PrintStmt(string str) : str(str) {};
+        PrintStmt(Expr * expr,bool ln) : ln(ln){ this->expr = expr; };
         ~PrintStmt() {};
 
-        void exec() override;
+        void exec() override{
+            if(ln)
+                cout<<expr->eval()<<endl;
+            else
+                cout<<expr->eval();
+        };
 
     private:
         Expr * expr;
-        string str;
+        bool ln;
+};
+
+class NextIntStmt : public Stmt {
+    public:
+        NextIntStmt() {}
+        ~NextIntStmt() {};
+        void exec() override{
+            cin>>num;
+        };
+        int getNum(){return num;}
+
+    private:
+        int num;
 };
 
 class IfStmt : public Stmt {
     public:
-        IfStmt(Expr * cond, Stmt * left, Stmt * right) {
+        IfStmt(Expr * cond, Stmt * stmtTrue, Stmt * stmtFalse) {
             this->cond = cond;
-            this->trueBlk = left;
-            this->falseBlk = right;
+            this->trueBlk = stmtTrue;
+            this->falseBlk = stmtFalse;
         };
 
         void exec() override{
@@ -186,33 +256,17 @@ class ForStmt : public Stmt {
             this->block = block;
         };
 
-        void exec() override;
+        void exec() override{
+            init->exec();
+            while(cond->eval())
+            {
+                block->exec();
+                end->exec();
+            }
+        };
 
         Expr * cond;
         Stmt * init, * block, * end;
-};
-
-class FieldDeclStmt: public Stmt{
-    public:
-        FieldDeclStmt(string type,list<string> fields,int value)
-        {
-
-        }
-
-        string type;
-        vector<string> fields;
-        int value;
-};
-
-class MethodDecStmt: public Stmt{
-    public:
-        MethodDecStmt(string type, unordered_map<string,string>ids,Stmt* block){}
-        
-        void exec() override;
-        string type;
-        unordered_map<string,string> ids;
-        Stmt * block;
-
 };
 
 class MethodCallStmt: public Stmt{
@@ -225,7 +279,7 @@ class MethodCallStmt: public Stmt{
 
 class WhileStmt: public Stmt{
     public: 
-        WhileStmt(Expr * cond, Expr * block){
+        WhileStmt(Expr * cond, Stmt * block){
             this->cond = cond;
             this->block = block;
         };
@@ -247,11 +301,38 @@ class ReturnStmt: public Stmt{
         };
 
         void exec() override{
-            return return_->eval();
+            return_->eval();
         };
 
         Expr * return_;
 
 };
+
+class BreakStmt: public Stmt{
+    public:
+        BreakStmt(){}
+        void exec() override{};
+
+};
+
+class ContinueStmt: public Stmt{
+    public:
+        ContinueStmt(){}
+        void exec() override{};
+};
+
+struct Methods{
+    string tipo;
+    string id;
+    unordered_map<string,string> parametros;
+    Stmt * block;
+};
+
+struct Vars{
+    string tipo;
+    string id;
+    int value;
+};
+
 
 #endif /* _AST_H */

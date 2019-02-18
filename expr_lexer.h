@@ -5,6 +5,7 @@
 #include <string>
 #include <stdio.h>
 #include <string.h>
+#include "tokens.h"
 
 enum class Token {
     KwBool              = 0,
@@ -25,6 +26,9 @@ enum class Token {
     KwVoid              = 15,
     KwWhile             = 16,
     KwPrint             = 17,
+    KwPrintln           = 18,
+    KwRead              = 19,
+    KwRandom            = 20,
     
     OpenBrace           = 100,
     CloseBrace          = 101,
@@ -56,7 +60,7 @@ enum class Token {
 
     StringConstant      = 200,
     CharConstant        = 201,
-    Number              = 202,
+    intConstant         = 202,
     Id                  = 203,
 
     Error               = 998,
@@ -66,10 +70,10 @@ enum class Token {
 class ExprLexer {
 public:
     ExprLexer(std::istream &in): ctx(in) {}
-    Token getNextToken();
-    int getLineNo() { return lineNo; }
+    int getNextToken();
+    //int getLineNo() { return lineNo; }
     std::string getText() { return text; }
-
+    
 private:
     struct Context {
         std::istream& in;
@@ -79,7 +83,7 @@ private:
         char *tok;
         bool eof;
         
-        bool fill(size_t need);
+        int fill(size_t need);
 
         Context(std::istream &in)
             : in(in)
@@ -90,14 +94,13 @@ private:
         {}
     };
 
-    Token makeToken(const char *txt, int len, Token tk) {
+    yytokentype makeToken(const char *txt, int len, yytokentype tk) {
         std::string tt(txt, len);
         text = std::move(tt);
         return tk;
     }
 
 private:
-    int lineNo;
     Context ctx;
     std::string text;
     int state;
