@@ -31,7 +31,7 @@
 
 %%
 
-program: KwClass Id OpenBrace program_body CloseBrace {
+program: KwClass Id OpenBrace program_body CloseBrace {}
 
 ;
 
@@ -129,7 +129,7 @@ argument:   StringConstant  {}
 ;
 
 expr:   cond-op             {}
-        | '!' expr               {}
+        | '!' expr          {}
 ;
 
 cond-op:    cond-op OpOr  cond-op_2  {}
