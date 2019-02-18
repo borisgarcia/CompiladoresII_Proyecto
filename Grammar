@@ -1,21 +1,21 @@
 
-program> -> KwClass class-name> ‘{’ program_body> ‘}’
-program_body> -> program_body field-decl 
-program_body> -> program_body method-decl 
-program_body> -> method-decl 
-program_body> -> field-decl
-program_body> -> '' 
+program -> KwClass class-name ‘{’ program_body ‘}’
+program_body -> program_body field-decl 
+program_body -> program_body method-decl 
+program_body -> method-decl 
+program_body -> field-decl
+program_body -> '' 
 
-class-name> -> Id
+class-name -> Id
 
-field-decl> -> type> { Id | Id ‘[’ intConstant ‘]’ }+, ‘;’
-field-decl> -> type> Id ‘=’ constant> ‘;’
+field-decl -> type { Id | Id ‘[’ intConstant ‘]’ }+, ‘;’
+field-decl -> type Id ‘=’ constant ‘;’
 
-method-decl> -> ( type> | void ) Id ‘(’ [{ type Id }+,] ‘)’ block>
+method-decl -> ( type | void ) Id ‘(’ [{ type Id }+,] ‘)’ block
 
-block> -> ‘{‘ var-decl>* statement>* ‘}’
+block -> ‘{‘ var-decl* statement* ‘}’
 
-var-decl> -> type> { Id }+, ';'
+var-decl -> type { Id }+, ';'
 
 type -> KwInt 
 type -> KwBool
@@ -24,70 +24,70 @@ statement -> assign
 statement -> method-call
 statement -> KwIf ‘(‘ expr ‘)’ block [KwElse block]
 statement -> KwWhile ‘(‘ expr ‘)’ block
-statement -> KwFor ‘(‘ {expr}+, ‘;’ expr ‘;’ {assign>}+, ‘)’ block
+statement -> KwFor ‘(‘ {expr}+, ‘;’ expr ‘;’ {assign}+, ‘)’ block
 statement -> KwReturn [expr] ‘;’
 statement -> KwBreak ‘;’
 statement -> KwContinue ‘;’
 statement -> block
 
-assign> -> lvalue> ‘=’ expr
+assign -> lvalue ‘=’ expr
 
-method-call -> Id ‘(‘ [{ expr> }+,] ‘)’
-method-call -> System.out.print ‘(‘ argument> ‘)’
-method-call -> System.out.println ‘(‘ argument> ‘)’
+method-call -> Id ‘(‘ [{ expr }+,] ‘)’
+method-call -> System.out.print ‘(‘ argument ‘)’
+method-call -> System.out.println ‘(‘ argument ‘)’
 method-call -> System.in.read ‘(‘ ‘)’
 method-call -> Random.nextInt ‘(‘ expr ‘)’
 
 argument -> stringConstant
 argument -> expr
 
------------------
+
 expr -> cond-op
+expr -> '-' expr
+expr -> '!' expr
 
-cond-op> -> cond-op> "||" cond-op_2> 
-cond-op> -> cond-op_2> 
+cond-op -> cond-op "||" cond-op_2
+cond-op -> cond-op_2 
 
-cond-op_2> -> cond-op_2> "&&" eq-op>  
-cond-op_2> -> eq-op>
+cond-op_2 -> cond-op_2 "&&" eq-op  
+cond-op_2 -> eq-op
 
-eq-op -> eq-op "==" rel-op>
-eq-op -> eq-op "!=" rel-op>
-eq-op -> rel-op> 
+eq-op -> eq-op "==" rel-op
+eq-op -> eq-op "!=" rel-op
+eq-op -> rel-op 
 
-rel-op -> rel-op> ">=" arith-op>
-rel-op -> rel-op> "=" arith-op>
-rel-op -> rel-op> '>' arith-op>
-rel-op -> rel-op> '<' arith-op>
+rel-op -> rel-op ">=" arith-op
+rel-op -> rel-op "=" arith-op
+rel-op -> rel-op '>' arith-op
+rel-op -> rel-op '<' arith-op
 rel-op -> arith-op>
 
-arith-op -> arith-op> "<<" arith-op_2>
-arith-op -> arith-op> ">>" arith-op_2>
-arith-op -> arith-op_2>
+arith-op -> arith-op "<<" arith-op_2
+arith-op -> arith-op ">>" arith-op_2
+arith-op -> arith-op_2
 
-arith-op_2> -> arith-op_2> '%' arith-op_3>
-arith-op_2> -> arith-op_3>
+arith-op_2 -> arith-op_2 '%' arith-op_3
+arith-op_2 -> arith-op_3
 
-arith-op_3> -> arith-op_3> '+' arith-op_4>
-arith-op_3> -> arith-op_3> '-' arith-op_4>
-arith-op_3> -> arith-op_4>
+arith-op_3 -> arith-op_3 '+' arith-op_4
+arith-op_3 -> arith-op_3 '-' arith-op_4
+arith-op_3 -> arith-op_4
 
-arith-op_4> -> arith-op_4> '*' factor>
-arith-op_4> -> arith-op_4> '/' factor>
-arith-op_4> -> factor '/'
+arith-op_4 -> arith-op_4 '*' factor
+arith-op_4 -> arith-op_4 '/' factor
+arith-op_4 -> factor '/'
 
 factor -> '(' expr ')'
-factor -> lvalue>
+factor -> lvalue
 factor -> method-call
 factor -> constant
-factor -> '-' expr
-factor -> '!' expr
 
-constant> -> intConstant
-constant> -> CharConstant
-constant> -> bool-constant
+constant -> intConstant
+constant -> CharConstant
+constant -> bool-constant
 
-bool-constant> -> KwTrue
-bool-constant> -> KwFalse
+bool-constant -> KwTrue
+bool-constant -> KwFalse
 
 lvalue> -> Id
 lvalue> -> Id '[' expr> ']'

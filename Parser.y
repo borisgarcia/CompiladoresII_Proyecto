@@ -18,9 +18,6 @@
   }
 
   #define YYERROR_VERBOSE 1
-
-
-
 %}
 
 %token KwBool KwBreak KwContinue KwClass KwElse KwExtends KwFalse KwFor KwIf KwInt KwNew KwNull KwReturn KwRot KwTrue KwVoid KwWhile KwPrint KwPrintln KwRead KwRandom  
@@ -34,7 +31,7 @@
 
 %%
 
-program: KwClass Id OpenBrace program_body CloseBrace {}
+program: KwClass Id OpenBrace program_body CloseBrace {
 
 ;
 
