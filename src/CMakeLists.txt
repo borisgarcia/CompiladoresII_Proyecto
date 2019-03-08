@@ -8,15 +8,21 @@ find_package(RE2C REQUIRED)
 set( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++14" )
 
 add_custom_command (
-  OUTPUT lexer.cpp
-  COMMAND ${RE2C} -olexer.cpp ${PROJECT_SOURCE_DIR}/expr_lexer.re
+  OUTPUT ../src/lexer.cpp
+  COMMAND ${RE2C} -o../src/lexer.cpp ${PROJECT_SOURCE_DIR}/expr_lexer.re
   MAIN_DEPENDENCY ${PROJECT_SOURCE_DIR}/expr_lexer.re
 )
 
 add_custom_command (
-  OUTPUT Parser.cpp tokens.h
-  COMMAND bison -oParser.cpp -rall --defines=tokens.h ${PROJECT_SOURCE_DIR}/Parser.y
+  OUTPUT ../src/Parser.cpp tokens.h
+  COMMAND bison -o../src/Parser.cpp -rall --defines=../src/tokens.h ${PROJECT_SOURCE_DIR}/Parser.y
   MAIN_DEPENDENCY ${PROJECT_SOURCE_DIR}/Parser.y
+)
+
+add_custom_command(
+  OUTPUT ../src/ast.cpp
+  COMMAND /opt/treecc/bin/treecc -o ../src/ast.cpp ${PROJECT_SOURCE_DIR}/expr_ast.tc
+  MAIN_DEPENDENCY ${PROJECT_SOURCE_DIR}/expr_ast.tc
 )
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
@@ -26,5 +32,6 @@ include_directories(${PROJECT_SOURCE_DIR})
 add_executable(${PROJECT_NAME} 
                         lexer.cpp
                         Parser.cpp
+                        ast.cpp                        
                         main.cpp)
 

@@ -111,8 +111,16 @@ int ExprLexer::getNextToken() {
             "System.out.print"          {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwPrint);}
             "System.in.read"            {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwRead);}
             "Random.nextInt"            {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwRandom);}
-            [0-9]+                      {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::intConstant);}
-            [_a-zA-Z][_a-zA-Z0-9]*      {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::Id);}
+            [0-9]+                      {
+                                            yytokentype tok = makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::intConstant);
+                                            yylval.int_t = atol(text.c_str());
+                                            return tok;
+                                        }
+            [_a-zA-Z][_a-zA-Z0-9]*      {
+                                            yytokentype tok = makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::Id);
+                                            yylval.str_t = strdup(text.c_str());
+                                            return tok;
+                                        }
             "\x00"                      {return 0;}
         */
         linecomment:

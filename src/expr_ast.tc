@@ -1,0 +1,420 @@
+%option lang = "C++"
+%option reentrant
+
+%decls %{
+    #include <iostream>
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <unordered_map>
+    #include <string>
+    #include <vector>
+    class ASTNode;
+    class Statement;
+    class Expression;
+    using StmtList = std::vector<Statement*>;
+    using ExprList = std::vector<Expression*>;
+    using string_t = std::string;
+    using stringList = std::vector<std::string>;
+    using intList = std::vector<int>;
+    using int_t = int;
+%}
+
+%{
+    #include "ast.h"
+    using namespace std;
+
+    struct Context{
+        string_t id;
+        int_t value;
+    };
+    std::unordered_map<string_t,Context> vars;
+    bool method_dec_boolean;
+    bool state_ment_boolean;
+%}
+
+%node ASTNode %abstract %typedef
+
+%node Expression ASTNode %abstract
+%operation %virtual int eval(Expression *this)
+
+%node Statement ASTNode %abstract
+%operation %virtual void exec(Statement *this)
+
+%node OneExpr Expression %abstract = { Expression *expr1; }
+%node NotExpr OneExpr
+%node UnaExpr OneExpr
+eval(NotExpr) { return !expr1->eval();}
+eval(UnaExpr) { return -expr1->eval();}
+
+%node NumExpr Expression =
+{
+    int_t num;
+}
+eval(NumExpr)
+{
+    return num;
+}
+
+%node StringConstant Expression =
+{
+    string_t text;
+}
+eval(StringConstant)
+{
+    return 0;
+}
+%operation string_t returnText(StringConstant *this)
+returnText(StringConstant)
+{
+    return text;
+}
+
+%node NextIntExpr Expression =
+{
+    Expression * expr;
+}
+eval(NextIntExpr)
+{
+    return rand() % expr->eval();
+}
+
+%node ReadExpr Expression
+eval(ReadExpr)
+{
+    int_t a;
+    cin>>a;
+    return a;
+}
+
+%node PrintExpr Expression =
+{
+    Expression * expr;
+}
+eval(PrintExpr)
+{
+    std::cerr << getFilename() << ":" << getLinenum() <<": error: assigning a void expression" << endl;
+    exit(0);
+}
+
+//Expr Llamada a Funcion
+
+%node FunctionCallExpr Expression = 
+{
+    string_t *id;
+    Expression * expr;
+}
+eval(FunctionCallExpr)
+{
+    return 0;
+}
+
+%node FunctionCallParams Expression = 
+{
+    %nocreate ExprList lista;
+}
+eval(FunctionCallParams)
+{
+    return 0;
+}
+%operation void AddParam(FunctionCallParams *this, Expression * expr)
+AddParam(FunctionCallParams)
+{
+    lista.push_back(expr);
+}
+
+//Id Expr
+%node IdExpr Expression =
+{
+    string_t id;
+}
+eval(IdExpr)
+{
+    /*if(vars.find(id) != vars.end())
+        return vars[id];
+    else
+    {
+        std::cerr << "Id: "<<id<<" no Existe" << endl;
+        exit(0);
+    } */
+    return 0;
+}
+
+%node IdArrayExpr Expression =
+{
+    string_t id;
+    int_t pos;
+}
+eval(IdArrayExpr)
+{
+    return 0;
+}
+
+//Binary Expression
+
+%node BinExpr Expression %abstract =
+{
+    Expression *expr1;
+    Expression *expr2;
+}
+
+%node AddExpr BinExpr
+%node SubExpr BinExpr
+%node MulExpr BinExpr
+%node DivExpr BinExpr
+%node SRLExpr BinExpr
+%node SLLExpr BinExpr
+%node ModExpr BinExpr
+%node LesExpr BinExpr
+%node GreExpr BinExpr
+%node LeEExpr BinExpr
+%node GrEExpr BinExpr
+%node EquExpr BinExpr
+%node NEqExpr BinExpr
+%node AndExpr BinExpr
+%node Or_Expr BinExpr
+
+eval(AddExpr) { return expr1->eval() + expr2->eval();  }
+eval(SubExpr) { return expr1->eval() - expr2->eval();  }
+eval(MulExpr) { return expr1->eval() * expr2->eval();  }
+eval(DivExpr)
+{
+    if(expr2->eval() != 0)
+        return expr1->eval() / expr2->eval();
+    else
+    {
+        std::cerr << getFilename() << ":" << getLinenum() <<": division by zero" << endl;
+        return 0;
+    }	
+}
+eval(SRLExpr) { return expr1->eval() >> expr2->eval(); }
+eval(SLLExpr) { return expr1->eval() << expr2->eval(); }
+eval(ModExpr) { return expr1->eval() &  expr2->eval(); }
+eval(GreExpr) { return expr1->eval() >  expr2->eval(); }
+eval(LesExpr) { return expr1->eval() <  expr2->eval(); }
+eval(LeEExpr) { return expr1->eval() <= expr2->eval(); }
+eval(GrEExpr) { return expr1->eval() >= expr2->eval(); }
+eval(EquExpr) { return expr1->eval() == expr2->eval(); }
+eval(NEqExpr) { return expr1->eval() != expr2->eval(); }
+eval(AndExpr) { return expr1->eval() && expr2->eval(); }
+eval(Or_Expr) { return expr1->eval() || expr2->eval(); }
+
+//Statement
+
+%node MultipleExpr Statement = { ExprList listaExprs; %nocreate intList listaInts;}
+exec(MultipleExpr)
+{ 
+    for(int x = 0;x<listaExprs.size();x++)
+        listaInts.push_back(listaExprs.at(x)->eval());
+}
+
+//Multiple_Dec Statement
+
+%node FieldDecStmt Statement =
+{
+    string_t type;
+    Statement * lista;
+}
+exec(FieldDecStmt)
+{
+
+}
+
+%node FieldDecListStmt Statement =
+{
+    %nocreate stringList lista;
+}
+exec(FieldDecListStmt)
+{
+
+}
+%operation void AddDec(FieldDecListStmt *this, string_t id)
+AddDec(FieldDecListStmt,id)
+{
+    lista.push_back(id);
+}
+
+//Print Statement
+
+%node PrintLNStmt Statement =
+{
+    Expression * expr;
+}
+exec(PrintLNStmt)
+{
+    std::cout<<expr->eval()<<"\n";
+}   
+%node PrintStmt Statement =
+{
+    Expression * expr;
+}
+exec(PrintStmt)
+{
+    std::cout<<expr->eval();
+}
+
+//Read Statement
+
+%node ReadStmt Statement
+exec(ReadStmt)
+{
+    std::cerr << getFilename() << ":" << getLinenum() <<": warning: expression result unused" << endl;
+}
+
+//NextInt Statement
+
+%node NextIntStmt Statement =
+{
+    Expression * expr;
+}
+exec(NextIntStmt)
+{
+    std::cerr << getFilename() << ":" << getLinenum() <<": warning: expression result unused" << endl;
+    rand();
+}
+
+//Function Call Statement
+
+%node FunctionCallStmt Statement =
+{
+    string_t id;
+    Expression * expr;
+}
+exec(FunctionCallStmt)
+{
+    expr->eval();
+}
+
+//Assign Statement
+
+%node AssignStmt Statement =
+{
+    string_t id;
+    Expression * expr;
+}
+exec(AssignStmt)
+{
+    //vars[id] = expr->eval();
+}
+
+//For Statement
+
+%node ForStmt Statement =
+{
+    Statement * for_dec;
+    Expression * cond;
+    Statement * for_assign;
+    Statement * block;
+}
+exec(ForStmt)
+{ 
+    for_dec->exec();
+    while(cond->eval())
+    {
+        block->exec();
+        for_assign->exec();
+    }
+}
+
+//Block Statement
+
+%node BlockStmt Statement =
+{
+   StmtList list;
+}
+exec(BlockStmt)
+{
+    for(int x = 0;x<list.size();x++)
+        list.at(x)->exec();
+}
+%operation void AddStmt(BlockStmt *this, Statement * stmt)
+AddStmt(BlockStmt)
+{
+    list.push_back(stmt);
+}
+
+//If Statement
+
+%node IfStmt Statement =
+{
+    Expression * cond;
+    Statement * true_block;
+    Statement * false_block;
+}
+exec(IfStmt)
+{
+    if(cond->eval())
+        true_block->exec();
+    else if(false_block != nullptr)
+        false_block->exec();
+}
+
+//While Statement
+
+%node WhileStmt Statement =
+{
+    Expression * cond;
+    Statement * block;
+}
+exec(WhileStmt)
+{ 
+    while(cond->eval())
+        block->exec();
+}
+
+//Return Statement
+
+%node ReturnStmt Statement =
+{
+   Expression * expr;
+}
+exec(ReturnStmt)
+{
+
+}
+
+//Break Statement
+
+%node BreakStmt Statement
+exec(BreakStmt)
+{
+
+}
+
+//Continue Statement
+
+%node ContinueStmt Statement
+exec(ContinueStmt)
+{
+
+}
+
+//Method Declar Stmt
+
+%node MethodDecStmt Statement =
+{
+    string_t type;
+    string_t id;
+    Statement * params;
+    Statement * block;
+}
+exec(MethodDecStmt)
+{
+
+}
+
+%node ParamsListStmt Statement =
+{
+    %nocreate stringList tipo;
+    %nocreate stringList id;
+}
+exec(ParamsListStmt)
+{
+
+}
+%operation void AddDec(ParamsListStmt *this,string_t tipo_, string_t id_)
+AddDec(ParamsListStmt,tipo_,id_)
+{
+    tipo.push_back(tipo_);
+    id.push_back(id_);
+}
+

@@ -1,0 +1,4 @@
+# Hashes of file build rules.
+2288e2981ce62bb272afd1c495f384c9 /home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.cpp
+ba2a5d2b35e44540a4bd203e40febfbf /home/boris/Desktop/CompiladoresII/Proyecto/src/ast.cpp
+63b443529280143bb9739a9e8871abde /home/boris/Desktop/CompiladoresII/Proyecto/src/lexer.cpp

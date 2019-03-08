@@ -1,0 +1,21 @@
+Notas:
+
+Return, Continue y Break: Verificar si un Stmt de este tipo se ejecuto para saber si ejecutarlo, por ejemplo cuando se ejecute podemos devolver un enum del tipo de Stmt que se acaba de ejecutar.
+
+Para el context: Que exista uno global y tambien que cada block tenga su propio Context, que pueda acceder a ambas, por ejemplo si estoy llamando una variable reviso ambos, para declarar una variable primero reviso que no exista en el context global
+
+Hacer method call como Expr y como Stmt
+
+MulDecStmt para soportar declaraciones como: int a,b,c,d;
+
+MultipleExpr para los parametros de las funciones (al hacer FunctionCallStmt)
+
+Pendiente:  - Implementar el Context 
+            - Return
+            - Continue
+            - Break
+            - Fn Call
+            - 
+
+En Re2c arreglar los tokens que necesito que regresen el texto ejem: void, int, char 
+

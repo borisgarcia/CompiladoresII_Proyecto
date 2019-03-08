@@ -200,7 +200,7 @@ factor: OpenPar expr ClosePar    { $$ = $2; }
         | constant               { $$ = $1; }
 ;
 
-lvalue: Id                                      {$$ = new IdExpr($1);}
+lvalue: Id                                       {$$ = new IdExpr($1);}
        | Id OpenBracket expr CloseBracket        {$$ = new IdArrayExpr($1,$3->eval());}
 ;
 

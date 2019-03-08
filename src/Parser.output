@@ -1,0 +1,4873 @@
+Terminals unused in grammar
+
+   KwExtends
+   KwNew
+   KwNull
+   KwRot
+   "end of input"
+   Error
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: KwClass Id "{" program_body "}"
+    2        | KwClass Id "{" "}"
+
+    3 program_body: program_body field_decl
+    4             | program_body method_decl
+    5             | field_decl
+    6             | method_decl
+
+    7 field_decl: type mult-field ";"
+    8           | type Id "=" constant ";"
+
+    9 mult-field: mult-field "," Id
+   10           | mult-field "," Id "[" intConstant "]"
+   11           | Id
+   12           | Id "[" intConstant "]"
+
+   13 method_decl: type Id "(" params ")" block
+   14            | KwVoid Id "(" params ")" block
+
+   15 params: params "," type Id
+   16       | type Id
+   17       | %empty
+
+   18 type: KwInt
+   19     | KwBool
+
+   20 block: "{" block_p "}"
+   21      | "{" "}"
+
+   22 block_p: block_p var-decl
+   23        | block_p statement
+   24        | var-decl
+   25        | statement
+
+   26 var-decl: type var-decl_p ";"
+
+   27 var-decl_p: var-decl_p "," Id
+   28           | Id
+
+   29 statement: assign ";"
+   30          | method-call_stmt ";"
+   31          | KwIf "(" expr ")" block else_opt
+   32          | KwWhile "(" expr ")" block
+   33          | KwBreak ";"
+   34          | KwFor "(" for_assign ";" expr ";" for_assign ")" block
+   35          | KwReturn return_expr_opt ";"
+   36          | KwContinue ";"
+   37          | block
+
+   38 assign: lvalue "=" expr
+
+   39 else_opt: KwElse block
+   40         | %empty
+
+   41 for_assign: for_assign "," assign
+   42           | assign
+
+   43 return_expr_opt: expr
+   44                | %empty
+
+   45 method-call_stmt: Id "(" method-call_params ")"
+   46                 | KwPrint "(" argument ")"
+   47                 | KwPrintln "(" argument ")"
+   48                 | KwRead "(" ")"
+   49                 | KwRandom "(" expr ")"
+
+   50 method-call_expr: Id "(" method-call_params ")"
+   51                 | KwPrint "(" argument ")"
+   52                 | KwPrintln "(" argument ")"
+   53                 | KwRead "(" ")"
+   54                 | KwRandom "(" expr ")"
+
+   55 method-call_params: method-call_params "," expr
+   56                   | expr
+
+   57 argument: StringConstant
+   58         | expr
+
+   59 lvalue: Id
+   60       | Id "[" expr "]"
+
+   61 expr: lvalue
+   62     | method-call_expr
+   63     | constant
+   64     | bin-op
+   65     | "!" expr
+   66     | "-" expr
+   67     | "(" expr ")"
+
+   68 bin-op: arith-op
+   69       | rel-op
+   70       | cond-op
+   71       | eq-op
+
+   72 arith-op: expr "+" expr
+   73         | expr "-" expr
+   74         | expr "*" expr
+   75         | expr "/" expr
+   76         | expr "<<" expr
+   77         | expr ">>" expr
+   78         | expr "%" expr
+
+   79 rel-op: expr "<" expr
+   80       | expr ">" expr
+   81       | expr "<=" expr
+   82       | expr ">=" expr
+
+   83 eq-op: expr "==" expr
+   84      | expr "!=" expr
+
+   85 cond-op: expr "&&" expr
+   86        | expr "||" expr
+
+   87 constant: intConstant
+   88         | CharConstant
+   89         | KwTrue
+   90         | KwFalse
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+KwBool (258) 19
+KwBreak (259) 33
+KwContinue (260) 36
+KwClass (261) 1 2
+KwElse (262) 39
+KwExtends (263)
+KwFalse (264) 90
+KwFor (265) 34
+KwIf (266) 31
+KwInt (267) 18
+KwNew (268)
+KwNull (269)
+KwReturn (270) 35
+KwRot (271)
+KwTrue (272) 89
+KwVoid (273) 14
+KwWhile (274) 32
+KwPrint (275) 46 51
+KwPrintln (276) 47 52
+KwRead (277) 48 53
+KwRandom (278) 49 54
+"{" (279) 1 2 20 21
+"}" (280) 1 2 20 21
+"[" (281) 10 12 60
+"]" (282) 10 12 60
+"," (283) 9 10 15 27 41 55
+";" (284) 7 8 26 29 30 33 34 35 36
+"(" (285) 13 14 31 32 34 45 46 47 48 49 50 51 52 53 54 67
+")" (286) 13 14 31 32 34 45 46 47 48 49 50 51 52 53 54 67
+"!" (287) 65
+"+" (288) 72
+"-" (289) 66 73
+"/" (290) 75
+"*" (291) 74
+"%" (292) 78
+"=" (293) 8 38
+">" (294) 80
+"<" (295) 79
+">=" (296) 82
+"<=" (297) 81
+"!=" (298) 84
+"&&" (299) 85
+"||" (300) 86
+"==" (301) 83
+"<<" (302) 76
+">>" (303) 77
+intConstant (304) 10 12 87
+CharConstant (305) 88
+Id (306) 1 2 8 9 10 11 12 13 14 15 16 27 28 45 50 59 60
+StringConstant (307) 57
+"end of input" (308)
+Error (309)
+
+
+Nonterminals, with rules where they appear
+
+$accept (55)
+    on left: 0
+program (56)
+    on left: 1 2, on right: 0
+program_body (57)
+    on left: 3 4 5 6, on right: 1 3 4
+field_decl (58)
+    on left: 7 8, on right: 3 5
+mult-field (59)
+    on left: 9 10 11 12, on right: 7 9 10
+method_decl (60)
+    on left: 13 14, on right: 4 6
+params (61)
+    on left: 15 16 17, on right: 13 14 15
+type (62)
+    on left: 18 19, on right: 7 8 13 15 16 26
+block (63)
+    on left: 20 21, on right: 13 14 31 32 34 37 39
+block_p (64)
+    on left: 22 23 24 25, on right: 20 22 23
+var-decl (65)
+    on left: 26, on right: 22 24
+var-decl_p (66)
+    on left: 27 28, on right: 26 27
+statement (67)
+    on left: 29 30 31 32 33 34 35 36 37, on right: 23 25
+assign (68)
+    on left: 38, on right: 29 41 42
+else_opt (69)
+    on left: 39 40, on right: 31
+for_assign (70)
+    on left: 41 42, on right: 34 41
+return_expr_opt (71)
+    on left: 43 44, on right: 35
+method-call_stmt (72)
+    on left: 45 46 47 48 49, on right: 30
+method-call_expr (73)
+    on left: 50 51 52 53 54, on right: 62
+method-call_params (74)
+    on left: 55 56, on right: 45 50 55
+argument (75)
+    on left: 57 58, on right: 46 47 51 52
+lvalue (76)
+    on left: 59 60, on right: 38 61
+expr (77)
+    on left: 61 62 63 64 65 66 67, on right: 31 32 34 38 43 49 54 55
+    56 58 60 65 66 67 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86
+bin-op (78)
+    on left: 68 69 70 71, on right: 64
+arith-op (79)
+    on left: 72 73 74 75 76 77 78, on right: 68
+rel-op (80)
+    on left: 79 80 81 82, on right: 69
+eq-op (81)
+    on left: 83 84, on right: 71
+cond-op (82)
+    on left: 85 86, on right: 70
+constant (83)
+    on left: 87 88 89 90, on right: 8 63
+
+
+State 0
+
+    0 $accept: . program $end
+    1 program: . KwClass Id "{" program_body "}"
+    2        | . KwClass Id "{" "}"
+
+    KwClass  shift, and go to state 1
+
+    program  go to state 2
+
+
+State 1
+
+    1 program: KwClass . Id "{" program_body "}"
+    2        | KwClass . Id "{" "}"
+
+    Id  shift, and go to state 3
+
+
+State 2
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 4
+
+
+State 3
+
+    1 program: KwClass Id . "{" program_body "}"
+    2        | KwClass Id . "{" "}"
+
+    "{"  shift, and go to state 5
+
+
+State 4
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 5
+
+    1 program: KwClass Id "{" . program_body "}"
+    2        | KwClass Id "{" . "}"
+    3 program_body: . program_body field_decl
+    4             | . program_body method_decl
+    5             | . field_decl
+    6             | . method_decl
+    7 field_decl: . type mult-field ";"
+    8           | . type Id "=" constant ";"
+   13 method_decl: . type Id "(" params ")" block
+   14            | . KwVoid Id "(" params ")" block
+   18 type: . KwInt
+   19     | . KwBool
+
+    KwBool  shift, and go to state 6
+    KwInt   shift, and go to state 7
+    KwVoid  shift, and go to state 8
+    "}"     shift, and go to state 9
+
+    program_body  go to state 10
+    field_decl    go to state 11
+    method_decl   go to state 12
+    type          go to state 13
+
+
+State 6
+
+   19 type: KwBool .
+
+    $default  reduce using rule 19 (type)
+
+
+State 7
+
+   18 type: KwInt .
+
+    $default  reduce using rule 18 (type)
+
+
+State 8
+
+   14 method_decl: KwVoid . Id "(" params ")" block
+
+    Id  shift, and go to state 14
+
+
+State 9
+
+    2 program: KwClass Id "{" "}" .
+
+    $default  reduce using rule 2 (program)
+
+
+State 10
+
+    1 program: KwClass Id "{" program_body . "}"
+    3 program_body: program_body . field_decl
+    4             | program_body . method_decl
+    7 field_decl: . type mult-field ";"
+    8           | . type Id "=" constant ";"
+   13 method_decl: . type Id "(" params ")" block
+   14            | . KwVoid Id "(" params ")" block
+   18 type: . KwInt
+   19     | . KwBool
+
+    KwBool  shift, and go to state 6
+    KwInt   shift, and go to state 7
+    KwVoid  shift, and go to state 8
+    "}"     shift, and go to state 15
+
+    field_decl   go to state 16
+    method_decl  go to state 17
+    type         go to state 13
+
+
+State 11
+
+    5 program_body: field_decl .
+
+    $default  reduce using rule 5 (program_body)
+
+
+State 12
+
+    6 program_body: method_decl .
+
+    $default  reduce using rule 6 (program_body)
+
+
+State 13
+
+    7 field_decl: type . mult-field ";"
+    8           | type . Id "=" constant ";"
+    9 mult-field: . mult-field "," Id
+   10           | . mult-field "," Id "[" intConstant "]"
+   11           | . Id
+   12           | . Id "[" intConstant "]"
+   13 method_decl: type . Id "(" params ")" block
+
+    Id  shift, and go to state 18
+
+    mult-field  go to state 19
+
+
+State 14
+
+   14 method_decl: KwVoid Id . "(" params ")" block
+
+    "("  shift, and go to state 20
+
+
+State 15
+
+    1 program: KwClass Id "{" program_body "}" .
+
+    $default  reduce using rule 1 (program)
+
+
+State 16
+
+    3 program_body: program_body field_decl .
+
+    $default  reduce using rule 3 (program_body)
+
+
+State 17
+
+    4 program_body: program_body method_decl .
+
+    $default  reduce using rule 4 (program_body)
+
+
+State 18
+
+    8 field_decl: type Id . "=" constant ";"
+   11 mult-field: Id .  [",", ";"]
+   12           | Id . "[" intConstant "]"
+   13 method_decl: type Id . "(" params ")" block
+
+    "["  shift, and go to state 21
+    "("  shift, and go to state 22
+    "="  shift, and go to state 23
+
+    $default  reduce using rule 11 (mult-field)
+
+
+State 19
+
+    7 field_decl: type mult-field . ";"
+    9 mult-field: mult-field . "," Id
+   10           | mult-field . "," Id "[" intConstant "]"
+
+    ","  shift, and go to state 24
+    ";"  shift, and go to state 25
+
+
+State 20
+
+   14 method_decl: KwVoid Id "(" . params ")" block
+   15 params: . params "," type Id
+   16       | . type Id
+   17       | . %empty  [",", ")"]
+   18 type: . KwInt
+   19     | . KwBool
+
+    KwBool  shift, and go to state 6
+    KwInt   shift, and go to state 7
+
+    $default  reduce using rule 17 (params)
+
+    params  go to state 26
+    type    go to state 27
+
+
+State 21
+
+   12 mult-field: Id "[" . intConstant "]"
+
+    intConstant  shift, and go to state 28
+
+
+State 22
+
+   13 method_decl: type Id "(" . params ")" block
+   15 params: . params "," type Id
+   16       | . type Id
+   17       | . %empty  [",", ")"]
+   18 type: . KwInt
+   19     | . KwBool
+
+    KwBool  shift, and go to state 6
+    KwInt   shift, and go to state 7
+
+    $default  reduce using rule 17 (params)
+
+    params  go to state 29
+    type    go to state 27
+
+
+State 23
+
+    8 field_decl: type Id "=" . constant ";"
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+
+    constant  go to state 34
+
+
+State 24
+
+    9 mult-field: mult-field "," . Id
+   10           | mult-field "," . Id "[" intConstant "]"
+
+    Id  shift, and go to state 35
+
+
+State 25
+
+    7 field_decl: type mult-field ";" .
+
+    $default  reduce using rule 7 (field_decl)
+
+
+State 26
+
+   14 method_decl: KwVoid Id "(" params . ")" block
+   15 params: params . "," type Id
+
+    ","  shift, and go to state 36
+    ")"  shift, and go to state 37
+
+
+State 27
+
+   16 params: type . Id
+
+    Id  shift, and go to state 38
+
+
+State 28
+
+   12 mult-field: Id "[" intConstant . "]"
+
+    "]"  shift, and go to state 39
+
+
+State 29
+
+   13 method_decl: type Id "(" params . ")" block
+   15 params: params . "," type Id
+
+    ","  shift, and go to state 36
+    ")"  shift, and go to state 40
+
+
+State 30
+
+   90 constant: KwFalse .
+
+    $default  reduce using rule 90 (constant)
+
+
+State 31
+
+   89 constant: KwTrue .
+
+    $default  reduce using rule 89 (constant)
+
+
+State 32
+
+   87 constant: intConstant .
+
+    $default  reduce using rule 87 (constant)
+
+
+State 33
+
+   88 constant: CharConstant .
+
+    $default  reduce using rule 88 (constant)
+
+
+State 34
+
+    8 field_decl: type Id "=" constant . ";"
+
+    ";"  shift, and go to state 41
+
+
+State 35
+
+    9 mult-field: mult-field "," Id .  [",", ";"]
+   10           | mult-field "," Id . "[" intConstant "]"
+
+    "["  shift, and go to state 42
+
+    $default  reduce using rule 9 (mult-field)
+
+
+State 36
+
+   15 params: params "," . type Id
+   18 type: . KwInt
+   19     | . KwBool
+
+    KwBool  shift, and go to state 6
+    KwInt   shift, and go to state 7
+
+    type  go to state 43
+
+
+State 37
+
+   14 method_decl: KwVoid Id "(" params ")" . block
+   20 block: . "{" block_p "}"
+   21      | . "{" "}"
+
+    "{"  shift, and go to state 44
+
+    block  go to state 45
+
+
+State 38
+
+   16 params: type Id .
+
+    $default  reduce using rule 16 (params)
+
+
+State 39
+
+   12 mult-field: Id "[" intConstant "]" .
+
+    $default  reduce using rule 12 (mult-field)
+
+
+State 40
+
+   13 method_decl: type Id "(" params ")" . block
+   20 block: . "{" block_p "}"
+   21      | . "{" "}"
+
+    "{"  shift, and go to state 44
+
+    block  go to state 46
+
+
+State 41
+
+    8 field_decl: type Id "=" constant ";" .
+
+    $default  reduce using rule 8 (field_decl)
+
+
+State 42
+
+   10 mult-field: mult-field "," Id "[" . intConstant "]"
+
+    intConstant  shift, and go to state 47
+
+
+State 43
+
+   15 params: params "," type . Id
+
+    Id  shift, and go to state 48
+
+
+State 44
+
+   18 type: . KwInt
+   19     | . KwBool
+   20 block: . "{" block_p "}"
+   20      | "{" . block_p "}"
+   21      | . "{" "}"
+   21      | "{" . "}"
+   22 block_p: . block_p var-decl
+   23        | . block_p statement
+   24        | . var-decl
+   25        | . statement
+   26 var-decl: . type var-decl_p ";"
+   29 statement: . assign ";"
+   30          | . method-call_stmt ";"
+   31          | . KwIf "(" expr ")" block else_opt
+   32          | . KwWhile "(" expr ")" block
+   33          | . KwBreak ";"
+   34          | . KwFor "(" for_assign ";" expr ";" for_assign ")" block
+   35          | . KwReturn return_expr_opt ";"
+   36          | . KwContinue ";"
+   37          | . block
+   38 assign: . lvalue "=" expr
+   45 method-call_stmt: . Id "(" method-call_params ")"
+   46                 | . KwPrint "(" argument ")"
+   47                 | . KwPrintln "(" argument ")"
+   48                 | . KwRead "(" ")"
+   49                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+
+    KwBool      shift, and go to state 6
+    KwBreak     shift, and go to state 49
+    KwContinue  shift, and go to state 50
+    KwFor       shift, and go to state 51
+    KwIf        shift, and go to state 52
+    KwInt       shift, and go to state 7
+    KwReturn    shift, and go to state 53
+    KwWhile     shift, and go to state 54
+    KwPrint     shift, and go to state 55
+    KwPrintln   shift, and go to state 56
+    KwRead      shift, and go to state 57
+    KwRandom    shift, and go to state 58
+    "{"         shift, and go to state 44
+    "}"         shift, and go to state 59
+    Id          shift, and go to state 60
+
+    type              go to state 61
+    block             go to state 62
+    block_p           go to state 63
+    var-decl          go to state 64
+    statement         go to state 65
+    assign            go to state 66
+    method-call_stmt  go to state 67
+    lvalue            go to state 68
+
+
+State 45
+
+   14 method_decl: KwVoid Id "(" params ")" block .
+
+    $default  reduce using rule 14 (method_decl)
+
+
+State 46
+
+   13 method_decl: type Id "(" params ")" block .
+
+    $default  reduce using rule 13 (method_decl)
+
+
+State 47
+
+   10 mult-field: mult-field "," Id "[" intConstant . "]"
+
+    "]"  shift, and go to state 69
+
+
+State 48
+
+   15 params: params "," type Id .
+
+    $default  reduce using rule 15 (params)
+
+
+State 49
+
+   33 statement: KwBreak . ";"
+
+    ";"  shift, and go to state 70
+
+
+State 50
+
+   36 statement: KwContinue . ";"
+
+    ";"  shift, and go to state 71
+
+
+State 51
+
+   34 statement: KwFor . "(" for_assign ";" expr ";" for_assign ")" block
+
+    "("  shift, and go to state 72
+
+
+State 52
+
+   31 statement: KwIf . "(" expr ")" block else_opt
+
+    "("  shift, and go to state 73
+
+
+State 53
+
+   35 statement: KwReturn . return_expr_opt ";"
+   43 return_expr_opt: . expr
+   44                | . %empty  [";"]
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    $default  reduce using rule 44 (return_expr_opt)
+
+    return_expr_opt   go to state 82
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 85
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 54
+
+   32 statement: KwWhile . "(" expr ")" block
+
+    "("  shift, and go to state 92
+
+
+State 55
+
+   46 method-call_stmt: KwPrint . "(" argument ")"
+
+    "("  shift, and go to state 93
+
+
+State 56
+
+   47 method-call_stmt: KwPrintln . "(" argument ")"
+
+    "("  shift, and go to state 94
+
+
+State 57
+
+   48 method-call_stmt: KwRead . "(" ")"
+
+    "("  shift, and go to state 95
+
+
+State 58
+
+   49 method-call_stmt: KwRandom . "(" expr ")"
+
+    "("  shift, and go to state 96
+
+
+State 59
+
+   21 block: "{" "}" .
+
+    $default  reduce using rule 21 (block)
+
+
+State 60
+
+   45 method-call_stmt: Id . "(" method-call_params ")"
+   59 lvalue: Id .  ["="]
+   60       | Id . "[" expr "]"
+
+    "["  shift, and go to state 97
+    "("  shift, and go to state 98
+
+    $default  reduce using rule 59 (lvalue)
+
+
+State 61
+
+   26 var-decl: type . var-decl_p ";"
+   27 var-decl_p: . var-decl_p "," Id
+   28           | . Id
+
+    Id  shift, and go to state 99
+
+    var-decl_p  go to state 100
+
+
+State 62
+
+   37 statement: block .
+
+    $default  reduce using rule 37 (statement)
+
+
+State 63
+
+   18 type: . KwInt
+   19     | . KwBool
+   20 block: . "{" block_p "}"
+   20      | "{" block_p . "}"
+   21      | . "{" "}"
+   22 block_p: block_p . var-decl
+   23        | block_p . statement
+   26 var-decl: . type var-decl_p ";"
+   29 statement: . assign ";"
+   30          | . method-call_stmt ";"
+   31          | . KwIf "(" expr ")" block else_opt
+   32          | . KwWhile "(" expr ")" block
+   33          | . KwBreak ";"
+   34          | . KwFor "(" for_assign ";" expr ";" for_assign ")" block
+   35          | . KwReturn return_expr_opt ";"
+   36          | . KwContinue ";"
+   37          | . block
+   38 assign: . lvalue "=" expr
+   45 method-call_stmt: . Id "(" method-call_params ")"
+   46                 | . KwPrint "(" argument ")"
+   47                 | . KwPrintln "(" argument ")"
+   48                 | . KwRead "(" ")"
+   49                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+
+    KwBool      shift, and go to state 6
+    KwBreak     shift, and go to state 49
+    KwContinue  shift, and go to state 50
+    KwFor       shift, and go to state 51
+    KwIf        shift, and go to state 52
+    KwInt       shift, and go to state 7
+    KwReturn    shift, and go to state 53
+    KwWhile     shift, and go to state 54
+    KwPrint     shift, and go to state 55
+    KwPrintln   shift, and go to state 56
+    KwRead      shift, and go to state 57
+    KwRandom    shift, and go to state 58
+    "{"         shift, and go to state 44
+    "}"         shift, and go to state 101
+    Id          shift, and go to state 60
+
+    type              go to state 61
+    block             go to state 62
+    var-decl          go to state 102
+    statement         go to state 103
+    assign            go to state 66
+    method-call_stmt  go to state 67
+    lvalue            go to state 68
+
+
+State 64
+
+   24 block_p: var-decl .
+
+    $default  reduce using rule 24 (block_p)
+
+
+State 65
+
+   25 block_p: statement .
+
+    $default  reduce using rule 25 (block_p)
+
+
+State 66
+
+   29 statement: assign . ";"
+
+    ";"  shift, and go to state 104
+
+
+State 67
+
+   30 statement: method-call_stmt . ";"
+
+    ";"  shift, and go to state 105
+
+
+State 68
+
+   38 assign: lvalue . "=" expr
+
+    "="  shift, and go to state 106
+
+
+State 69
+
+   10 mult-field: mult-field "," Id "[" intConstant "]" .
+
+    $default  reduce using rule 10 (mult-field)
+
+
+State 70
+
+   33 statement: KwBreak ";" .
+
+    $default  reduce using rule 33 (statement)
+
+
+State 71
+
+   36 statement: KwContinue ";" .
+
+    $default  reduce using rule 36 (statement)
+
+
+State 72
+
+   34 statement: KwFor "(" . for_assign ";" expr ";" for_assign ")" block
+   38 assign: . lvalue "=" expr
+   41 for_assign: . for_assign "," assign
+   42           | . assign
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+
+    Id  shift, and go to state 107
+
+    assign      go to state 108
+    for_assign  go to state 109
+    lvalue      go to state 68
+
+
+State 73
+
+   31 statement: KwIf "(" . expr ")" block else_opt
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 110
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 74
+
+   51 method-call_expr: KwPrint . "(" argument ")"
+
+    "("  shift, and go to state 111
+
+
+State 75
+
+   52 method-call_expr: KwPrintln . "(" argument ")"
+
+    "("  shift, and go to state 112
+
+
+State 76
+
+   53 method-call_expr: KwRead . "(" ")"
+
+    "("  shift, and go to state 113
+
+
+State 77
+
+   54 method-call_expr: KwRandom . "(" expr ")"
+
+    "("  shift, and go to state 114
+
+
+State 78
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   67     | "(" . expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 115
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 79
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   65     | "!" . expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 116
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 80
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   66     | "-" . expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 117
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 81
+
+   50 method-call_expr: Id . "(" method-call_params ")"
+   59 lvalue: Id .  ["]", ",", ";", ")", "+", "-", "/", "*", "%", ">", "<", ">=", "<=", "!=", "&&", "||", "==", "<<", ">>"]
+   60       | Id . "[" expr "]"
+
+    "["  shift, and go to state 97
+    "("  shift, and go to state 118
+
+    $default  reduce using rule 59 (lvalue)
+
+
+State 82
+
+   35 statement: KwReturn return_expr_opt . ";"
+
+    ";"  shift, and go to state 119
+
+
+State 83
+
+   62 expr: method-call_expr .
+
+    $default  reduce using rule 62 (expr)
+
+
+State 84
+
+   61 expr: lvalue .
+
+    $default  reduce using rule 61 (expr)
+
+
+State 85
+
+   43 return_expr_opt: expr .  [";"]
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "+"   shift, and go to state 120
+    "-"   shift, and go to state 121
+    "/"   shift, and go to state 122
+    "*"   shift, and go to state 123
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+    $default  reduce using rule 43 (return_expr_opt)
+
+
+State 86
+
+   64 expr: bin-op .
+
+    $default  reduce using rule 64 (expr)
+
+
+State 87
+
+   68 bin-op: arith-op .
+
+    $default  reduce using rule 68 (bin-op)
+
+
+State 88
+
+   69 bin-op: rel-op .
+
+    $default  reduce using rule 69 (bin-op)
+
+
+State 89
+
+   71 bin-op: eq-op .
+
+    $default  reduce using rule 71 (bin-op)
+
+
+State 90
+
+   70 bin-op: cond-op .
+
+    $default  reduce using rule 70 (bin-op)
+
+
+State 91
+
+   63 expr: constant .
+
+    $default  reduce using rule 63 (expr)
+
+
+State 92
+
+   32 statement: KwWhile "(" . expr ")" block
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 135
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 93
+
+   46 method-call_stmt: KwPrint "(" . argument ")"
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   57 argument: . StringConstant
+   58         | . expr
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse         shift, and go to state 30
+    KwTrue          shift, and go to state 31
+    KwPrint         shift, and go to state 74
+    KwPrintln       shift, and go to state 75
+    KwRead          shift, and go to state 76
+    KwRandom        shift, and go to state 77
+    "("             shift, and go to state 78
+    "!"             shift, and go to state 79
+    "-"             shift, and go to state 80
+    intConstant     shift, and go to state 32
+    CharConstant    shift, and go to state 33
+    Id              shift, and go to state 81
+    StringConstant  shift, and go to state 136
+
+    method-call_expr  go to state 83
+    argument          go to state 137
+    lvalue            go to state 84
+    expr              go to state 138
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 94
+
+   47 method-call_stmt: KwPrintln "(" . argument ")"
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   57 argument: . StringConstant
+   58         | . expr
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse         shift, and go to state 30
+    KwTrue          shift, and go to state 31
+    KwPrint         shift, and go to state 74
+    KwPrintln       shift, and go to state 75
+    KwRead          shift, and go to state 76
+    KwRandom        shift, and go to state 77
+    "("             shift, and go to state 78
+    "!"             shift, and go to state 79
+    "-"             shift, and go to state 80
+    intConstant     shift, and go to state 32
+    CharConstant    shift, and go to state 33
+    Id              shift, and go to state 81
+    StringConstant  shift, and go to state 136
+
+    method-call_expr  go to state 83
+    argument          go to state 139
+    lvalue            go to state 84
+    expr              go to state 138
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 95
+
+   48 method-call_stmt: KwRead "(" . ")"
+
+    ")"  shift, and go to state 140
+
+
+State 96
+
+   49 method-call_stmt: KwRandom "(" . expr ")"
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 141
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 97
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   60       | Id "[" . expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 142
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 98
+
+   45 method-call_stmt: Id "(" . method-call_params ")"
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   55 method-call_params: . method-call_params "," expr
+   56                   | . expr
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr    go to state 83
+    method-call_params  go to state 143
+    lvalue              go to state 84
+    expr                go to state 144
+    bin-op              go to state 86
+    arith-op            go to state 87
+    rel-op              go to state 88
+    eq-op               go to state 89
+    cond-op             go to state 90
+    constant            go to state 91
+
+
+State 99
+
+   28 var-decl_p: Id .
+
+    $default  reduce using rule 28 (var-decl_p)
+
+
+State 100
+
+   26 var-decl: type var-decl_p . ";"
+   27 var-decl_p: var-decl_p . "," Id
+
+    ","  shift, and go to state 145
+    ";"  shift, and go to state 146
+
+
+State 101
+
+   20 block: "{" block_p "}" .
+
+    $default  reduce using rule 20 (block)
+
+
+State 102
+
+   22 block_p: block_p var-decl .
+
+    $default  reduce using rule 22 (block_p)
+
+
+State 103
+
+   23 block_p: block_p statement .
+
+    $default  reduce using rule 23 (block_p)
+
+
+State 104
+
+   29 statement: assign ";" .
+
+    $default  reduce using rule 29 (statement)
+
+
+State 105
+
+   30 statement: method-call_stmt ";" .
+
+    $default  reduce using rule 30 (statement)
+
+
+State 106
+
+   38 assign: lvalue "=" . expr
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 147
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 107
+
+   59 lvalue: Id .  ["="]
+   60       | Id . "[" expr "]"
+
+    "["  shift, and go to state 97
+
+    $default  reduce using rule 59 (lvalue)
+
+
+State 108
+
+   42 for_assign: assign .
+
+    $default  reduce using rule 42 (for_assign)
+
+
+State 109
+
+   34 statement: KwFor "(" for_assign . ";" expr ";" for_assign ")" block
+   41 for_assign: for_assign . "," assign
+
+    ","  shift, and go to state 148
+    ";"  shift, and go to state 149
+
+
+State 110
+
+   31 statement: KwIf "(" expr . ")" block else_opt
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    ")"   shift, and go to state 150
+    "+"   shift, and go to state 120
+    "-"   shift, and go to state 121
+    "/"   shift, and go to state 122
+    "*"   shift, and go to state 123
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+
+State 111
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   51                 | KwPrint "(" . argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   57 argument: . StringConstant
+   58         | . expr
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse         shift, and go to state 30
+    KwTrue          shift, and go to state 31
+    KwPrint         shift, and go to state 74
+    KwPrintln       shift, and go to state 75
+    KwRead          shift, and go to state 76
+    KwRandom        shift, and go to state 77
+    "("             shift, and go to state 78
+    "!"             shift, and go to state 79
+    "-"             shift, and go to state 80
+    intConstant     shift, and go to state 32
+    CharConstant    shift, and go to state 33
+    Id              shift, and go to state 81
+    StringConstant  shift, and go to state 136
+
+    method-call_expr  go to state 83
+    argument          go to state 151
+    lvalue            go to state 84
+    expr              go to state 138
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 112
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   52                 | KwPrintln "(" . argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   57 argument: . StringConstant
+   58         | . expr
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse         shift, and go to state 30
+    KwTrue          shift, and go to state 31
+    KwPrint         shift, and go to state 74
+    KwPrintln       shift, and go to state 75
+    KwRead          shift, and go to state 76
+    KwRandom        shift, and go to state 77
+    "("             shift, and go to state 78
+    "!"             shift, and go to state 79
+    "-"             shift, and go to state 80
+    intConstant     shift, and go to state 32
+    CharConstant    shift, and go to state 33
+    Id              shift, and go to state 81
+    StringConstant  shift, and go to state 136
+
+    method-call_expr  go to state 83
+    argument          go to state 152
+    lvalue            go to state 84
+    expr              go to state 138
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 113
+
+   53 method-call_expr: KwRead "(" . ")"
+
+    ")"  shift, and go to state 153
+
+
+State 114
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   54                 | KwRandom "(" . expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 154
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 115
+
+   67 expr: "(" expr . ")"
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    ")"   shift, and go to state 155
+    "+"   shift, and go to state 120
+    "-"   shift, and go to state 121
+    "/"   shift, and go to state 122
+    "*"   shift, and go to state 123
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+
+State 116
+
+   65 expr: "!" expr .  ["]", ",", ";", ")"]
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "+"   shift, and go to state 120
+    "-"   shift, and go to state 121
+    "/"   shift, and go to state 122
+    "*"   shift, and go to state 123
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+    $default  reduce using rule 65 (expr)
+
+    Conflict between rule 65 and token "+" resolved as shift ("!" < "+").
+    Conflict between rule 65 and token "-" resolved as shift ("!" < "-").
+    Conflict between rule 65 and token "/" resolved as shift ("!" < "/").
+    Conflict between rule 65 and token "*" resolved as shift ("!" < "*").
+    Conflict between rule 65 and token "%" resolved as shift ("!" < "%").
+    Conflict between rule 65 and token ">" resolved as shift ("!" < ">").
+    Conflict between rule 65 and token "<" resolved as shift ("!" < "<").
+    Conflict between rule 65 and token ">=" resolved as shift ("!" < ">=").
+    Conflict between rule 65 and token "<=" resolved as shift ("!" < "<=").
+    Conflict between rule 65 and token "!=" resolved as shift ("!" < "!=").
+    Conflict between rule 65 and token "&&" resolved as shift ("!" < "&&").
+    Conflict between rule 65 and token "||" resolved as shift ("!" < "||").
+    Conflict between rule 65 and token "==" resolved as shift ("!" < "==").
+    Conflict between rule 65 and token "<<" resolved as shift ("!" < "<<").
+    Conflict between rule 65 and token ">>" resolved as shift ("!" < ">>").
+
+
+State 117
+
+   66 expr: "-" expr .  ["]", ",", ";", ")", "+", "-", "/", "*"]
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+    $default  reduce using rule 66 (expr)
+
+    Conflict between rule 66 and token "+" resolved as reduce (%left "+").
+    Conflict between rule 66 and token "-" resolved as reduce (%left "-").
+    Conflict between rule 66 and token "/" resolved as reduce ("/" < "-").
+    Conflict between rule 66 and token "*" resolved as reduce ("*" < "-").
+    Conflict between rule 66 and token "%" resolved as shift ("-" < "%").
+    Conflict between rule 66 and token ">" resolved as shift ("-" < ">").
+    Conflict between rule 66 and token "<" resolved as shift ("-" < "<").
+    Conflict between rule 66 and token ">=" resolved as shift ("-" < ">=").
+    Conflict between rule 66 and token "<=" resolved as shift ("-" < "<=").
+    Conflict between rule 66 and token "!=" resolved as shift ("-" < "!=").
+    Conflict between rule 66 and token "&&" resolved as shift ("-" < "&&").
+    Conflict between rule 66 and token "||" resolved as shift ("-" < "||").
+    Conflict between rule 66 and token "==" resolved as shift ("-" < "==").
+    Conflict between rule 66 and token "<<" resolved as shift ("-" < "<<").
+    Conflict between rule 66 and token ">>" resolved as shift ("-" < ">>").
+
+
+State 118
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   50                 | Id "(" . method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   55 method-call_params: . method-call_params "," expr
+   56                   | . expr
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr    go to state 83
+    method-call_params  go to state 156
+    lvalue              go to state 84
+    expr                go to state 144
+    bin-op              go to state 86
+    arith-op            go to state 87
+    rel-op              go to state 88
+    eq-op               go to state 89
+    cond-op             go to state 90
+    constant            go to state 91
+
+
+State 119
+
+   35 statement: KwReturn return_expr_opt ";" .
+
+    $default  reduce using rule 35 (statement)
+
+
+State 120
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   72         | expr "+" . expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 157
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 121
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   73         | expr "-" . expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 158
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 122
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   75         | expr "/" . expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 159
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 123
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   74         | expr "*" . expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 160
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 124
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   78         | expr "%" . expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 161
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 125
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   80       | expr ">" . expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 162
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 126
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   79       | expr "<" . expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 163
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 127
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   82       | expr ">=" . expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 164
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 128
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   81       | expr "<=" . expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 165
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 129
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   84      | expr "!=" . expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 166
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 130
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   85        | expr "&&" . expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 167
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 131
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   86        | expr "||" . expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 168
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 132
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   83      | expr "==" . expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 169
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 133
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   76         | expr "<<" . expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 170
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 134
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   77         | expr ">>" . expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 171
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 135
+
+   32 statement: KwWhile "(" expr . ")" block
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    ")"   shift, and go to state 172
+    "+"   shift, and go to state 120
+    "-"   shift, and go to state 121
+    "/"   shift, and go to state 122
+    "*"   shift, and go to state 123
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+
+State 136
+
+   57 argument: StringConstant .
+
+    $default  reduce using rule 57 (argument)
+
+
+State 137
+
+   46 method-call_stmt: KwPrint "(" argument . ")"
+
+    ")"  shift, and go to state 173
+
+
+State 138
+
+   58 argument: expr .  [")"]
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "+"   shift, and go to state 120
+    "-"   shift, and go to state 121
+    "/"   shift, and go to state 122
+    "*"   shift, and go to state 123
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+    $default  reduce using rule 58 (argument)
+
+
+State 139
+
+   47 method-call_stmt: KwPrintln "(" argument . ")"
+
+    ")"  shift, and go to state 174
+
+
+State 140
+
+   48 method-call_stmt: KwRead "(" ")" .
+
+    $default  reduce using rule 48 (method-call_stmt)
+
+
+State 141
+
+   49 method-call_stmt: KwRandom "(" expr . ")"
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    ")"   shift, and go to state 175
+    "+"   shift, and go to state 120
+    "-"   shift, and go to state 121
+    "/"   shift, and go to state 122
+    "*"   shift, and go to state 123
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+
+State 142
+
+   60 lvalue: Id "[" expr . "]"
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "]"   shift, and go to state 176
+    "+"   shift, and go to state 120
+    "-"   shift, and go to state 121
+    "/"   shift, and go to state 122
+    "*"   shift, and go to state 123
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+
+State 143
+
+   45 method-call_stmt: Id "(" method-call_params . ")"
+   55 method-call_params: method-call_params . "," expr
+
+    ","  shift, and go to state 177
+    ")"  shift, and go to state 178
+
+
+State 144
+
+   56 method-call_params: expr .  [",", ")"]
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "+"   shift, and go to state 120
+    "-"   shift, and go to state 121
+    "/"   shift, and go to state 122
+    "*"   shift, and go to state 123
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+    $default  reduce using rule 56 (method-call_params)
+
+
+State 145
+
+   27 var-decl_p: var-decl_p "," . Id
+
+    Id  shift, and go to state 179
+
+
+State 146
+
+   26 var-decl: type var-decl_p ";" .
+
+    $default  reduce using rule 26 (var-decl)
+
+
+State 147
+
+   38 assign: lvalue "=" expr .  [",", ";", ")"]
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "+"   shift, and go to state 120
+    "-"   shift, and go to state 121
+    "/"   shift, and go to state 122
+    "*"   shift, and go to state 123
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+    $default  reduce using rule 38 (assign)
+
+
+State 148
+
+   38 assign: . lvalue "=" expr
+   41 for_assign: for_assign "," . assign
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+
+    Id  shift, and go to state 107
+
+    assign  go to state 180
+    lvalue  go to state 68
+
+
+State 149
+
+   34 statement: KwFor "(" for_assign ";" . expr ";" for_assign ")" block
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 181
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 150
+
+   20 block: . "{" block_p "}"
+   21      | . "{" "}"
+   31 statement: KwIf "(" expr ")" . block else_opt
+
+    "{"  shift, and go to state 44
+
+    block  go to state 182
+
+
+State 151
+
+   51 method-call_expr: KwPrint "(" argument . ")"
+
+    ")"  shift, and go to state 183
+
+
+State 152
+
+   52 method-call_expr: KwPrintln "(" argument . ")"
+
+    ")"  shift, and go to state 184
+
+
+State 153
+
+   53 method-call_expr: KwRead "(" ")" .
+
+    $default  reduce using rule 53 (method-call_expr)
+
+
+State 154
+
+   54 method-call_expr: KwRandom "(" expr . ")"
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    ")"   shift, and go to state 185
+    "+"   shift, and go to state 120
+    "-"   shift, and go to state 121
+    "/"   shift, and go to state 122
+    "*"   shift, and go to state 123
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+
+State 155
+
+   67 expr: "(" expr ")" .
+
+    $default  reduce using rule 67 (expr)
+
+
+State 156
+
+   50 method-call_expr: Id "(" method-call_params . ")"
+   55 method-call_params: method-call_params . "," expr
+
+    ","  shift, and go to state 177
+    ")"  shift, and go to state 186
+
+
+State 157
+
+   72 arith-op: expr . "+" expr
+   72         | expr "+" expr .  ["]", ",", ";", ")", "+", "-", "/", "*"]
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+    $default  reduce using rule 72 (arith-op)
+
+    Conflict between rule 72 and token "+" resolved as reduce (%left "+").
+    Conflict between rule 72 and token "-" resolved as reduce (%left "-").
+    Conflict between rule 72 and token "/" resolved as reduce ("/" < "+").
+    Conflict between rule 72 and token "*" resolved as reduce ("*" < "+").
+    Conflict between rule 72 and token "%" resolved as shift ("+" < "%").
+    Conflict between rule 72 and token ">" resolved as shift ("+" < ">").
+    Conflict between rule 72 and token "<" resolved as shift ("+" < "<").
+    Conflict between rule 72 and token ">=" resolved as shift ("+" < ">=").
+    Conflict between rule 72 and token "<=" resolved as shift ("+" < "<=").
+    Conflict between rule 72 and token "!=" resolved as shift ("+" < "!=").
+    Conflict between rule 72 and token "&&" resolved as shift ("+" < "&&").
+    Conflict between rule 72 and token "||" resolved as shift ("+" < "||").
+    Conflict between rule 72 and token "==" resolved as shift ("+" < "==").
+    Conflict between rule 72 and token "<<" resolved as shift ("+" < "<<").
+    Conflict between rule 72 and token ">>" resolved as shift ("+" < ">>").
+
+
+State 158
+
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   73         | expr "-" expr .  ["]", ",", ";", ")", "+", "-", "/", "*"]
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+    $default  reduce using rule 73 (arith-op)
+
+    Conflict between rule 73 and token "+" resolved as reduce (%left "+").
+    Conflict between rule 73 and token "-" resolved as reduce (%left "-").
+    Conflict between rule 73 and token "/" resolved as reduce ("/" < "-").
+    Conflict between rule 73 and token "*" resolved as reduce ("*" < "-").
+    Conflict between rule 73 and token "%" resolved as shift ("-" < "%").
+    Conflict between rule 73 and token ">" resolved as shift ("-" < ">").
+    Conflict between rule 73 and token "<" resolved as shift ("-" < "<").
+    Conflict between rule 73 and token ">=" resolved as shift ("-" < ">=").
+    Conflict between rule 73 and token "<=" resolved as shift ("-" < "<=").
+    Conflict between rule 73 and token "!=" resolved as shift ("-" < "!=").
+    Conflict between rule 73 and token "&&" resolved as shift ("-" < "&&").
+    Conflict between rule 73 and token "||" resolved as shift ("-" < "||").
+    Conflict between rule 73 and token "==" resolved as shift ("-" < "==").
+    Conflict between rule 73 and token "<<" resolved as shift ("-" < "<<").
+    Conflict between rule 73 and token ">>" resolved as shift ("-" < ">>").
+
+
+State 159
+
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   75         | expr "/" expr .  ["]", ",", ";", ")", "/", "*"]
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "+"   shift, and go to state 120
+    "-"   shift, and go to state 121
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+    $default  reduce using rule 75 (arith-op)
+
+    Conflict between rule 75 and token "+" resolved as shift ("/" < "+").
+    Conflict between rule 75 and token "-" resolved as shift ("/" < "-").
+    Conflict between rule 75 and token "/" resolved as reduce (%left "/").
+    Conflict between rule 75 and token "*" resolved as reduce (%left "*").
+    Conflict between rule 75 and token "%" resolved as shift ("/" < "%").
+    Conflict between rule 75 and token ">" resolved as shift ("/" < ">").
+    Conflict between rule 75 and token "<" resolved as shift ("/" < "<").
+    Conflict between rule 75 and token ">=" resolved as shift ("/" < ">=").
+    Conflict between rule 75 and token "<=" resolved as shift ("/" < "<=").
+    Conflict between rule 75 and token "!=" resolved as shift ("/" < "!=").
+    Conflict between rule 75 and token "&&" resolved as shift ("/" < "&&").
+    Conflict between rule 75 and token "||" resolved as shift ("/" < "||").
+    Conflict between rule 75 and token "==" resolved as shift ("/" < "==").
+    Conflict between rule 75 and token "<<" resolved as shift ("/" < "<<").
+    Conflict between rule 75 and token ">>" resolved as shift ("/" < ">>").
+
+
+State 160
+
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   74         | expr "*" expr .  ["]", ",", ";", ")", "/", "*"]
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "+"   shift, and go to state 120
+    "-"   shift, and go to state 121
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+    $default  reduce using rule 74 (arith-op)
+
+    Conflict between rule 74 and token "+" resolved as shift ("*" < "+").
+    Conflict between rule 74 and token "-" resolved as shift ("*" < "-").
+    Conflict between rule 74 and token "/" resolved as reduce (%left "/").
+    Conflict between rule 74 and token "*" resolved as reduce (%left "*").
+    Conflict between rule 74 and token "%" resolved as shift ("*" < "%").
+    Conflict between rule 74 and token ">" resolved as shift ("*" < ">").
+    Conflict between rule 74 and token "<" resolved as shift ("*" < "<").
+    Conflict between rule 74 and token ">=" resolved as shift ("*" < ">=").
+    Conflict between rule 74 and token "<=" resolved as shift ("*" < "<=").
+    Conflict between rule 74 and token "!=" resolved as shift ("*" < "!=").
+    Conflict between rule 74 and token "&&" resolved as shift ("*" < "&&").
+    Conflict between rule 74 and token "||" resolved as shift ("*" < "||").
+    Conflict between rule 74 and token "==" resolved as shift ("*" < "==").
+    Conflict between rule 74 and token "<<" resolved as shift ("*" < "<<").
+    Conflict between rule 74 and token ">>" resolved as shift ("*" < ">>").
+
+
+State 161
+
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   78         | expr "%" expr .  ["]", ",", ";", ")", "+", "-", "/", "*", "%"]
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+    $default  reduce using rule 78 (arith-op)
+
+    Conflict between rule 78 and token "+" resolved as reduce ("+" < "%").
+    Conflict between rule 78 and token "-" resolved as reduce ("-" < "%").
+    Conflict between rule 78 and token "/" resolved as reduce ("/" < "%").
+    Conflict between rule 78 and token "*" resolved as reduce ("*" < "%").
+    Conflict between rule 78 and token "%" resolved as reduce (%left "%").
+    Conflict between rule 78 and token ">" resolved as shift ("%" < ">").
+    Conflict between rule 78 and token "<" resolved as shift ("%" < "<").
+    Conflict between rule 78 and token ">=" resolved as shift ("%" < ">=").
+    Conflict between rule 78 and token "<=" resolved as shift ("%" < "<=").
+    Conflict between rule 78 and token "!=" resolved as shift ("%" < "!=").
+    Conflict between rule 78 and token "&&" resolved as shift ("%" < "&&").
+    Conflict between rule 78 and token "||" resolved as shift ("%" < "||").
+    Conflict between rule 78 and token "==" resolved as shift ("%" < "==").
+    Conflict between rule 78 and token "<<" resolved as shift ("%" < "<<").
+    Conflict between rule 78 and token ">>" resolved as shift ("%" < ">>").
+
+
+State 162
+
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   80       | expr ">" expr .  ["]", ",", ";", ")", "+", "-", "/", "*", "%", ">", "<", ">=", "<=", "<<", ">>"]
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+
+    $default  reduce using rule 80 (rel-op)
+
+    Conflict between rule 80 and token "+" resolved as reduce ("+" < ">").
+    Conflict between rule 80 and token "-" resolved as reduce ("-" < ">").
+    Conflict between rule 80 and token "/" resolved as reduce ("/" < ">").
+    Conflict between rule 80 and token "*" resolved as reduce ("*" < ">").
+    Conflict between rule 80 and token "%" resolved as reduce ("%" < ">").
+    Conflict between rule 80 and token ">" resolved as reduce (%left ">").
+    Conflict between rule 80 and token "<" resolved as reduce (%left "<").
+    Conflict between rule 80 and token ">=" resolved as reduce (%left ">=").
+    Conflict between rule 80 and token "<=" resolved as reduce (%left "<=").
+    Conflict between rule 80 and token "!=" resolved as shift (">" < "!=").
+    Conflict between rule 80 and token "&&" resolved as shift (">" < "&&").
+    Conflict between rule 80 and token "||" resolved as shift (">" < "||").
+    Conflict between rule 80 and token "==" resolved as shift (">" < "==").
+    Conflict between rule 80 and token "<<" resolved as reduce ("<<" < ">").
+    Conflict between rule 80 and token ">>" resolved as reduce (">>" < ">").
+
+
+State 163
+
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   79       | expr "<" expr .  ["]", ",", ";", ")", "+", "-", "/", "*", "%", ">", "<", ">=", "<=", "<<", ">>"]
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+
+    $default  reduce using rule 79 (rel-op)
+
+    Conflict between rule 79 and token "+" resolved as reduce ("+" < "<").
+    Conflict between rule 79 and token "-" resolved as reduce ("-" < "<").
+    Conflict between rule 79 and token "/" resolved as reduce ("/" < "<").
+    Conflict between rule 79 and token "*" resolved as reduce ("*" < "<").
+    Conflict between rule 79 and token "%" resolved as reduce ("%" < "<").
+    Conflict between rule 79 and token ">" resolved as reduce (%left ">").
+    Conflict between rule 79 and token "<" resolved as reduce (%left "<").
+    Conflict between rule 79 and token ">=" resolved as reduce (%left ">=").
+    Conflict between rule 79 and token "<=" resolved as reduce (%left "<=").
+    Conflict between rule 79 and token "!=" resolved as shift ("<" < "!=").
+    Conflict between rule 79 and token "&&" resolved as shift ("<" < "&&").
+    Conflict between rule 79 and token "||" resolved as shift ("<" < "||").
+    Conflict between rule 79 and token "==" resolved as shift ("<" < "==").
+    Conflict between rule 79 and token "<<" resolved as reduce ("<<" < "<").
+    Conflict between rule 79 and token ">>" resolved as reduce (">>" < "<").
+
+
+State 164
+
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   82       | expr ">=" expr .  ["]", ",", ";", ")", "+", "-", "/", "*", "%", ">", "<", ">=", "<=", "<<", ">>"]
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+
+    $default  reduce using rule 82 (rel-op)
+
+    Conflict between rule 82 and token "+" resolved as reduce ("+" < ">=").
+    Conflict between rule 82 and token "-" resolved as reduce ("-" < ">=").
+    Conflict between rule 82 and token "/" resolved as reduce ("/" < ">=").
+    Conflict between rule 82 and token "*" resolved as reduce ("*" < ">=").
+    Conflict between rule 82 and token "%" resolved as reduce ("%" < ">=").
+    Conflict between rule 82 and token ">" resolved as reduce (%left ">").
+    Conflict between rule 82 and token "<" resolved as reduce (%left "<").
+    Conflict between rule 82 and token ">=" resolved as reduce (%left ">=").
+    Conflict between rule 82 and token "<=" resolved as reduce (%left "<=").
+    Conflict between rule 82 and token "!=" resolved as shift (">=" < "!=").
+    Conflict between rule 82 and token "&&" resolved as shift (">=" < "&&").
+    Conflict between rule 82 and token "||" resolved as shift (">=" < "||").
+    Conflict between rule 82 and token "==" resolved as shift (">=" < "==").
+    Conflict between rule 82 and token "<<" resolved as reduce ("<<" < ">=").
+    Conflict between rule 82 and token ">>" resolved as reduce (">>" < ">=").
+
+
+State 165
+
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   81       | expr "<=" expr .  ["]", ",", ";", ")", "+", "-", "/", "*", "%", ">", "<", ">=", "<=", "<<", ">>"]
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+
+    $default  reduce using rule 81 (rel-op)
+
+    Conflict between rule 81 and token "+" resolved as reduce ("+" < "<=").
+    Conflict between rule 81 and token "-" resolved as reduce ("-" < "<=").
+    Conflict between rule 81 and token "/" resolved as reduce ("/" < "<=").
+    Conflict between rule 81 and token "*" resolved as reduce ("*" < "<=").
+    Conflict between rule 81 and token "%" resolved as reduce ("%" < "<=").
+    Conflict between rule 81 and token ">" resolved as reduce (%left ">").
+    Conflict between rule 81 and token "<" resolved as reduce (%left "<").
+    Conflict between rule 81 and token ">=" resolved as reduce (%left ">=").
+    Conflict between rule 81 and token "<=" resolved as reduce (%left "<=").
+    Conflict between rule 81 and token "!=" resolved as shift ("<=" < "!=").
+    Conflict between rule 81 and token "&&" resolved as shift ("<=" < "&&").
+    Conflict between rule 81 and token "||" resolved as shift ("<=" < "||").
+    Conflict between rule 81 and token "==" resolved as shift ("<=" < "==").
+    Conflict between rule 81 and token "<<" resolved as reduce ("<<" < "<=").
+    Conflict between rule 81 and token ">>" resolved as reduce (">>" < "<=").
+
+
+State 166
+
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   84      | expr "!=" expr .  ["]", ",", ";", ")", "+", "-", "/", "*", "%", ">", "<", ">=", "<=", "!=", "==", "<<", ">>"]
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+
+    $default  reduce using rule 84 (eq-op)
+
+    Conflict between rule 84 and token "+" resolved as reduce ("+" < "!=").
+    Conflict between rule 84 and token "-" resolved as reduce ("-" < "!=").
+    Conflict between rule 84 and token "/" resolved as reduce ("/" < "!=").
+    Conflict between rule 84 and token "*" resolved as reduce ("*" < "!=").
+    Conflict between rule 84 and token "%" resolved as reduce ("%" < "!=").
+    Conflict between rule 84 and token ">" resolved as reduce (">" < "!=").
+    Conflict between rule 84 and token "<" resolved as reduce ("<" < "!=").
+    Conflict between rule 84 and token ">=" resolved as reduce (">=" < "!=").
+    Conflict between rule 84 and token "<=" resolved as reduce ("<=" < "!=").
+    Conflict between rule 84 and token "!=" resolved as reduce (%left "!=").
+    Conflict between rule 84 and token "&&" resolved as shift ("!=" < "&&").
+    Conflict between rule 84 and token "||" resolved as shift ("!=" < "||").
+    Conflict between rule 84 and token "==" resolved as reduce (%left "==").
+    Conflict between rule 84 and token "<<" resolved as reduce ("<<" < "!=").
+    Conflict between rule 84 and token ">>" resolved as reduce (">>" < "!=").
+
+
+State 167
+
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   85        | expr "&&" expr .  ["]", ",", ";", ")", "+", "-", "/", "*", "%", ">", "<", ">=", "<=", "!=", "&&", "==", "<<", ">>"]
+   86        | expr . "||" expr
+
+    "||"  shift, and go to state 131
+
+    $default  reduce using rule 85 (cond-op)
+
+    Conflict between rule 85 and token "+" resolved as reduce ("+" < "&&").
+    Conflict between rule 85 and token "-" resolved as reduce ("-" < "&&").
+    Conflict between rule 85 and token "/" resolved as reduce ("/" < "&&").
+    Conflict between rule 85 and token "*" resolved as reduce ("*" < "&&").
+    Conflict between rule 85 and token "%" resolved as reduce ("%" < "&&").
+    Conflict between rule 85 and token ">" resolved as reduce (">" < "&&").
+    Conflict between rule 85 and token "<" resolved as reduce ("<" < "&&").
+    Conflict between rule 85 and token ">=" resolved as reduce (">=" < "&&").
+    Conflict between rule 85 and token "<=" resolved as reduce ("<=" < "&&").
+    Conflict between rule 85 and token "!=" resolved as reduce ("!=" < "&&").
+    Conflict between rule 85 and token "&&" resolved as reduce (%left "&&").
+    Conflict between rule 85 and token "||" resolved as shift ("&&" < "||").
+    Conflict between rule 85 and token "==" resolved as reduce ("==" < "&&").
+    Conflict between rule 85 and token "<<" resolved as reduce ("<<" < "&&").
+    Conflict between rule 85 and token ">>" resolved as reduce (">>" < "&&").
+
+
+State 168
+
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+   86        | expr "||" expr .  ["]", ",", ";", ")", "+", "-", "/", "*", "%", ">", "<", ">=", "<=", "!=", "&&", "||", "==", "<<", ">>"]
+
+    $default  reduce using rule 86 (cond-op)
+
+    Conflict between rule 86 and token "+" resolved as reduce ("+" < "||").
+    Conflict between rule 86 and token "-" resolved as reduce ("-" < "||").
+    Conflict between rule 86 and token "/" resolved as reduce ("/" < "||").
+    Conflict between rule 86 and token "*" resolved as reduce ("*" < "||").
+    Conflict between rule 86 and token "%" resolved as reduce ("%" < "||").
+    Conflict between rule 86 and token ">" resolved as reduce (">" < "||").
+    Conflict between rule 86 and token "<" resolved as reduce ("<" < "||").
+    Conflict between rule 86 and token ">=" resolved as reduce (">=" < "||").
+    Conflict between rule 86 and token "<=" resolved as reduce ("<=" < "||").
+    Conflict between rule 86 and token "!=" resolved as reduce ("!=" < "||").
+    Conflict between rule 86 and token "&&" resolved as reduce ("&&" < "||").
+    Conflict between rule 86 and token "||" resolved as reduce (%left "||").
+    Conflict between rule 86 and token "==" resolved as reduce ("==" < "||").
+    Conflict between rule 86 and token "<<" resolved as reduce ("<<" < "||").
+    Conflict between rule 86 and token ">>" resolved as reduce (">>" < "||").
+
+
+State 169
+
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   83      | expr "==" expr .  ["]", ",", ";", ")", "+", "-", "/", "*", "%", ">", "<", ">=", "<=", "!=", "==", "<<", ">>"]
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+
+    $default  reduce using rule 83 (eq-op)
+
+    Conflict between rule 83 and token "+" resolved as reduce ("+" < "==").
+    Conflict between rule 83 and token "-" resolved as reduce ("-" < "==").
+    Conflict between rule 83 and token "/" resolved as reduce ("/" < "==").
+    Conflict between rule 83 and token "*" resolved as reduce ("*" < "==").
+    Conflict between rule 83 and token "%" resolved as reduce ("%" < "==").
+    Conflict between rule 83 and token ">" resolved as reduce (">" < "==").
+    Conflict between rule 83 and token "<" resolved as reduce ("<" < "==").
+    Conflict between rule 83 and token ">=" resolved as reduce (">=" < "==").
+    Conflict between rule 83 and token "<=" resolved as reduce ("<=" < "==").
+    Conflict between rule 83 and token "!=" resolved as reduce (%left "!=").
+    Conflict between rule 83 and token "&&" resolved as shift ("==" < "&&").
+    Conflict between rule 83 and token "||" resolved as shift ("==" < "||").
+    Conflict between rule 83 and token "==" resolved as reduce (%left "==").
+    Conflict between rule 83 and token "<<" resolved as reduce ("<<" < "==").
+    Conflict between rule 83 and token ">>" resolved as reduce (">>" < "==").
+
+
+State 170
+
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   76         | expr "<<" expr .  ["]", ",", ";", ")", "+", "-", "/", "*", "%", "<<", ">>"]
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+
+    $default  reduce using rule 76 (arith-op)
+
+    Conflict between rule 76 and token "+" resolved as reduce ("+" < "<<").
+    Conflict between rule 76 and token "-" resolved as reduce ("-" < "<<").
+    Conflict between rule 76 and token "/" resolved as reduce ("/" < "<<").
+    Conflict between rule 76 and token "*" resolved as reduce ("*" < "<<").
+    Conflict between rule 76 and token "%" resolved as reduce ("%" < "<<").
+    Conflict between rule 76 and token ">" resolved as shift ("<<" < ">").
+    Conflict between rule 76 and token "<" resolved as shift ("<<" < "<").
+    Conflict between rule 76 and token ">=" resolved as shift ("<<" < ">=").
+    Conflict between rule 76 and token "<=" resolved as shift ("<<" < "<=").
+    Conflict between rule 76 and token "!=" resolved as shift ("<<" < "!=").
+    Conflict between rule 76 and token "&&" resolved as shift ("<<" < "&&").
+    Conflict between rule 76 and token "||" resolved as shift ("<<" < "||").
+    Conflict between rule 76 and token "==" resolved as shift ("<<" < "==").
+    Conflict between rule 76 and token "<<" resolved as reduce (%left "<<").
+    Conflict between rule 76 and token ">>" resolved as reduce (%left ">>").
+
+
+State 171
+
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   77         | expr ">>" expr .  ["]", ",", ";", ")", "+", "-", "/", "*", "%", "<<", ">>"]
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+
+    $default  reduce using rule 77 (arith-op)
+
+    Conflict between rule 77 and token "+" resolved as reduce ("+" < ">>").
+    Conflict between rule 77 and token "-" resolved as reduce ("-" < ">>").
+    Conflict between rule 77 and token "/" resolved as reduce ("/" < ">>").
+    Conflict between rule 77 and token "*" resolved as reduce ("*" < ">>").
+    Conflict between rule 77 and token "%" resolved as reduce ("%" < ">>").
+    Conflict between rule 77 and token ">" resolved as shift (">>" < ">").
+    Conflict between rule 77 and token "<" resolved as shift (">>" < "<").
+    Conflict between rule 77 and token ">=" resolved as shift (">>" < ">=").
+    Conflict between rule 77 and token "<=" resolved as shift (">>" < "<=").
+    Conflict between rule 77 and token "!=" resolved as shift (">>" < "!=").
+    Conflict between rule 77 and token "&&" resolved as shift (">>" < "&&").
+    Conflict between rule 77 and token "||" resolved as shift (">>" < "||").
+    Conflict between rule 77 and token "==" resolved as shift (">>" < "==").
+    Conflict between rule 77 and token "<<" resolved as reduce (%left "<<").
+    Conflict between rule 77 and token ">>" resolved as reduce (%left ">>").
+
+
+State 172
+
+   20 block: . "{" block_p "}"
+   21      | . "{" "}"
+   32 statement: KwWhile "(" expr ")" . block
+
+    "{"  shift, and go to state 44
+
+    block  go to state 187
+
+
+State 173
+
+   46 method-call_stmt: KwPrint "(" argument ")" .
+
+    $default  reduce using rule 46 (method-call_stmt)
+
+
+State 174
+
+   47 method-call_stmt: KwPrintln "(" argument ")" .
+
+    $default  reduce using rule 47 (method-call_stmt)
+
+
+State 175
+
+   49 method-call_stmt: KwRandom "(" expr ")" .
+
+    $default  reduce using rule 49 (method-call_stmt)
+
+
+State 176
+
+   60 lvalue: Id "[" expr "]" .
+
+    $default  reduce using rule 60 (lvalue)
+
+
+State 177
+
+   50 method-call_expr: . Id "(" method-call_params ")"
+   51                 | . KwPrint "(" argument ")"
+   52                 | . KwPrintln "(" argument ")"
+   53                 | . KwRead "(" ")"
+   54                 | . KwRandom "(" expr ")"
+   55 method-call_params: method-call_params "," . expr
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+   61 expr: . lvalue
+   62     | . method-call_expr
+   63     | . constant
+   64     | . bin-op
+   65     | . "!" expr
+   66     | . "-" expr
+   67     | . "(" expr ")"
+   68 bin-op: . arith-op
+   69       | . rel-op
+   70       | . cond-op
+   71       | . eq-op
+   72 arith-op: . expr "+" expr
+   73         | . expr "-" expr
+   74         | . expr "*" expr
+   75         | . expr "/" expr
+   76         | . expr "<<" expr
+   77         | . expr ">>" expr
+   78         | . expr "%" expr
+   79 rel-op: . expr "<" expr
+   80       | . expr ">" expr
+   81       | . expr "<=" expr
+   82       | . expr ">=" expr
+   83 eq-op: . expr "==" expr
+   84      | . expr "!=" expr
+   85 cond-op: . expr "&&" expr
+   86        | . expr "||" expr
+   87 constant: . intConstant
+   88         | . CharConstant
+   89         | . KwTrue
+   90         | . KwFalse
+
+    KwFalse       shift, and go to state 30
+    KwTrue        shift, and go to state 31
+    KwPrint       shift, and go to state 74
+    KwPrintln     shift, and go to state 75
+    KwRead        shift, and go to state 76
+    KwRandom      shift, and go to state 77
+    "("           shift, and go to state 78
+    "!"           shift, and go to state 79
+    "-"           shift, and go to state 80
+    intConstant   shift, and go to state 32
+    CharConstant  shift, and go to state 33
+    Id            shift, and go to state 81
+
+    method-call_expr  go to state 83
+    lvalue            go to state 84
+    expr              go to state 188
+    bin-op            go to state 86
+    arith-op          go to state 87
+    rel-op            go to state 88
+    eq-op             go to state 89
+    cond-op           go to state 90
+    constant          go to state 91
+
+
+State 178
+
+   45 method-call_stmt: Id "(" method-call_params ")" .
+
+    $default  reduce using rule 45 (method-call_stmt)
+
+
+State 179
+
+   27 var-decl_p: var-decl_p "," Id .
+
+    $default  reduce using rule 27 (var-decl_p)
+
+
+State 180
+
+   41 for_assign: for_assign "," assign .
+
+    $default  reduce using rule 41 (for_assign)
+
+
+State 181
+
+   34 statement: KwFor "(" for_assign ";" expr . ";" for_assign ")" block
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    ";"   shift, and go to state 189
+    "+"   shift, and go to state 120
+    "-"   shift, and go to state 121
+    "/"   shift, and go to state 122
+    "*"   shift, and go to state 123
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+
+State 182
+
+   31 statement: KwIf "(" expr ")" block . else_opt
+   39 else_opt: . KwElse block
+   40         | . %empty  [KwBool, KwBreak, KwContinue, KwFor, KwIf, KwInt, KwReturn, KwWhile, KwPrint, KwPrintln, KwRead, KwRandom, "{", "}", Id]
+
+    KwElse  shift, and go to state 190
+
+    $default  reduce using rule 40 (else_opt)
+
+    else_opt  go to state 191
+
+
+State 183
+
+   51 method-call_expr: KwPrint "(" argument ")" .
+
+    $default  reduce using rule 51 (method-call_expr)
+
+
+State 184
+
+   52 method-call_expr: KwPrintln "(" argument ")" .
+
+    $default  reduce using rule 52 (method-call_expr)
+
+
+State 185
+
+   54 method-call_expr: KwRandom "(" expr ")" .
+
+    $default  reduce using rule 54 (method-call_expr)
+
+
+State 186
+
+   50 method-call_expr: Id "(" method-call_params ")" .
+
+    $default  reduce using rule 50 (method-call_expr)
+
+
+State 187
+
+   32 statement: KwWhile "(" expr ")" block .
+
+    $default  reduce using rule 32 (statement)
+
+
+State 188
+
+   55 method-call_params: method-call_params "," expr .  [",", ")"]
+   72 arith-op: expr . "+" expr
+   73         | expr . "-" expr
+   74         | expr . "*" expr
+   75         | expr . "/" expr
+   76         | expr . "<<" expr
+   77         | expr . ">>" expr
+   78         | expr . "%" expr
+   79 rel-op: expr . "<" expr
+   80       | expr . ">" expr
+   81       | expr . "<=" expr
+   82       | expr . ">=" expr
+   83 eq-op: expr . "==" expr
+   84      | expr . "!=" expr
+   85 cond-op: expr . "&&" expr
+   86        | expr . "||" expr
+
+    "+"   shift, and go to state 120
+    "-"   shift, and go to state 121
+    "/"   shift, and go to state 122
+    "*"   shift, and go to state 123
+    "%"   shift, and go to state 124
+    ">"   shift, and go to state 125
+    "<"   shift, and go to state 126
+    ">="  shift, and go to state 127
+    "<="  shift, and go to state 128
+    "!="  shift, and go to state 129
+    "&&"  shift, and go to state 130
+    "||"  shift, and go to state 131
+    "=="  shift, and go to state 132
+    "<<"  shift, and go to state 133
+    ">>"  shift, and go to state 134
+
+    $default  reduce using rule 55 (method-call_params)
+
+
+State 189
+
+   34 statement: KwFor "(" for_assign ";" expr ";" . for_assign ")" block
+   38 assign: . lvalue "=" expr
+   41 for_assign: . for_assign "," assign
+   42           | . assign
+   59 lvalue: . Id
+   60       | . Id "[" expr "]"
+
+    Id  shift, and go to state 107
+
+    assign      go to state 108
+    for_assign  go to state 192
+    lvalue      go to state 68
+
+
+State 190
+
+   20 block: . "{" block_p "}"
+   21      | . "{" "}"
+   39 else_opt: KwElse . block
+
+    "{"  shift, and go to state 44
+
+    block  go to state 193
+
+
+State 191
+
+   31 statement: KwIf "(" expr ")" block else_opt .
+
+    $default  reduce using rule 31 (statement)
+
+
+State 192
+
+   34 statement: KwFor "(" for_assign ";" expr ";" for_assign . ")" block
+   41 for_assign: for_assign . "," assign
+
+    ","  shift, and go to state 148
+    ")"  shift, and go to state 194
+
+
+State 193
+
+   39 else_opt: KwElse block .
+
+    $default  reduce using rule 39 (else_opt)
+
+
+State 194
+
+   20 block: . "{" block_p "}"
+   21      | . "{" "}"
+   34 statement: KwFor "(" for_assign ";" expr ";" for_assign ")" . block
+
+    "{"  shift, and go to state 44
+
+    block  go to state 195
+
+
+State 195
+
+   34 statement: KwFor "(" for_assign ";" expr ";" for_assign ")" block .
+
+    $default  reduce using rule 34 (statement)

@@ -21,42 +21,81 @@
 %}
 
 %token KwBool KwBreak KwContinue KwClass KwElse KwExtends KwFalse KwFor KwIf KwInt KwNew KwNull KwReturn KwRot KwTrue KwVoid KwWhile KwPrint KwPrintln KwRead KwRandom  
-%token OpenBrace CloseBrace OpenBracket CloseBracket Comma Semicolon OpenPar ClosePar    
-%token Not OpAdd OpSub OpDiv OpMul OpMod Assign
-%token OpGreater OpLess OpGreaterEqual OpLessEqual NotEqual OpAnd OpOr OpEqual SLL SLR 
+%token OpenBrace "{"
+%token CloseBrace "}"
+%token OpenBracket "["
+%token CloseBracket "]"
+%token Comma ","
+%token Semicolon ";"
+%token OpenPar "("
+%token ClosePar ")"  
+%token Not "!" 
+%token OpAdd "+"
+%token OpSub "-"
+%token OpDiv "/"
+%token OpMul "*"
+%token OpMod "%"
+%token Assign "="
+%token OpGreater ">"
+%token OpLess "<"
+%token OpGreaterEqual ">="
+%token OpLessEqual "<="
+%token NotEqual "!="
+%token OpAnd "&&"
+%token OpOr "||"
+%token OpEqual "=="
+%token SLL "<<"
+%token SLR ">>"
 %token intConstant CharConstant
 %token Id StringConstant                       
 %token Eof "end of input"
 %token Error
 
+%left "!"
+%left "*" "/"
+%left "+" "-"
+%left "%"
+%left "<<" ">>"
+%left "<" "<=" ">=" ">"
+%left "==" "!="
+%left "&&"
+%left "||"
+
+
 %%
 
-program: KwClass Id OpenBrace program_body CloseBrace {}
+program: KwClass Id "{" program_body "}" {}
 
 ;
 
-program_body: program_body field-decl   {}
-            | program_body method-decl  {}
-            | method-decl               {}
-            | field-decl                {}
-            |                           {} 
+program_body: field_decl method-decl {}
 ;
 
-field-decl:   type mult-field Semicolon                 {}
-            | type Id Assign constant Semicolon         {}
+field_decl:     field_decl field-decl_p   {}
+        |       field-decl_p              {}
+        |                                 {} 
 ;
 
-mult-field:     mult-field Comma Id                                             {}
-        |       mult-field Comma Id OpenBracket intConstant CloseBracket        {}
+field-decl_p:   type mult-field ";"                 {}
+            |   type Id Assign constant ";"         {}
+;
+
+mult-field:     mult-field "," Id                                             {}
+        |       mult-field "," Id "[" intConstant "]"        {}
         |       Id                                                              {}
-        |       Id OpenBracket intConstant CloseBracket                         {}
+        |       Id "[" intConstant "]"                         {}
 ;
 
-method-decl:    type Id OpenPar method-decl_p ClosePar block {}
-        |       KwVoid Id OpenPar method-decl_p ClosePar block {}
+method-decl:    program_body method-decl_p  {}
+            |   method-decl_p               {}
+            |
 ;
 
-method-decl_p:  method-decl_p Comma type Id   {}
+method-decl_p:    type Id "(" params ")" block {}
+        |       KwVoid Id "(" params ")" block {}
+;
+
+params:         params "," type Id    {}
         |       type Id                 {}
         |                               {}
 ;
@@ -65,7 +104,7 @@ type:           KwInt   {}
         |       KwBool  {}
 ;
 
-block:  OpenBrace block_p CloseBrace     {}
+block:  "{" block_p "}"     {}
 ;
 
 block_p:    block_p var-decl    {}
@@ -75,25 +114,32 @@ block_p:    block_p var-decl    {}
         |
 ;
 
-var-decl:   type  var-decl_p Semicolon   {}
+var-decl:   type  var-decl_p ";"   {}
 ;
 
-var-decl_p:     var-decl_p Comma Id       {}
+var-decl_p:     var-decl_p "," Id       {}
         |       Id                        {}
 ;
 
-statement:  assign Semicolon                                                                 {}
-        |   method-call Semicolon                                                            {}
-        |   KwIf OpenPar expr ClosePar block else_opt                                        {}
-        |   KwWhile OpenPar expr ClosePar block                                              {}
-        |   KwBreak Semicolon                                                                {}
-        |   KwFor OpenPar for_assign Semicolon expr Semicolon for_assign ClosePar block      {}
-        |   KwReturn return_expr_opt Semicolon                                               {}
-        |   KwContinue Semicolon                                                             {}
-        |   block                                                                            {} 
+statement:  assign ";"                                                              {}
+        |   method-call_stmt ";"                                                    {}
+        |   KwIf "(" expr ")" block else_opt                                        {}
+        |   KwWhile "(" expr ")" block                                              {}
+        |   KwBreak ";"                                                             {}
+        |   KwFor "(" for_assign ";" expr ";" for_assign ")" block                  {}
+        |   KwReturn return_expr_opt ";"                                            {}
+        |   KwContinue ";"                                                          {}
+        |   block                                                                   {} 
 ;
 
-for_assign: for_assign Comma assign   {}
+assign: lvalue Assign expr {}
+;
+
+else_opt:   KwElse block    {}
+            |               {}
+;
+
+for_assign: for_assign "," assign   {}
         |   assign                    {}
 ;
 
@@ -101,84 +147,68 @@ return_expr_opt:        expr   {}
                 |              {}
 ;
 
-method-call:    Id OpenPar method-call_expr ClosePar    {}
-        |       KwRandom OpenPar expr ClosePar          {}
-        |       KwRead OpenPar ClosePar                 {}
-        |       print                                   {}
+method-call_stmt:       Id "(" method-call_params ")"    {}
+                |       KwPrint "(" argument ")"                                {}
+                |       KwPrintln "(" argument ")"                               {}
+                |       KwRead "(" ")"                      {}
+                |       KwRandom "(" expr ")"               {}
 ;
 
-
-
-method-call_expr:       method-call_expr Comma expr       {}
-                |       expr                              {}
+method-call_expr:       Id "(" method-call_params ")"    {}
+                |       KwPrint "(" argument ")"                               {}
+                |       KwPrintln "(" argument ")"                               {}
+                |       KwRead "(" ")"                      {}
+                |       KwRandom "(" expr ")"               {}
 ;
 
-print:          KwPrint OpenPar argument ClosePar         {}      
-        |       KwPrintln OpenPar argument ClosePar       {}      
-;
-
-else_opt:   KwElse block    {}
-            |               {}
-;
-
-assign: lvalue Assign expr {}
+method-call_params:  method-call_params "," expr  {}
+                |       expr                            {}
 ;
 
 argument:   StringConstant  {}
-        |    expr            {}
+        |   expr            {}
 ;
 
-expr:   cond-op             {}
-        | '!' expr          {}
+lvalue:  Id                     {}
+       | Id "[" expr "]"        {}
 ;
 
-cond-op:    cond-op OpOr  cond-op_2  {}
-        |   cond-op_2                {}
+expr:   lvalue          {}
+|       method-call_expr     {}
+|       constant        {}
+|       bin-op          {}
+|       "!" expr        {}
+|       "-" expr        {}
+|       "(" expr ")"    {}
 ;
 
-cond-op_2:    cond-op_2 OpAnd eq-op  {}
-          |   eq-op                  {}
+bin-op: arith-op        {}
+|       rel-op          {}
+|       cond-op         {}
+|       eq-op           {}
 ;
 
-eq-op:      eq-op OpEqual  rel-op   {}
-        |   eq-op NotEqual rel-op  {}
-        |   rel-op                 {}
+arith-op:  expr "+"  expr   {}
+        |  expr "-"  expr   {}
+        |  expr "*"  expr   {}       
+        |  expr "/"  expr   {}       
+        |  expr "<<" expr   {}       
+        |  expr ">>" expr   {}       
+        |  expr "%"  expr   {}
 ;
 
-rel-op:     rel-op OpGreaterEqual arith-op      {}
-        |   rel-op OpLessEqual arith-op         {}
-        |   rel-op OpGreater arith-op           {}
-        |   rel-op OpLess arith-op              {}
-        |   arith-op                            {}
+rel-op: expr "<"  expr   {}
+|       expr ">"  expr   {}
+|       expr "<=" expr   {}
+|       expr ">=" expr   {}
 ;
 
-arith-op:     arith-op SLR arith-op_2 {}
-          |   arith-op SLL arith-op_2 {}
-          |   arith-op_2              {}
+eq-op:  expr "==" expr  {}
+|       expr "!=" expr  {}       
 ;
 
-arith-op_2:   arith-op_2 OpMod arith-op_3  {}
-          |   arith-op_3                   {}
-;
-
-arith-op_3:     arith-op_3 OpAdd arith-op_4 {}
-            |   arith-op_3 OpSub arith-op_4 {}
-            |   arith-op_4                  {}
-;
-
-arith-op_4:     arith-op_4 OpDiv factor    {}
-            |   arith-op_4 OpMul factor    {}
-            |   factor                     {}
-;
-
-factor: OpenPar expr ClosePar    {}
-        | lvalue                 {}
-        | method-call            {}
-        | constant               {}
-;
-
-lvalue: Id                                       {}
-       | Id OpenBracket expr CloseBracket        {}
+cond-op: expr "&&" expr   {}
+|        expr "||" expr   {}
 ;
 
 constant: intConstant   {}
