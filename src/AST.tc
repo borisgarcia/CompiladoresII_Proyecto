@@ -1,0 +1,208 @@
+%option lang = "C++"
+
+%decls %{
+    #include <iostream>
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <unordered_map>
+    #include <string>
+    #include <vector>
+    #include <sstream>
+    #include "ident_handler.h"
+    
+    using namespace std;
+
+    class ASTNode;
+    class Statement;
+    class Expression;
+    class NumExpr;
+
+    using StmtList = std::vector<Statement*>;
+    using ExprList = std::vector<Expression*>;
+    using stringList = std::vector<std::string>;
+    using intList = std::vector<int>;
+    
+    using string_t = std::string;
+
+%}
+
+%{
+    #include "ast.h"
+    
+    std::string getPlace(ASTNode * expr)
+    {
+        if(expr->getKind() == NumExpr_kind)
+            return expr->place;
+        else
+            return "dword [" + expr->place + "]";
+    }
+
+    void addToNodeList(ASTNode * &lstn, ASTNode * node) 
+    {
+        if (lstn == nullptr) 
+        {
+            lstn = new nodeList(node, nullptr);
+            static_cast<nodeList *>(lstn)->last = static_cast<nodeList *>(lstn);
+        } 
+        else 
+        {
+            nodeList *lst = static_cast<nodeList *>(lstn);
+            nodeList *l = new nodeList(node, nullptr);
+            lst->last->next = l;
+            lst->last = l;
+        }
+    }
+%}
+
+%node ASTNode %abstract %typedef = {
+    %nocreate string_t code = {""};
+    %nocreate string_t place = {""};
+}
+
+%node nodeList ASTNode = {
+    ASTNode *node;
+    ASTNode_list *next;
+    %nocreate nodeList *last = {nullptr};
+}
+
+%node Expression ASTNode %abstract
+
+%node NumExpr Expression =
+{
+    int value;
+}
+
+%node StringConstant Expression =
+{
+    string_t value;
+}
+
+%node CharExpr Expression = 
+{
+    int value; 
+}
+
+//Unary Expression
+
+%node OneExpr Expression %abstract = 
+{ 
+    Expression *expr; 
+}
+
+%node NotExpr OneExpr
+%node NegExpr OneExpr
+
+
+//Binary Expression
+
+%node BinExpr Expression %abstract =
+{
+    Expression *expr1;
+    Expression *expr2;
+}
+
+%node AddExpr BinExpr
+%node SubExpr BinExpr
+%node MulExpr BinExpr
+%node DivExpr BinExpr
+%node SRLExpr BinExpr
+%node SLLExpr BinExpr
+%node ModExpr BinExpr
+%node LesExpr BinExpr
+%node GreExpr BinExpr
+%node LeEExpr BinExpr
+%node GrEExpr BinExpr
+%node EquExpr BinExpr
+%node NEqExpr BinExpr
+%node AndExpr BinExpr
+%node Or_Expr BinExpr
+
+%node IdExpr Expression =
+{
+    string_t id;
+}
+
+%node IdArrayExpr Expression =
+{
+    string_t id;
+    int_t pos;
+}
+
+//Funciones
+
+%node NextIntExpr Expression =
+{
+    Expression * expr;
+}
+
+%node ReadExpr Expression
+
+%node PrintExpr Expression =
+{
+    Expression * expr;
+}
+
+%node FunctionCallExpr Expression = 
+{
+    string_t *id;
+    ASTNode * param_list;
+}
+
+%node Statement ASTNode %abstract
+
+%node WhileStmt Statement = {
+    Expression * cond;
+    Statement * block;
+}
+
+%node ForStmt Statement = {
+    ASTNode * for_dec;
+    Expression * cond;
+    ASTNode * for_assign;
+    Statement * block;
+}
+
+%node IfStmt Statement = {
+    Expression * cond;
+    Statement * true_block;
+    Statement * false_block;
+}
+
+%node Assign Statement = {
+    Expression * lhs;
+    Expression * rhs;
+}
+
+%node ReturnStmt Statement = {
+    Expression * expr;
+    %nocreate string_t label = {""};
+}
+
+%node Continue Statement = {
+    %nocreate string_t label = {""};
+}
+
+%node Break Statement = {
+    %nocreate string_t label = {""};
+}
+
+%node FunctionDecStmt = {
+    string_t type; 
+    string_t name;
+    ASTNode * params;
+    Statement * block; 
+}
+
+%node FieldDec = {
+    string_t type; 
+    ASTNode * list;
+}
+
+%node FieldDec_2 = {
+    string_t type; 
+    ASTNode * id;
+    ASTNode * value; 
+}
+
+%operation %virtual bool genCode(ASTNode * this, IdentsHandler& identHandler)
+%include "genCode.tc"

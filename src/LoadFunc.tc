@@ -1,0 +1,66 @@
+load_func_decl(ast_node) {
+    return true;
+}
+
+load_func_decl(program_node) {
+    ast_node_list *lst = static_cast<ast_node_list *>(func_decl_list);
+
+    while (lst != nullptr) {
+        ast_node *fd = lst->node;
+
+        if (!fd->load_func_decl(identHandler)) {
+            return false;
+        }
+        lst = lst->next;
+    }
+    return true;
+}
+
+load_func_decl(func_decl) {
+    std::string funcname = static_cast<strnode *>(name)->value;
+
+    if (identHandler.findFunc(funcname)) {
+        std::cerr << "Line: " << name->getLinenum() << ": Function '" << funcname << "' already declared\n";
+        return false;
+    }
+    UPFuncDef funcDef = std::make_unique<FuncDef>(funcname);
+    
+    // Registering parameters
+    ast_node_list *lst = static_cast<ast_node_list *>(param_list);
+    while (lst != nullptr) {
+        ast_node *fd = lst->node;
+        std::string paramName = static_cast<strnode *>(fd)->value;
+        funcDef->registerParam(paramName);
+
+        lst = lst->next;
+    }
+    identHandler.registerFuncDef(std::move(funcDef));
+
+    // Registering variables
+    identHandler.setCurrentFuncDef(funcname);
+    if (!stmt->load_func_decl(identHandler)) {
+        return false;
+    }
+    identHandler.setCurrentFuncDef("");
+
+    return true;
+}
+
+load_func_decl(assign_stmt) {
+    lvalue *lv = static_cast<lvalue *>(lhs);
+    strnode *sn = static_cast<strnode *>(lv->ident);
+    identHandler.registerLocalVar(sn->value);
+}
+
+load_func_decl(block_stmt) {
+    ast_node_list *lst = static_cast<ast_node_list *>(stmt_list);
+    while (lst != nullptr) {
+        ast_node *n = lst->node;
+        if (!n->load_func_decl(identHandler)) {
+            return false;
+        }
+        lst = lst->next;
+    }
+
+    return true;
+}

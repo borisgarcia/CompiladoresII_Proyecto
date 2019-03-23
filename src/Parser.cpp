@@ -62,7 +62,7 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 1 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:339  */
+#line 1 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:339  */
 
   #include <stdio.h>
   #include <iostream>
@@ -76,18 +76,20 @@
   using namespace std;
   extern int lineNo;
   extern int yylex();
+  
   int errors;
-  extern bool state_ment_boolean;
-  extern bool method_dec_boolean;
+  bool state_ment_boolean;
+  bool method_dec_boolean;
   
   void yyerror(const char *msg) {
         std::cerr << "Parsing Error" <<"Line: "<<lineNo<<"-" <<msg<<'\n';
         errors++;
   }
-
+  YYNODESTATE *nodeState;
   #define YYERROR_VERBOSE 1
+  
 
-#line 91 "../src/Parser.cpp" /* yacc.c:339  */
+#line 93 "../src/Parser.cpp" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -179,7 +181,20 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+
+union YYSTYPE
+{
+#line 28 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:355  */
+
+        //Statement * stmt_t;
+        //Expression * expr_t;
+        char * str_t;
+        int int_t;
+
+#line 195 "../src/Parser.cpp" /* yacc.c:355  */
+};
+
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -193,7 +208,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 197 "../src/Parser.cpp" /* yacc.c:358  */
+#line 212 "../src/Parser.cpp" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -440,11 +455,11 @@ union yyalloc
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  55
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  29
+#define YYNNTS  30
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  91
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  196
+#define YYNSTATES  197
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
@@ -493,18 +508,18 @@ static const yytype_uint8 yytranslate[] =
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_uint16 yyrline[] =
 {
-       0,    72,    72,    73,    76,    83,    84,    91,    94,    95,
-      98,    99,   100,   101,   104,   105,   108,   109,   110,   113,
-     114,   117,   118,   121,   128,   129,   136,   139,   142,   143,
-     146,   147,   148,   149,   150,   151,   152,   153,   154,   157,
-     160,   161,   164,   165,   168,   169,   172,   173,   174,   175,
-     176,   179,   180,   181,   182,   183,   186,   187,   190,   191,
-     194,   195,   198,   199,   200,   201,   202,   203,   204,   207,
-     208,   209,   210,   213,   214,   215,   216,   217,   218,   219,
-     222,   223,   224,   225,   228,   229,   232,   233,   236,   237,
-     238,   239
+       0,    86,    86,    87,    90,    97,    98,   105,   108,   109,
+     112,   113,   114,   115,   118,   121,   126,   127,   130,   131,
+     134,   135,   138,   139,   142,   149,   156,   157,   160,   163,
+     164,   167,   168,   169,   170,   171,   172,   173,   174,   175,
+     178,   181,   182,   185,   186,   189,   192,   193,   194,   195,
+     196,   199,   200,   201,   202,   203,   206,   207,   210,   211,
+     214,   215,   218,   219,   220,   221,   222,   223,   224,   227,
+     228,   229,   230,   233,   234,   235,   236,   237,   238,   239,
+     242,   243,   244,   245,   248,   249,   252,   253,   256,   257,
+     258,   259
 };
 #endif
 
@@ -522,11 +537,11 @@ static const char *const yytname[] =
   "\"!=\"", "\"&&\"", "\"||\"", "\"==\"", "\"<<\"", "\">>\"",
   "intConstant", "CharConstant", "Id", "StringConstant",
   "\"end of input\"", "Error", "$accept", "program", "program_body",
-  "field_decl", "mult-field", "method_decl", "params", "type", "block",
-  "block_p", "var-decl", "var-decl_p", "statement", "assign", "else_opt",
-  "for_assign", "return_expr_opt", "method-call_stmt", "method-call_expr",
-  "method-call_params", "argument", "lvalue", "expr", "bin-op", "arith-op",
-  "rel-op", "eq-op", "cond-op", "constant", YY_NULLPTR
+  "field_decl", "mult-field", "method_decl", "params", "params_p", "type",
+  "block", "block_p", "var-decl", "var-decl_p", "statement", "assign",
+  "else_opt", "for_assign", "return_expr", "method-call_stmt",
+  "method-call_expr", "method-call_params", "argument", "lvalue", "expr",
+  "bin-op", "arith-op", "rel-op", "eq-op", "cond-op", "constant", YY_NULLPTR
 };
 #endif
 
@@ -544,10 +559,10 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF -76
+#define YYPACT_NINF -90
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-76)))
+  (!!((Yystate) == (-90)))
 
 #define YYTABLE_NINF -1
 
@@ -558,26 +573,26 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-      11,   -41,    15,    31,   -76,     9,   -76,   -76,     6,   -76,
-      10,   -76,   -76,    18,     3,   -76,   -76,   -76,    13,   -20,
-       4,    14,     4,    -3,    20,   -76,    36,    38,    61,    37,
-     -76,   -76,   -76,   -76,    66,    68,     4,    80,   -76,   -76,
-      80,   -76,    82,    64,    87,   -76,   -76,   105,   -76,    97,
-     104,   106,   107,   193,   109,   110,   111,   115,   117,   -76,
-      12,    83,   -76,   139,   -76,   -76,   119,   123,   118,   -76,
-     -76,   -76,   114,   193,   125,   137,   138,   140,   193,   193,
-     193,    26,   142,   -76,   -76,   338,   -76,   -76,   -76,   -76,
-     -76,   -76,   193,   157,   157,   141,   193,   193,   193,   -76,
-      -5,   -76,   -76,   -76,   -76,   -76,   193,   143,   -76,    25,
-     250,   157,   157,   144,   193,   268,   338,    77,   193,   -76,
-     193,   193,   193,   193,   193,   193,   193,   193,   193,   193,
-     193,   193,   193,   193,   193,   286,   -76,   145,   338,   150,
-     -76,   304,   212,    65,   338,   122,   -76,   338,   114,   193,
-      80,   151,   152,   -76,   322,   -76,    72,    77,    77,   354,
-     354,   153,    16,    16,    16,    16,    -4,   158,   -76,    -4,
-     189,   189,    80,   -76,   -76,   -76,   -76,   193,   -76,   -76,
-     -76,   232,   177,   -76,   -76,   -76,   -76,   -76,   338,   114,
-      80,   -76,    99,   -76,    80,   -76
+       1,   -42,    26,    19,   -90,    39,   -90,   -90,   -23,   -90,
+      44,   -90,   -90,     8,    31,   -90,   -90,   -90,   -16,    60,
+       5,    18,     5,     4,    20,   -90,   -13,   -90,    53,   107,
+      24,   -90,   -90,   -90,   -90,    86,   110,     5,   113,   -90,
+     -90,   113,   -90,    90,    89,    87,   -90,   -90,   114,   -90,
+     116,   118,   122,   125,   193,   126,   135,   137,   138,   140,
+     -90,   -14,    97,   -90,   139,   -90,   -90,   142,   143,   131,
+     -90,   -90,   -90,   124,   193,   146,   151,   152,   154,   193,
+     193,   193,    15,   144,   -90,   -90,   338,   -90,   -90,   -90,
+     -90,   -90,   -90,   193,   157,   157,   155,   193,   193,   193,
+     -90,    98,   -90,   -90,   -90,   -90,   -90,   193,   159,   -90,
+     102,   250,   157,   157,   172,   193,   268,   338,    77,   193,
+     -90,   193,   193,   193,   193,   193,   193,   193,   193,   193,
+     193,   193,   193,   193,   193,   193,   286,   -90,   173,   338,
+     174,   -90,   304,   212,    32,   338,   132,   -90,   338,   124,
+     193,   113,   180,   181,   -90,   322,   -90,    37,    77,    77,
+     354,   354,   153,    50,    50,    50,    50,    88,   175,   -90,
+      88,    -6,    -6,   113,   -90,   -90,   -90,   -90,   193,   -90,
+     -90,   -90,   232,   210,   -90,   -90,   -90,   -90,   -90,   338,
+     124,   113,   -90,    72,   -90,   113,   -90
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -585,42 +600,42 @@ static const yytype_int16 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     0,     0,     0,     1,     0,    20,    19,     0,     3,
+       0,     0,     0,     0,     1,     0,    21,    20,     0,     3,
        0,     6,     7,     0,     0,     2,     4,     5,    12,     0,
-      18,     0,    18,     0,     0,     8,     0,     0,     0,     0,
-      91,    90,    88,    89,     0,    10,     0,     0,    17,    13,
-       0,     9,     0,     0,     0,    15,    14,     0,    16,     0,
-       0,     0,     0,    45,     0,     0,     0,     0,     0,    22,
-      60,     0,    38,     0,    25,    26,     0,     0,     0,    11,
-      34,    37,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,    60,     0,    63,    62,    44,    65,    69,    70,    72,
-      71,    64,     0,     0,     0,     0,     0,     0,     0,    29,
-       0,    21,    23,    24,    30,    31,     0,    60,    43,     0,
-       0,     0,     0,     0,     0,     0,    66,    67,     0,    36,
+      17,     0,    17,     0,     0,     8,     0,    16,     0,     0,
+       0,    91,    90,    88,    89,     0,    10,     0,     0,    19,
+      13,     0,     9,     0,     0,     0,    15,    14,     0,    18,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,    58,     0,    59,     0,
-      49,     0,     0,     0,    57,     0,    27,    39,     0,     0,
-       0,     0,     0,    54,     0,    68,     0,    73,    74,    76,
-      75,    79,    81,    80,    83,    82,    85,    86,    87,    84,
-      77,    78,     0,    47,    48,    50,    61,     0,    46,    28,
-      42,     0,    41,    52,    53,    55,    51,    33,    56,     0,
-       0,    32,     0,    40,     0,    35
+      23,    60,     0,    39,     0,    25,    27,     0,     0,     0,
+      11,    35,    38,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,    60,     0,    63,    62,    45,    65,    69,    70,
+      72,    71,    64,     0,     0,     0,     0,     0,     0,     0,
+      30,     0,    22,    24,    26,    31,    32,     0,    60,    44,
+       0,     0,     0,     0,     0,     0,     0,    66,    67,     0,
+      37,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,    58,     0,    59,
+       0,    49,     0,     0,     0,    57,     0,    28,    40,     0,
+       0,     0,     0,     0,    54,     0,    68,     0,    73,    74,
+      76,    75,    79,    81,    80,    83,    82,    85,    86,    87,
+      84,    77,    78,     0,    47,    48,    50,    61,     0,    46,
+      29,    43,     0,    42,    52,    53,    55,    51,    34,    56,
+       0,     0,    33,     0,    41,     0,    36
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
-     -76,   -76,   -76,   175,   -76,   176,   166,   -18,   -37,   -76,
-     148,   -76,   149,   -61,   -76,    28,   -76,   -76,   -76,    86,
-     -75,   -43,   -48,   -76,   -76,   -76,   -76,   -76,   182
+     -90,   -90,   -90,   178,   -90,   208,   197,   -90,   -18,   -38,
+     -90,   158,   -90,   160,   -62,   -90,    36,   -90,   -90,   -90,
+     109,   -89,   -44,   -49,   -90,   -90,   -90,   -90,   -90,   198
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int16 yydefgoto[] =
 {
-      -1,     2,    10,    11,    19,    12,    26,    13,    62,    63,
-      64,   100,    65,    66,   191,   109,    82,    67,    83,   143,
-     137,    84,   138,    86,    87,    88,    89,    90,    91
+      -1,     2,    10,    11,    19,    12,    26,    27,    13,    63,
+      64,    65,   101,    66,    67,   192,   110,    83,    68,    84,
+     144,   138,    85,   139,    87,    88,    89,    90,    91,    92
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -628,75 +643,75 @@ static const yytype_int16 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      45,    68,    27,    46,    27,    85,    30,     6,    24,    25,
-       3,   108,     6,     6,    31,     4,     7,     1,    43,   139,
-      68,     7,     7,   145,   146,   110,    61,     8,     8,    68,
-     115,   116,   117,    20,     9,    15,   151,   152,    97,    21,
-     130,   131,    98,    22,   135,    61,    32,    33,   141,   142,
-     144,    23,    97,   148,   149,     5,   118,    14,   147,   129,
-     130,   131,   132,    28,    36,    36,   154,    37,    40,    18,
-     144,    35,   157,   158,   159,   160,   161,   162,   163,   164,
-     165,   166,   167,   168,   169,   170,   171,   180,    39,    38,
-       6,    49,    50,   177,    42,    41,   178,    51,    52,     7,
-     177,   181,    53,   186,    44,    68,    54,    55,    56,    57,
-      58,    44,    59,   182,   124,    48,   125,   126,   127,   128,
-     129,   130,   131,   132,   133,   134,    70,   148,   108,   188,
-     194,    47,    69,    71,    99,   187,    72,    73,    60,    92,
-      93,    94,     6,    49,    50,    95,    68,    96,   104,    51,
-      52,     7,   105,   193,    53,   111,   106,   195,    54,    55,
-      56,    57,    58,    44,   101,   107,    30,   112,   113,    97,
-     114,   119,   140,   179,    31,   153,   173,    74,    75,    76,
-      77,   174,   183,   184,   190,    16,    17,    78,    29,    79,
-      60,    80,   125,   126,   127,   128,   129,   130,   131,   132,
-     133,   134,    30,   131,   156,    34,    32,    33,    81,   136,
-      31,   102,   103,    74,    75,    76,    77,   192,     0,     0,
-       0,     0,     0,    78,     0,    79,     0,    80,   125,   126,
-     127,   128,   129,   130,   131,   132,     0,     0,     0,   176,
-       0,     0,    32,    33,    81,   120,   121,   122,   123,   124,
-       0,   125,   126,   127,   128,   129,   130,   131,   132,   133,
-     134,   189,     0,     0,     0,   120,   121,   122,   123,   124,
-       0,   125,   126,   127,   128,   129,   130,   131,   132,   133,
-     134,   150,     0,   120,   121,   122,   123,   124,     0,   125,
-     126,   127,   128,   129,   130,   131,   132,   133,   134,   155,
-       0,   120,   121,   122,   123,   124,     0,   125,   126,   127,
-     128,   129,   130,   131,   132,   133,   134,   172,     0,   120,
-     121,   122,   123,   124,     0,   125,   126,   127,   128,   129,
-     130,   131,   132,   133,   134,   175,     0,   120,   121,   122,
-     123,   124,     0,   125,   126,   127,   128,   129,   130,   131,
-     132,   133,   134,   185,     0,   120,   121,   122,   123,   124,
-       0,   125,   126,   127,   128,   129,   130,   131,   132,   133,
-     134,   120,   121,   122,   123,   124,     0,   125,   126,   127,
-     128,   129,   130,   131,   132,   133,   134,   120,   121,     0,
-       0,   124,     0,   125,   126,   127,   128,   129,   130,   131,
-     132,   133,   134
+      46,    69,    28,    47,    28,    86,   140,     1,     6,     3,
+      21,   109,    98,    31,    22,    37,    99,     7,    38,    44,
+      69,    32,    23,   152,   153,   111,     4,    62,    14,    69,
+     116,   117,   118,   126,   127,   128,   129,   130,   131,   132,
+     133,    98,     6,     5,   136,   119,    62,     6,   142,   143,
+     145,     7,    37,    33,    34,    41,     7,     8,   148,    18,
+     178,    20,     8,   179,     9,   178,   155,    29,   187,    15,
+     145,    36,   158,   159,   160,   161,   162,   163,   164,   165,
+     166,   167,   168,   169,   170,   171,   172,   181,    24,    25,
+       6,    50,    51,   130,   131,   132,   133,    52,    53,     7,
+     149,   182,    54,   195,    39,    69,    55,    56,    57,    58,
+      59,    45,    60,   183,   125,    42,   126,   127,   128,   129,
+     130,   131,   132,   133,   134,   135,   146,   147,   109,   189,
+     149,   150,   131,   132,    40,   188,    43,    45,    61,    48,
+      49,    70,     6,    50,    51,    71,    69,    72,   100,    52,
+      53,     7,    73,   194,    54,    74,    93,   196,    55,    56,
+      57,    58,    59,    45,   102,    94,    31,    95,    96,   107,
+      97,   105,   106,   120,    32,   108,   112,    75,    76,    77,
+      78,   113,   114,   180,   115,    98,   141,    79,    16,    80,
+      61,    81,   126,   127,   128,   129,   130,   131,   132,   133,
+     134,   135,    31,   154,   174,   175,    33,    34,    82,   137,
+      32,   184,   185,    75,    76,    77,    78,   191,    17,    30,
+     132,    35,   103,    79,   104,    80,   193,    81,   157,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,   177,
+       0,     0,    33,    34,    82,   121,   122,   123,   124,   125,
+       0,   126,   127,   128,   129,   130,   131,   132,   133,   134,
+     135,   190,     0,     0,     0,   121,   122,   123,   124,   125,
+       0,   126,   127,   128,   129,   130,   131,   132,   133,   134,
+     135,   151,     0,   121,   122,   123,   124,   125,     0,   126,
+     127,   128,   129,   130,   131,   132,   133,   134,   135,   156,
+       0,   121,   122,   123,   124,   125,     0,   126,   127,   128,
+     129,   130,   131,   132,   133,   134,   135,   173,     0,   121,
+     122,   123,   124,   125,     0,   126,   127,   128,   129,   130,
+     131,   132,   133,   134,   135,   176,     0,   121,   122,   123,
+     124,   125,     0,   126,   127,   128,   129,   130,   131,   132,
+     133,   134,   135,   186,     0,   121,   122,   123,   124,   125,
+       0,   126,   127,   128,   129,   130,   131,   132,   133,   134,
+     135,   121,   122,   123,   124,   125,     0,   126,   127,   128,
+     129,   130,   131,   132,   133,   134,   135,   121,   122,     0,
+       0,   125,     0,   126,   127,   128,   129,   130,   131,   132,
+     133,   134,   135
 };
 
 static const yytype_int16 yycheck[] =
 {
-      37,    44,    20,    40,    22,    53,     9,     3,    28,    29,
-      51,    72,     3,     3,    17,     0,    12,     6,    36,    94,
-      63,    12,    12,    28,    29,    73,    44,    18,    18,    72,
-      78,    79,    80,    30,    25,    25,   111,   112,    26,    26,
-      44,    45,    30,    30,    92,    63,    49,    50,    96,    97,
-      98,    38,    26,    28,    29,    24,    30,    51,   106,    43,
-      44,    45,    46,    49,    28,    28,   114,    31,    31,    51,
-     118,    51,   120,   121,   122,   123,   124,   125,   126,   127,
-     128,   129,   130,   131,   132,   133,   134,   148,    27,    51,
-       3,     4,     5,    28,    26,    29,    31,    10,    11,    12,
-      28,   149,    15,    31,    24,   148,    19,    20,    21,    22,
-      23,    24,    25,   150,    37,    51,    39,    40,    41,    42,
-      43,    44,    45,    46,    47,    48,    29,    28,   189,   177,
-      31,    49,    27,    29,    51,   172,    30,    30,    51,    30,
-      30,    30,     3,     4,     5,    30,   189,    30,    29,    10,
-      11,    12,    29,   190,    15,    30,    38,   194,    19,    20,
-      21,    22,    23,    24,    25,    51,     9,    30,    30,    26,
-      30,    29,    31,    51,    17,    31,    31,    20,    21,    22,
-      23,    31,    31,    31,     7,    10,    10,    30,    22,    32,
+      38,    45,    20,    41,    22,    54,    95,     6,     3,    51,
+      26,    73,    26,     9,    30,    28,    30,    12,    31,    37,
+      64,    17,    38,   112,   113,    74,     0,    45,    51,    73,
+      79,    80,    81,    39,    40,    41,    42,    43,    44,    45,
+      46,    26,     3,    24,    93,    30,    64,     3,    97,    98,
+      99,    12,    28,    49,    50,    31,    12,    18,   107,    51,
+      28,    30,    18,    31,    25,    28,   115,    49,    31,    25,
+     119,    51,   121,   122,   123,   124,   125,   126,   127,   128,
+     129,   130,   131,   132,   133,   134,   135,   149,    28,    29,
+       3,     4,     5,    43,    44,    45,    46,    10,    11,    12,
+      28,   150,    15,    31,    51,   149,    19,    20,    21,    22,
+      23,    24,    25,   151,    37,    29,    39,    40,    41,    42,
+      43,    44,    45,    46,    47,    48,    28,    29,   190,   178,
+      28,    29,    44,    45,    27,   173,    26,    24,    51,    49,
+      51,    27,     3,     4,     5,    29,   190,    29,    51,    10,
+      11,    12,    30,   191,    15,    30,    30,   195,    19,    20,
+      21,    22,    23,    24,    25,    30,     9,    30,    30,    38,
+      30,    29,    29,    29,    17,    51,    30,    20,    21,    22,
+      23,    30,    30,    51,    30,    26,    31,    30,    10,    32,
       51,    34,    39,    40,    41,    42,    43,    44,    45,    46,
-      47,    48,     9,    45,   118,    23,    49,    50,    51,    52,
-      17,    63,    63,    20,    21,    22,    23,   189,    -1,    -1,
-      -1,    -1,    -1,    30,    -1,    32,    -1,    34,    39,    40,
-      41,    42,    43,    44,    45,    46,    -1,    -1,    -1,    27,
+      47,    48,     9,    31,    31,    31,    49,    50,    51,    52,
+      17,    31,    31,    20,    21,    22,    23,     7,    10,    22,
+      45,    23,    64,    30,    64,    32,   190,    34,   119,    -1,
+      -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    27,
       -1,    -1,    49,    50,    51,    33,    34,    35,    36,    37,
       -1,    39,    40,    41,    42,    43,    44,    45,    46,    47,
       48,    29,    -1,    -1,    -1,    33,    34,    35,    36,    37,
@@ -721,50 +736,50 @@ static const yytype_int16 yycheck[] =
 static const yytype_uint8 yystos[] =
 {
        0,     6,    56,    51,     0,    24,     3,    12,    18,    25,
-      57,    58,    60,    62,    51,    25,    58,    60,    51,    59,
-      30,    26,    30,    38,    28,    29,    61,    62,    49,    61,
-       9,    17,    49,    50,    83,    51,    28,    31,    51,    27,
-      31,    29,    26,    62,    24,    63,    63,    49,    51,     4,
-       5,    10,    11,    15,    19,    20,    21,    22,    23,    25,
-      51,    62,    63,    64,    65,    67,    68,    72,    76,    27,
-      29,    29,    30,    30,    20,    21,    22,    23,    30,    32,
-      34,    51,    71,    73,    76,    77,    78,    79,    80,    81,
-      82,    83,    30,    30,    30,    30,    30,    26,    30,    51,
-      66,    25,    65,    67,    29,    29,    38,    51,    68,    70,
-      77,    30,    30,    30,    30,    77,    77,    77,    30,    29,
-      33,    34,    35,    36,    37,    39,    40,    41,    42,    43,
-      44,    45,    46,    47,    48,    77,    52,    75,    77,    75,
-      31,    77,    77,    74,    77,    28,    29,    77,    28,    29,
-      31,    75,    75,    31,    77,    31,    74,    77,    77,    77,
-      77,    77,    77,    77,    77,    77,    77,    77,    77,    77,
-      77,    77,    31,    31,    31,    31,    27,    28,    31,    51,
-      68,    77,    63,    31,    31,    31,    31,    63,    77,    29,
-       7,    69,    70,    63,    31,    63
+      57,    58,    60,    63,    51,    25,    58,    60,    51,    59,
+      30,    26,    30,    38,    28,    29,    61,    62,    63,    49,
+      61,     9,    17,    49,    50,    84,    51,    28,    31,    51,
+      27,    31,    29,    26,    63,    24,    64,    64,    49,    51,
+       4,     5,    10,    11,    15,    19,    20,    21,    22,    23,
+      25,    51,    63,    64,    65,    66,    68,    69,    73,    77,
+      27,    29,    29,    30,    30,    20,    21,    22,    23,    30,
+      32,    34,    51,    72,    74,    77,    78,    79,    80,    81,
+      82,    83,    84,    30,    30,    30,    30,    30,    26,    30,
+      51,    67,    25,    66,    68,    29,    29,    38,    51,    69,
+      71,    78,    30,    30,    30,    30,    78,    78,    78,    30,
+      29,    33,    34,    35,    36,    37,    39,    40,    41,    42,
+      43,    44,    45,    46,    47,    48,    78,    52,    76,    78,
+      76,    31,    78,    78,    75,    78,    28,    29,    78,    28,
+      29,    31,    76,    76,    31,    78,    31,    75,    78,    78,
+      78,    78,    78,    78,    78,    78,    78,    78,    78,    78,
+      78,    78,    78,    31,    31,    31,    31,    27,    28,    31,
+      51,    69,    78,    64,    31,    31,    31,    31,    64,    78,
+      29,     7,    70,    71,    64,    31,    64
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
        0,    55,    56,    56,    57,    57,    57,    57,    58,    58,
-      59,    59,    59,    59,    60,    60,    61,    61,    61,    62,
-      62,    63,    63,    64,    64,    64,    64,    65,    66,    66,
-      67,    67,    67,    67,    67,    67,    67,    67,    67,    68,
-      69,    69,    70,    70,    71,    71,    72,    72,    72,    72,
-      72,    73,    73,    73,    73,    73,    74,    74,    75,    75,
-      76,    76,    77,    77,    77,    77,    77,    77,    77,    78,
-      78,    78,    78,    79,    79,    79,    79,    79,    79,    79,
-      80,    80,    80,    80,    81,    81,    82,    82,    83,    83,
-      83,    83
+      59,    59,    59,    59,    60,    60,    61,    61,    62,    62,
+      63,    63,    64,    64,    65,    65,    65,    65,    66,    67,
+      67,    68,    68,    68,    68,    68,    68,    68,    68,    68,
+      69,    70,    70,    71,    71,    72,    73,    73,    73,    73,
+      73,    74,    74,    74,    74,    74,    75,    75,    76,    76,
+      77,    77,    78,    78,    78,    78,    78,    78,    78,    79,
+      79,    79,    79,    80,    80,    80,    80,    80,    80,    80,
+      81,    81,    81,    81,    82,    82,    83,    83,    84,    84,
+      84,    84
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
        0,     2,     5,     4,     2,     2,     1,     1,     3,     5,
-       3,     6,     1,     4,     6,     6,     4,     2,     0,     1,
-       1,     3,     2,     2,     2,     1,     1,     3,     3,     1,
-       2,     2,     6,     5,     2,     9,     3,     2,     1,     3,
-       2,     0,     3,     1,     1,     0,     4,     4,     4,     3,
+       3,     6,     1,     4,     6,     6,     1,     0,     4,     2,
+       1,     1,     3,     2,     2,     1,     2,     1,     3,     3,
+       1,     2,     2,     6,     5,     2,     9,     3,     2,     1,
+       3,     2,     0,     3,     1,     1,     4,     4,     4,     3,
        4,     4,     4,     4,     3,     4,     3,     1,     1,     1,
        1,     4,     1,     1,     1,     1,     2,     2,     3,     1,
        1,     1,     1,     3,     3,     3,     3,     3,     3,     3,
@@ -1446,19 +1461,19 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 72 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 86 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1452 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1467 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 73 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 87 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1458 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1473 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 76 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 90 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {
                                                         if(method_dec_boolean)
                                                         {
@@ -1466,17 +1481,17 @@ yyreduce:
                                                                 exit(0);
                                                         }
                                                 }
-#line 1470 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1485 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 83 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 97 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1476 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1491 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 84 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 98 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {
                                                         if(method_dec_boolean)
                                                         {
@@ -1484,107 +1499,117 @@ yyreduce:
                                                                 exit(0);
                                                         }
                                                 }
-#line 1488 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1503 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 91 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 105 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1494 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1509 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 94 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 108 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1500 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1515 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 95 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 109 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1506 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1521 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 98 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 112 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1512 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1527 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 99 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 113 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1518 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1533 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 100 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 114 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1524 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1539 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 101 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 115 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1530 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1545 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 104 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
-    {method_dec_boolean = true;}
-#line 1536 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 118 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
+    {
+                                                        method_dec_boolean = true;
+                                                }
+#line 1553 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 105 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
-    {method_dec_boolean = true;}
-#line 1542 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 121 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
+    {
+                                                        method_dec_boolean = true;
+                                                }
+#line 1561 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 108 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 126 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1548 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1567 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 109 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 127 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1554 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1573 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 110 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 130 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1560 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1579 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 113 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 131 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1566 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1585 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 114 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 134 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1572 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1591 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 117 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 135 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1578 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1597 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 118 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 138 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1584 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1603 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 121 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 139 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
+    {}
+#line 1609 "../src/Parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 24:
+#line 142 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {
                                         if(state_ment_boolean)
                                         {
@@ -1592,425 +1617,419 @@ yyreduce:
                                                 exit(0);
                                         }
                                 }
-#line 1596 "../src/Parser.cpp" /* yacc.c:1646  */
-    break;
-
-  case 24:
-#line 128 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
-    {}
-#line 1602 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1621 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 129 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 149 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {
                                         if(state_ment_boolean)
                                         {
                                                 std::cerr << "PUTOELQUELOLEA" << std::endl;
                                                 exit(0);
-                                        }        
+                                        }                                                
                                 }
-#line 1614 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1633 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 136 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 156 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1620 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1639 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 139 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 157 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1626 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1645 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 142 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 160 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1632 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1651 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 143 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 163 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1638 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1657 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 146 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
-    {state_ment_boolean = true;}
-#line 1644 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 164 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
+    {}
+#line 1663 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 147 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 167 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {state_ment_boolean = true;}
-#line 1650 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1669 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 148 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 168 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {state_ment_boolean = true;}
-#line 1656 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1675 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 149 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 169 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {state_ment_boolean = true;}
-#line 1662 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1681 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 150 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 170 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {state_ment_boolean = true;}
-#line 1668 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1687 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 151 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 171 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {state_ment_boolean = true;}
-#line 1674 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1693 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 152 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 172 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {state_ment_boolean = true;}
-#line 1680 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1699 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 153 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 173 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {state_ment_boolean = true;}
-#line 1686 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1705 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 154 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 174 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {state_ment_boolean = true;}
-#line 1692 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1711 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 157 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
-    {}
-#line 1698 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 175 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
+    {state_ment_boolean = true;}
+#line 1717 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 160 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 178 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1704 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1723 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 161 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 181 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1710 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1729 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 164 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 182 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1716 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1735 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 165 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 185 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1722 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1741 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 168 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 186 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1728 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1747 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 169 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 189 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1734 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1753 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 172 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 192 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1740 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1759 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 173 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 193 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1746 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1765 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 174 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 194 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1752 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1771 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 175 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 195 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1758 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1777 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 176 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 196 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1764 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1783 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 179 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 199 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1770 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1789 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 180 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 200 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1776 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1795 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 181 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 201 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1782 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1801 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 182 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 202 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1788 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1807 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 183 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 203 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1794 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1813 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 186 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 206 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1800 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1819 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 187 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 207 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1806 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1825 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 190 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 210 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1812 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1831 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 191 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 211 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1818 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1837 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 194 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 214 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1824 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1843 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 195 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 215 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1830 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1849 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 198 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 218 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1836 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1855 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 199 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 219 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1842 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1861 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 200 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 220 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1848 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1867 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 201 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 221 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1854 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1873 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 202 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 222 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1860 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1879 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 203 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 223 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1866 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1885 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 204 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 224 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1872 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1891 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 207 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 227 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1878 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1897 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 208 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 228 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1884 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1903 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 209 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 229 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1890 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1909 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 210 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 230 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1896 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1915 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 213 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 233 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1902 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1921 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 214 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 234 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1908 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1927 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 215 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 235 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1914 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1933 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 216 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 236 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1920 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1939 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 217 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 237 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1926 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1945 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 218 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 238 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1932 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1951 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 219 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 239 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1938 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1957 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 222 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 242 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1944 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1963 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 223 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 243 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1950 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1969 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 224 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 244 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1956 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1975 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 225 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 245 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1962 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1981 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 228 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 248 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1968 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1987 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 85:
-#line 229 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 249 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1974 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1993 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 86:
-#line 232 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 252 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1980 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 1999 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 233 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 253 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1986 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 2005 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 88:
-#line 236 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 256 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1992 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 2011 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 89:
-#line 237 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 257 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 1998 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 2017 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 90:
-#line 238 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 258 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 2004 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 2023 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 91:
-#line 239 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1646  */
+#line 259 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
     {}
-#line 2010 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 2029 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
 
-#line 2014 "../src/Parser.cpp" /* yacc.c:1646  */
+#line 2033 "../src/Parser.cpp" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2238,4 +2257,5 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 241 "/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y" /* yacc.c:1906  */
+#line 261 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1906  */
+

@@ -102,7 +102,20 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+
+union YYSTYPE
+{
+#line 28 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1909  */
+
+        //Statement * stmt_t;
+        //Expression * expr_t;
+        char * str_t;
+        int int_t;
+
+#line 116 "../src/tokens.h" /* yacc.c:1909  */
+};
+
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif

@@ -21,8 +21,8 @@ add_custom_command (
 
 add_custom_command(
   OUTPUT ../src/ast.cpp
-  COMMAND /opt/treecc/bin/treecc -o ../src/ast.cpp ${PROJECT_SOURCE_DIR}/expr_ast.tc
-  MAIN_DEPENDENCY ${PROJECT_SOURCE_DIR}/expr_ast.tc
+  COMMAND /opt/treecc/bin/treecc -o ../src/ast.cpp ${PROJECT_SOURCE_DIR}/AST.tc
+  MAIN_DEPENDENCY ${PROJECT_SOURCE_DIR}/AST.tc
 )
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})

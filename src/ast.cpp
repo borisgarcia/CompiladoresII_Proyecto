@@ -1,19 +1,17 @@
 /* ../src/ast.cpp.  Generated automatically by treecc */
-#line 22 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
+#line 29 "/home/boris/Desktop/Proyecto/src/AST.tc"
 
     #include "ast.h"
-    using namespace std;
+    
+    std::string getPlace(ASTNode * expr)
+    {
+        if(expr->getKind() == NumExpr_kind)
+            return expr->place;
+        else
+            return "dword [" + expr->place + "]";
+    }
+#line 14 "../src/ast.cpp"
 
-    struct Context{
-        string_t id;
-        int_t value;
-    };
-    std::unordered_map<string_t,Context> vars;
-    bool method_dec_boolean;
-    bool state_ment_boolean;
-#line 15 "../src/ast.cpp"
-
-#define YYNODESTATE_REENTRANT 1
 #define YYNODESTATE_TRACK_LINES 1
 #define YYNODESTATE_USE_ALLOCATOR 1
 #line 1 "cpp_skel.cc"
@@ -291,285 +289,24 @@ long YYNODESTATE::currLinenum()
 }
 
 #endif
-#line 295 "../src/ast.cpp"
-NumExpr *YYNODESTATE::NumExprCreate(int num)
+#line 293 "../src/ast.cpp"
+void *ASTNode::operator new(size_t size__)
 {
-	void *buf__ = this->alloc(sizeof(NumExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) NumExpr(this, num);
+	return YYNODESTATE::getState()->alloc(size__);
 }
 
-NextIntExpr *YYNODESTATE::NextIntExprCreate(Expression * expr)
+void ASTNode::operator delete(void *ptr__, size_t size__)
 {
-	void *buf__ = this->alloc(sizeof(NextIntExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) NextIntExpr(this, expr);
+	YYNODESTATE::getState()->dealloc(ptr__, size__);
 }
 
-ReadExpr *YYNODESTATE::ReadExprCreate()
-{
-	void *buf__ = this->alloc(sizeof(ReadExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) ReadExpr(this);
-}
-
-PrintExpr *YYNODESTATE::PrintExprCreate(Expression * expr)
-{
-	void *buf__ = this->alloc(sizeof(PrintExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) PrintExpr(this, expr);
-}
-
-FunctionCallExpr *YYNODESTATE::FunctionCallExprCreate(string_t * id, Expression * expr)
-{
-	void *buf__ = this->alloc(sizeof(FunctionCallExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) FunctionCallExpr(this, id, expr);
-}
-
-IdExpr *YYNODESTATE::IdExprCreate(string_t id)
-{
-	void *buf__ = this->alloc(sizeof(IdExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) IdExpr(this, id);
-}
-
-IdArrayExpr *YYNODESTATE::IdArrayExprCreate(string_t id, int_t pos)
-{
-	void *buf__ = this->alloc(sizeof(IdArrayExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) IdArrayExpr(this, id, pos);
-}
-
-NotExpr *YYNODESTATE::NotExprCreate(Expression * expr1)
-{
-	void *buf__ = this->alloc(sizeof(NotExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) NotExpr(this, expr1);
-}
-
-UnaExpr *YYNODESTATE::UnaExprCreate(Expression * expr1)
-{
-	void *buf__ = this->alloc(sizeof(UnaExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) UnaExpr(this, expr1);
-}
-
-AddExpr *YYNODESTATE::AddExprCreate(Expression * expr1, Expression * expr2)
-{
-	void *buf__ = this->alloc(sizeof(AddExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) AddExpr(this, expr1, expr2);
-}
-
-SubExpr *YYNODESTATE::SubExprCreate(Expression * expr1, Expression * expr2)
-{
-	void *buf__ = this->alloc(sizeof(SubExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) SubExpr(this, expr1, expr2);
-}
-
-MulExpr *YYNODESTATE::MulExprCreate(Expression * expr1, Expression * expr2)
-{
-	void *buf__ = this->alloc(sizeof(MulExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) MulExpr(this, expr1, expr2);
-}
-
-DivExpr *YYNODESTATE::DivExprCreate(Expression * expr1, Expression * expr2)
-{
-	void *buf__ = this->alloc(sizeof(DivExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) DivExpr(this, expr1, expr2);
-}
-
-SRLExpr *YYNODESTATE::SRLExprCreate(Expression * expr1, Expression * expr2)
-{
-	void *buf__ = this->alloc(sizeof(SRLExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) SRLExpr(this, expr1, expr2);
-}
-
-SLLExpr *YYNODESTATE::SLLExprCreate(Expression * expr1, Expression * expr2)
-{
-	void *buf__ = this->alloc(sizeof(SLLExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) SLLExpr(this, expr1, expr2);
-}
-
-ModExpr *YYNODESTATE::ModExprCreate(Expression * expr1, Expression * expr2)
-{
-	void *buf__ = this->alloc(sizeof(ModExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) ModExpr(this, expr1, expr2);
-}
-
-LesExpr *YYNODESTATE::LesExprCreate(Expression * expr1, Expression * expr2)
-{
-	void *buf__ = this->alloc(sizeof(LesExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) LesExpr(this, expr1, expr2);
-}
-
-GreExpr *YYNODESTATE::GreExprCreate(Expression * expr1, Expression * expr2)
-{
-	void *buf__ = this->alloc(sizeof(GreExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) GreExpr(this, expr1, expr2);
-}
-
-LeTExpr *YYNODESTATE::LeTExprCreate(Expression * expr1, Expression * expr2)
-{
-	void *buf__ = this->alloc(sizeof(LeTExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) LeTExpr(this, expr1, expr2);
-}
-
-GrTExpr *YYNODESTATE::GrTExprCreate(Expression * expr1, Expression * expr2)
-{
-	void *buf__ = this->alloc(sizeof(GrTExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) GrTExpr(this, expr1, expr2);
-}
-
-EquExpr *YYNODESTATE::EquExprCreate(Expression * expr1, Expression * expr2)
-{
-	void *buf__ = this->alloc(sizeof(EquExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) EquExpr(this, expr1, expr2);
-}
-
-NEqExpr *YYNODESTATE::NEqExprCreate(Expression * expr1, Expression * expr2)
-{
-	void *buf__ = this->alloc(sizeof(NEqExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) NEqExpr(this, expr1, expr2);
-}
-
-AndExpr *YYNODESTATE::AndExprCreate(Expression * expr1, Expression * expr2)
-{
-	void *buf__ = this->alloc(sizeof(AndExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) AndExpr(this, expr1, expr2);
-}
-
-Or_Expr *YYNODESTATE::Or_ExprCreate(Expression * expr1, Expression * expr2)
-{
-	void *buf__ = this->alloc(sizeof(Or_Expr));
-	if(buf__ == 0) return 0;
-	return new (buf__) Or_Expr(this, expr1, expr2);
-}
-
-MultipleExpr *YYNODESTATE::MultipleExprCreate(ExprList listaExprs)
-{
-	void *buf__ = this->alloc(sizeof(MultipleExpr));
-	if(buf__ == 0) return 0;
-	return new (buf__) MultipleExpr(this, listaExprs);
-}
-
-FieldDecStmt *YYNODESTATE::FieldDecStmtCreate(string_t type, stringList lista)
-{
-	void *buf__ = this->alloc(sizeof(FieldDecStmt));
-	if(buf__ == 0) return 0;
-	return new (buf__) FieldDecStmt(this, type, lista);
-}
-
-PrintLNStmt *YYNODESTATE::PrintLNStmtCreate(Expression * expr)
-{
-	void *buf__ = this->alloc(sizeof(PrintLNStmt));
-	if(buf__ == 0) return 0;
-	return new (buf__) PrintLNStmt(this, expr);
-}
-
-PrintStmt *YYNODESTATE::PrintStmtCreate(Expression * expr)
-{
-	void *buf__ = this->alloc(sizeof(PrintStmt));
-	if(buf__ == 0) return 0;
-	return new (buf__) PrintStmt(this, expr);
-}
-
-ReadStmt *YYNODESTATE::ReadStmtCreate()
-{
-	void *buf__ = this->alloc(sizeof(ReadStmt));
-	if(buf__ == 0) return 0;
-	return new (buf__) ReadStmt(this);
-}
-
-NextIntStmt *YYNODESTATE::NextIntStmtCreate(Expression * expr)
-{
-	void *buf__ = this->alloc(sizeof(NextIntStmt));
-	if(buf__ == 0) return 0;
-	return new (buf__) NextIntStmt(this, expr);
-}
-
-FunctionCallStmt *YYNODESTATE::FunctionCallStmtCreate(string_t id, Expression * expr)
-{
-	void *buf__ = this->alloc(sizeof(FunctionCallStmt));
-	if(buf__ == 0) return 0;
-	return new (buf__) FunctionCallStmt(this, id, expr);
-}
-
-AssignStmt *YYNODESTATE::AssignStmtCreate(string_t id, Expression * expr)
-{
-	void *buf__ = this->alloc(sizeof(AssignStmt));
-	if(buf__ == 0) return 0;
-	return new (buf__) AssignStmt(this, id, expr);
-}
-
-ForStmt *YYNODESTATE::ForStmtCreate(Statement * for_dec, Expression * cond, Statement * for_assign, Statement * block)
-{
-	void *buf__ = this->alloc(sizeof(ForStmt));
-	if(buf__ == 0) return 0;
-	return new (buf__) ForStmt(this, for_dec, cond, for_assign, block);
-}
-
-BlockStmt *YYNODESTATE::BlockStmtCreate(StmtList list)
-{
-	void *buf__ = this->alloc(sizeof(BlockStmt));
-	if(buf__ == 0) return 0;
-	return new (buf__) BlockStmt(this, list);
-}
-
-IfStmt *YYNODESTATE::IfStmtCreate(Expression * cond, Statement * true_block, Statement * false_block)
-{
-	void *buf__ = this->alloc(sizeof(IfStmt));
-	if(buf__ == 0) return 0;
-	return new (buf__) IfStmt(this, cond, true_block, false_block);
-}
-
-WhileStmt *YYNODESTATE::WhileStmtCreate(Expression * cond, Statement * block)
-{
-	void *buf__ = this->alloc(sizeof(WhileStmt));
-	if(buf__ == 0) return 0;
-	return new (buf__) WhileStmt(this, cond, block);
-}
-
-ReturnStmt *YYNODESTATE::ReturnStmtCreate(Expression * expr)
-{
-	void *buf__ = this->alloc(sizeof(ReturnStmt));
-	if(buf__ == 0) return 0;
-	return new (buf__) ReturnStmt(this, expr);
-}
-
-BreakStmt *YYNODESTATE::BreakStmtCreate()
-{
-	void *buf__ = this->alloc(sizeof(BreakStmt));
-	if(buf__ == 0) return 0;
-	return new (buf__) BreakStmt(this);
-}
-
-ContinueStmt *YYNODESTATE::ContinueStmtCreate()
-{
-	void *buf__ = this->alloc(sizeof(ContinueStmt));
-	if(buf__ == 0) return 0;
-	return new (buf__) ContinueStmt(this);
-}
-
-ASTNode::ASTNode(YYNODESTATE *state__)
+ASTNode::ASTNode()
 {
 	this->kind__ = ASTNode_kind;
-	this->filename__ = state__->currFilename();
-	this->linenum__ = state__->currLinenum();
+	this->filename__ = YYNODESTATE::getState()->currFilename();
+	this->linenum__ = YYNODESTATE::getState()->currLinenum();
+	this->code = "";
+	this->place = "";
 }
 
 ASTNode::~ASTNode()
@@ -590,8 +327,8 @@ const char *ASTNode::getKindName() const
 	return "ASTNode";
 }
 
-Expression::Expression(YYNODESTATE *state__)
-	: ASTNode(state__)
+Expression::Expression()
+	: ASTNode()
 {
 	this->kind__ = Expression_kind;
 }
@@ -614,35 +351,11 @@ const char *Expression::getKindName() const
 	return "Expression";
 }
 
-Statement::Statement(YYNODESTATE *state__)
-	: ASTNode(state__)
-{
-	this->kind__ = Statement_kind;
-}
-
-Statement::~Statement()
-{
-	// not used
-}
-
-int Statement::isA(int kind) const
-{
-	if(kind == Statement_kind)
-		return 1;
-	else
-		return ASTNode::isA(kind);
-}
-
-const char *Statement::getKindName() const
-{
-	return "Statement";
-}
-
-OneExpr::OneExpr(YYNODESTATE *state__, Expression * expr1)
-	: Expression(state__)
+OneExpr::OneExpr(Expression * expr)
+	: Expression()
 {
 	this->kind__ = OneExpr_kind;
-	this->expr1 = expr1;
+	this->expr = expr;
 }
 
 OneExpr::~OneExpr()
@@ -663,11 +376,11 @@ const char *OneExpr::getKindName() const
 	return "OneExpr";
 }
 
-NumExpr::NumExpr(YYNODESTATE *state__, int num)
-	: Expression(state__)
+NumExpr::NumExpr(int value)
+	: Expression()
 {
 	this->kind__ = NumExpr_kind;
-	this->num = num;
+	this->value = value;
 }
 
 NumExpr::~NumExpr()
@@ -675,12 +388,13 @@ NumExpr::~NumExpr()
 	// not used
 }
 
-int NumExpr::eval()
-#line 54 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
+bool NumExpr::genCode(IdentsHandler identHandler)
+#line 348 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
-    return num;
+    place = std::to_string(value);
+    return true;    
 }
-#line 684 "../src/ast.cpp"
+#line 398 "../src/ast.cpp"
 
 int NumExpr::isA(int kind) const
 {
@@ -695,211 +409,74 @@ const char *NumExpr::getKindName() const
 	return "NumExpr";
 }
 
-NextIntExpr::NextIntExpr(YYNODESTATE *state__, Expression * expr)
-	: Expression(state__)
+StringConstant::StringConstant(string_t value)
+	: Expression()
 {
-	this->kind__ = NextIntExpr_kind;
-	this->expr = expr;
+	this->kind__ = StringConstant_kind;
+	this->value = value;
 }
 
-NextIntExpr::~NextIntExpr()
+StringConstant::~StringConstant()
 {
 	// not used
 }
 
-int NextIntExpr::eval()
-#line 63 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
+bool StringConstant::genCode(IdentsHandler identHandler)
+#line 342 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
-    return rand() % expr->eval();
+    place = identHandler.registerStrLiteral(value);
+    return true;
 }
-#line 716 "../src/ast.cpp"
+#line 431 "../src/ast.cpp"
 
-int NextIntExpr::isA(int kind) const
+int StringConstant::isA(int kind) const
 {
-	if(kind == NextIntExpr_kind)
+	if(kind == StringConstant_kind)
 		return 1;
 	else
 		return Expression::isA(kind);
 }
 
-const char *NextIntExpr::getKindName() const
+const char *StringConstant::getKindName() const
 {
-	return "NextIntExpr";
+	return "StringConstant";
 }
 
-ReadExpr::ReadExpr(YYNODESTATE *state__)
-	: Expression(state__)
+CharExpr::CharExpr(int value)
+	: Expression()
 {
-	this->kind__ = ReadExpr_kind;
+	this->kind__ = CharExpr_kind;
+	this->value = value;
 }
 
-ReadExpr::~ReadExpr()
+CharExpr::~CharExpr()
 {
 	// not used
 }
 
-int ReadExpr::eval()
-#line 69 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
+bool CharExpr::genCode(IdentsHandler identHandler)
+#line 354 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
-    int_t a;
-    cin>>a;
-    return a;
+    place = std::to_string(value);
+    return true;    
 }
-#line 749 "../src/ast.cpp"
+#line 464 "../src/ast.cpp"
 
-int ReadExpr::isA(int kind) const
+int CharExpr::isA(int kind) const
 {
-	if(kind == ReadExpr_kind)
+	if(kind == CharExpr_kind)
 		return 1;
 	else
 		return Expression::isA(kind);
 }
 
-const char *ReadExpr::getKindName() const
+const char *CharExpr::getKindName() const
 {
-	return "ReadExpr";
+	return "CharExpr";
 }
 
-PrintExpr::PrintExpr(YYNODESTATE *state__, Expression * expr)
-	: Expression(state__)
-{
-	this->kind__ = PrintExpr_kind;
-	this->expr = expr;
-}
-
-PrintExpr::~PrintExpr()
-{
-	// not used
-}
-
-int PrintExpr::eval()
-#line 80 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{
-    std::cerr << getFilename() << ":" << getLinenum() <<": error: assigning a void expression" << endl;
-    exit(0);
-}
-#line 782 "../src/ast.cpp"
-
-int PrintExpr::isA(int kind) const
-{
-	if(kind == PrintExpr_kind)
-		return 1;
-	else
-		return Expression::isA(kind);
-}
-
-const char *PrintExpr::getKindName() const
-{
-	return "PrintExpr";
-}
-
-FunctionCallExpr::FunctionCallExpr(YYNODESTATE *state__, string_t * id, Expression * expr)
-	: Expression(state__)
-{
-	this->kind__ = FunctionCallExpr_kind;
-	this->id = id;
-	this->expr = expr;
-}
-
-FunctionCallExpr::~FunctionCallExpr()
-{
-	// not used
-}
-
-int FunctionCallExpr::eval()
-#line 91 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{
-    return 0;
-}
-#line 815 "../src/ast.cpp"
-
-int FunctionCallExpr::isA(int kind) const
-{
-	if(kind == FunctionCallExpr_kind)
-		return 1;
-	else
-		return Expression::isA(kind);
-}
-
-const char *FunctionCallExpr::getKindName() const
-{
-	return "FunctionCallExpr";
-}
-
-IdExpr::IdExpr(YYNODESTATE *state__, string_t id)
-	: Expression(state__)
-{
-	this->kind__ = IdExpr_kind;
-	this->id = id;
-}
-
-IdExpr::~IdExpr()
-{
-	// not used
-}
-
-int IdExpr::eval()
-#line 100 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{
-    /*if(vars.find(id) != vars.end())
-        return vars[id];
-    else
-    {
-        std::cerr << "Id: "<<id<<" no Existe" << endl;
-        exit(0);
-    } */
-    return 0;
-}
-#line 854 "../src/ast.cpp"
-
-int IdExpr::isA(int kind) const
-{
-	if(kind == IdExpr_kind)
-		return 1;
-	else
-		return Expression::isA(kind);
-}
-
-const char *IdExpr::getKindName() const
-{
-	return "IdExpr";
-}
-
-IdArrayExpr::IdArrayExpr(YYNODESTATE *state__, string_t id, int_t pos)
-	: Expression(state__)
-{
-	this->kind__ = IdArrayExpr_kind;
-	this->id = id;
-	this->pos = pos;
-}
-
-IdArrayExpr::~IdArrayExpr()
-{
-	// not used
-}
-
-int IdArrayExpr::eval()
-#line 117 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{
-    return 0;
-}
-#line 887 "../src/ast.cpp"
-
-int IdArrayExpr::isA(int kind) const
-{
-	if(kind == IdArrayExpr_kind)
-		return 1;
-	else
-		return Expression::isA(kind);
-}
-
-const char *IdArrayExpr::getKindName() const
-{
-	return "IdArrayExpr";
-}
-
-BinExpr::BinExpr(YYNODESTATE *state__, Expression * expr1, Expression * expr2)
-	: Expression(state__)
+BinExpr::BinExpr(Expression * expr1, Expression * expr2)
+	: Expression()
 {
 	this->kind__ = BinExpr_kind;
 	this->expr1 = expr1;
@@ -924,8 +501,8 @@ const char *BinExpr::getKindName() const
 	return "BinExpr";
 }
 
-NotExpr::NotExpr(YYNODESTATE *state__, Expression * expr1)
-	: OneExpr(state__, expr1)
+NotExpr::NotExpr(Expression * expr)
+	: OneExpr(expr)
 {
 	this->kind__ = NotExpr_kind;
 }
@@ -935,10 +512,12 @@ NotExpr::~NotExpr()
 	// not used
 }
 
-int NotExpr::eval()
-#line 46 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ return !expr1->eval();}
-#line 942 "../src/ast.cpp"
+bool NotExpr::genCode(IdentsHandler identHandler)
+#line 740 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+{
+
+}
+#line 521 "../src/ast.cpp"
 
 int NotExpr::isA(int kind) const
 {
@@ -953,37 +532,56 @@ const char *NotExpr::getKindName() const
 	return "NotExpr";
 }
 
-UnaExpr::UnaExpr(YYNODESTATE *state__, Expression * expr1)
-	: OneExpr(state__, expr1)
+NegExpr::NegExpr(Expression * expr)
+	: OneExpr(expr)
 {
-	this->kind__ = UnaExpr_kind;
+	this->kind__ = NegExpr_kind;
 }
 
-UnaExpr::~UnaExpr()
+NegExpr::~NegExpr()
 {
 	// not used
 }
 
-int UnaExpr::eval()
-#line 47 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ return -expr1->eval();}
-#line 971 "../src/ast.cpp"
-
-int UnaExpr::isA(int kind) const
+bool NegExpr::genCode(IdentsHandler identHandler)
+#line 718 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
-	if(kind == UnaExpr_kind)
+    if (!expr->genCode(identHandler)) {
+        return false;
+    }
+    place = identHandler.newTemp();
+    std::ostringstream ss;
+
+    ss << expr->code << "\n";
+    if(expr->getKind() == NumExpr_kind)
+        expr->place = "-" + expr->place;
+    else
+    {
+        ss << "mov eax, dword [" << expr->place << "]\n";
+        ss << "neg eax\n";
+        ss << "mov dword [" << place << "], eax";
+    }
+
+    code = ss.str();
+    return true;
+}
+#line 569 "../src/ast.cpp"
+
+int NegExpr::isA(int kind) const
+{
+	if(kind == NegExpr_kind)
 		return 1;
 	else
 		return OneExpr::isA(kind);
 }
 
-const char *UnaExpr::getKindName() const
+const char *NegExpr::getKindName() const
 {
-	return "UnaExpr";
+	return "NegExpr";
 }
 
-AddExpr::AddExpr(YYNODESTATE *state__, Expression * expr1, Expression * expr2)
-	: BinExpr(state__, expr1, expr2)
+AddExpr::AddExpr(Expression * expr1, Expression * expr2)
+	: BinExpr(expr1, expr2)
 {
 	this->kind__ = AddExpr_kind;
 }
@@ -993,10 +591,25 @@ AddExpr::~AddExpr()
 	// not used
 }
 
-int AddExpr::eval()
-#line 145 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ return expr1->eval() + expr2->eval();  }
-#line 1000 "../src/ast.cpp"
+bool AddExpr::genCode(IdentsHandler identHandler)
+#line 361 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+{
+    if (!expr1->genCode(identHandler))
+        return false;
+    if (!expr2->genCode(identHandler))
+        return false;
+    std::ostringstream ss;
+
+    place = identHandler.newTemp();
+    ss << expr1->code << "\n"
+       << expr2->code << "\n"
+       << "mov eax, " << getPlace(expr1) << "\n"
+       << "add eax, " << getPlace(expr2) << "\n"
+       << "mov dword [" << place << "], eax";
+    code = ss.str();
+    return true;
+}
+#line 613 "../src/ast.cpp"
 
 int AddExpr::isA(int kind) const
 {
@@ -1011,8 +624,8 @@ const char *AddExpr::getKindName() const
 	return "AddExpr";
 }
 
-SubExpr::SubExpr(YYNODESTATE *state__, Expression * expr1, Expression * expr2)
-	: BinExpr(state__, expr1, expr2)
+SubExpr::SubExpr(Expression * expr1, Expression * expr2)
+	: BinExpr(expr1, expr2)
 {
 	this->kind__ = SubExpr_kind;
 }
@@ -1022,10 +635,25 @@ SubExpr::~SubExpr()
 	// not used
 }
 
-int SubExpr::eval()
-#line 146 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ return expr1->eval() - expr2->eval();  }
-#line 1029 "../src/ast.cpp"
+bool SubExpr::genCode(IdentsHandler identHandler)
+#line 457 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+{
+    if (!expr1->genCode(identHandler))
+        return false;
+    if (!expr2->genCode(identHandler))
+        return false;
+    std::ostringstream ss;
+
+    place = identHandler.newTemp();
+    ss << expr1->code << "\n"
+       << expr2->code << "\n"
+       << "mov eax, " << getPlace(expr1) << "\n"
+       << "sub eax, " << getPlace(expr2) << "\n"
+       << "mov dword [" << place << "], eax";
+    code = ss.str();
+    return true;
+}
+#line 657 "../src/ast.cpp"
 
 int SubExpr::isA(int kind) const
 {
@@ -1040,8 +668,8 @@ const char *SubExpr::getKindName() const
 	return "SubExpr";
 }
 
-MulExpr::MulExpr(YYNODESTATE *state__, Expression * expr1, Expression * expr2)
-	: BinExpr(state__, expr1, expr2)
+MulExpr::MulExpr(Expression * expr1, Expression * expr2)
+	: BinExpr(expr1, expr2)
 {
 	this->kind__ = MulExpr_kind;
 }
@@ -1051,10 +679,26 @@ MulExpr::~MulExpr()
 	// not used
 }
 
-int MulExpr::eval()
-#line 147 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ return expr1->eval() * expr2->eval();  }
-#line 1058 "../src/ast.cpp"
+bool MulExpr::genCode(IdentsHandler identHandler)
+#line 475 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+{
+    if (!expr1->genCode(identHandler))
+        return false;
+    if (!expr2->genCode(identHandler))
+        return false;
+
+    std::ostringstream ss;
+
+    place = identHandler.newTemp();
+    ss << expr1->code << "\n"
+       << expr2->code << "\n"
+       << "mov eax, " << getPlace(expr1) << "\n"
+       << "imul eax, " << getPlace(expr2) << "\n"
+       << "mov dword [" << place << "], eax" << "\n";
+    code = ss.str();
+    return true;
+}
+#line 702 "../src/ast.cpp"
 
 int MulExpr::isA(int kind) const
 {
@@ -1069,8 +713,8 @@ const char *MulExpr::getKindName() const
 	return "MulExpr";
 }
 
-DivExpr::DivExpr(YYNODESTATE *state__, Expression * expr1, Expression * expr2)
-	: BinExpr(state__, expr1, expr2)
+DivExpr::DivExpr(Expression * expr1, Expression * expr2)
+	: BinExpr(expr1, expr2)
 {
 	this->kind__ = DivExpr_kind;
 }
@@ -1080,18 +724,29 @@ DivExpr::~DivExpr()
 	// not used
 }
 
-int DivExpr::eval()
-#line 149 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
+bool DivExpr::genCode(IdentsHandler identHandler)
+#line 494 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
-    if(expr2->eval() != 0)
-        return expr1->eval() / expr2->eval();
-    else
-    {
-        std::cerr << getFilename() << ":" << getLinenum() <<": division by zero" << endl;
-        return 0;
-    }	
+    if (!expr1->genCode(identHandler)) {
+        return false;
+    }
+    if (!expr2->genCode(identHandler)) {
+        return false;
+    }
+    std::ostringstream ss;
+
+    place = identHandler.newTemp();
+    ss << expr1->code << "\n"
+       << expr2->code << "\n"
+       << "mov eax, " << getPlace(expr1) << "\n"
+       << "mov ebx, " << getPlace(expr1) << "\n"
+       << "cdq\n"
+       << "idiv ebx\n"
+       << "mov dword [" << place << "], eax";
+    code = ss.str();
+    return true;
 }
-#line 1095 "../src/ast.cpp"
+#line 750 "../src/ast.cpp"
 
 int DivExpr::isA(int kind) const
 {
@@ -1106,8 +761,8 @@ const char *DivExpr::getKindName() const
 	return "DivExpr";
 }
 
-SRLExpr::SRLExpr(YYNODESTATE *state__, Expression * expr1, Expression * expr2)
-	: BinExpr(state__, expr1, expr2)
+SRLExpr::SRLExpr(Expression * expr1, Expression * expr2)
+	: BinExpr(expr1, expr2)
 {
 	this->kind__ = SRLExpr_kind;
 }
@@ -1117,10 +772,27 @@ SRLExpr::~SRLExpr()
 	// not used
 }
 
-int SRLExpr::eval()
-#line 158 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ return expr1->eval() >> expr2->eval(); }
-#line 1124 "../src/ast.cpp"
+bool SRLExpr::genCode(IdentsHandler identHandler)
+#line 417 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+{
+    if (!expr1->genCode(identHandler)) {
+        return false;
+    }
+    if (!expr2->genCode(identHandler)) {
+        return false;
+    }
+    std::ostringstream ss;
+
+    place = identHandler.newTemp();
+    ss << expr1->code << "\n"
+       << expr2->code << "\n"
+       << "mov eax, " << getPlace(expr1) << "\n"
+       << "or eax, " << getPlace(expr2) << "\n"
+       << "mov dword [" << place << "], eax";
+    code = ss.str();
+    return true;
+}
+#line 796 "../src/ast.cpp"
 
 int SRLExpr::isA(int kind) const
 {
@@ -1135,8 +807,8 @@ const char *SRLExpr::getKindName() const
 	return "SRLExpr";
 }
 
-SLLExpr::SLLExpr(YYNODESTATE *state__, Expression * expr1, Expression * expr2)
-	: BinExpr(state__, expr1, expr2)
+SLLExpr::SLLExpr(Expression * expr1, Expression * expr2)
+	: BinExpr(expr1, expr2)
 {
 	this->kind__ = SLLExpr_kind;
 }
@@ -1146,10 +818,27 @@ SLLExpr::~SLLExpr()
 	// not used
 }
 
-int SLLExpr::eval()
-#line 159 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ return expr1->eval() << expr2->eval(); }
-#line 1153 "../src/ast.cpp"
+bool SLLExpr::genCode(IdentsHandler identHandler)
+#line 437 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+{
+    if (!expr1->genCode(identHandler)) {
+        return false;
+    }
+    if (!expr2->genCode(identHandler)) {
+        return false;
+    }
+    std::ostringstream ss;
+
+    place = identHandler.newTemp();
+    ss << expr1->code << "\n"
+       << expr2->code << "\n"
+       << "mov eax, " << getPlace(expr1) << "\n"
+       << "or eax, " << getPlace(expr2) << "\n"
+       << "mov dword [" << place << "], eax";
+    code = ss.str();
+    return true;
+}
+#line 842 "../src/ast.cpp"
 
 int SLLExpr::isA(int kind) const
 {
@@ -1164,8 +853,8 @@ const char *SLLExpr::getKindName() const
 	return "SLLExpr";
 }
 
-ModExpr::ModExpr(YYNODESTATE *state__, Expression * expr1, Expression * expr2)
-	: BinExpr(state__, expr1, expr2)
+ModExpr::ModExpr(Expression * expr1, Expression * expr2)
+	: BinExpr(expr1, expr2)
 {
 	this->kind__ = ModExpr_kind;
 }
@@ -1175,10 +864,29 @@ ModExpr::~ModExpr()
 	// not used
 }
 
-int ModExpr::eval()
-#line 160 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ return expr1->eval() &  expr2->eval(); }
-#line 1182 "../src/ast.cpp"
+bool ModExpr::genCode(IdentsHandler identHandler)
+#line 516 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+{
+    if (!expr1->genCode(identHandler)) {
+        return false;
+    }
+    if (!expr2->genCode(identHandler)) {
+        return false;
+    }
+    std::ostringstream ss;
+
+    place = identHandler.newTemp();
+    ss << expr1->code << "\n"
+       << expr2->code << "\n"
+       << "mov eax, " << getPlace(expr1) << "\n"
+       << "mov ebx, " << getPlace(expr1) << "\n"
+       << "cdq\n"
+       << "idiv ebx\n"
+       << "mov dword [" << place << "], edx";
+    code = ss.str();
+    return true;
+}
+#line 890 "../src/ast.cpp"
 
 int ModExpr::isA(int kind) const
 {
@@ -1193,8 +901,8 @@ const char *ModExpr::getKindName() const
 	return "ModExpr";
 }
 
-LesExpr::LesExpr(YYNODESTATE *state__, Expression * expr1, Expression * expr2)
-	: BinExpr(state__, expr1, expr2)
+LesExpr::LesExpr(Expression * expr1, Expression * expr2)
+	: BinExpr(expr1, expr2)
 {
 	this->kind__ = LesExpr_kind;
 }
@@ -1204,10 +912,37 @@ LesExpr::~LesExpr()
 	// not used
 }
 
-int LesExpr::eval()
-#line 162 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ return expr1->eval() <  expr2->eval(); }
-#line 1211 "../src/ast.cpp"
+bool LesExpr::genCode(IdentsHandler identHandler)
+#line 538 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+{
+    if (!expr1->genCode(identHandler))
+        return false;
+    
+    if (!expr2->genCode(identHandler)) 
+        return false;
+    place = identHandler.newTemp();
+
+    std::ostringstream ss;
+
+    place = identHandler.newTemp();
+    std::string label = identHandler.genNewLabel();
+    std::string fin = identHandler.genNewLabel();
+
+    ss << expr1->code << "\n"
+        << expr2->code << "\n"
+        << "mov eax, " << getPlace(expr1) << "\n"
+        << "cmp eax, " << getPlace(expr2) << "\n"
+        << "jl" << label <<"\n"
+        << "mov eax, 0\n"
+        << "jmp " << fin <<"\n"
+        << label << ":\n"
+        << "mov eax, 1\n"
+        << fin << ":\n"
+        << "mov dword [" << place << "], eax";
+    code = ss.str();
+    return true;
+}
+#line 946 "../src/ast.cpp"
 
 int LesExpr::isA(int kind) const
 {
@@ -1222,8 +957,8 @@ const char *LesExpr::getKindName() const
 	return "LesExpr";
 }
 
-GreExpr::GreExpr(YYNODESTATE *state__, Expression * expr1, Expression * expr2)
-	: BinExpr(state__, expr1, expr2)
+GreExpr::GreExpr(Expression * expr1, Expression * expr2)
+	: BinExpr(expr1, expr2)
 {
 	this->kind__ = GreExpr_kind;
 }
@@ -1233,10 +968,37 @@ GreExpr::~GreExpr()
 	// not used
 }
 
-int GreExpr::eval()
-#line 161 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ return expr1->eval() >  expr2->eval(); }
-#line 1240 "../src/ast.cpp"
+bool GreExpr::genCode(IdentsHandler identHandler)
+#line 568 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+{
+     if (!expr1->genCode(identHandler))
+        return false;
+    
+    if (!expr2->genCode(identHandler)) 
+        return false;
+    place = identHandler.newTemp();
+
+    std::ostringstream ss;
+
+    place = identHandler.newTemp();
+    std::string label = identHandler.genNewLabel();
+    std::string fin = identHandler.genNewLabel();
+
+    ss << expr1->code << "\n"
+        << expr2->code << "\n"
+        << "mov eax, " << getPlace(expr1) << "\n"
+        << "cmp eax, " << getPlace(expr2) << "\n"
+        << "jg" << label <<"\n"
+        << "mov eax, 0\n"
+        << "jmp " << fin <<"\n"
+        << label << ":\n"
+        << "mov eax, 1\n"
+        << fin << ":\n"
+        << "mov dword [" << place << "], eax";
+    code = ss.str();
+    return true;
+}
+#line 1002 "../src/ast.cpp"
 
 int GreExpr::isA(int kind) const
 {
@@ -1251,66 +1013,120 @@ const char *GreExpr::getKindName() const
 	return "GreExpr";
 }
 
-LeTExpr::LeTExpr(YYNODESTATE *state__, Expression * expr1, Expression * expr2)
-	: BinExpr(state__, expr1, expr2)
+LeEExpr::LeEExpr(Expression * expr1, Expression * expr2)
+	: BinExpr(expr1, expr2)
 {
-	this->kind__ = LeTExpr_kind;
+	this->kind__ = LeEExpr_kind;
 }
 
-LeTExpr::~LeTExpr()
+LeEExpr::~LeEExpr()
 {
 	// not used
 }
 
-int LeTExpr::eval()
-#line 163 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ return expr1->eval() <= expr2->eval(); }
-#line 1269 "../src/ast.cpp"
-
-int LeTExpr::isA(int kind) const
+bool LeEExpr::genCode(IdentsHandler identHandler)
+#line 598 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
-	if(kind == LeTExpr_kind)
+    if (!expr1->genCode(identHandler))
+        return false;
+    
+    if (!expr2->genCode(identHandler)) 
+        return false;
+    place = identHandler.newTemp();
+
+    std::ostringstream ss;
+
+    place = identHandler.newTemp();
+    std::string label = identHandler.genNewLabel();
+    std::string fin = identHandler.genNewLabel();
+
+    ss << expr1->code << "\n"
+        << expr2->code << "\n"
+        << "mov eax, " << getPlace(expr1) << "\n"
+        << "cmp eax, " << getPlace(expr2) << "\n"
+        << "jle" << label <<"\n"
+        << "mov eax, 0\n"
+        << "jmp " << fin <<"\n"
+        << label << ":\n"
+        << "mov eax, 1\n"
+        << fin << ":\n"
+        << "mov dword [" << place << "], eax";
+    code = ss.str();
+    return true;
+}
+#line 1058 "../src/ast.cpp"
+
+int LeEExpr::isA(int kind) const
+{
+	if(kind == LeEExpr_kind)
 		return 1;
 	else
 		return BinExpr::isA(kind);
 }
 
-const char *LeTExpr::getKindName() const
+const char *LeEExpr::getKindName() const
 {
-	return "LeTExpr";
+	return "LeEExpr";
 }
 
-GrTExpr::GrTExpr(YYNODESTATE *state__, Expression * expr1, Expression * expr2)
-	: BinExpr(state__, expr1, expr2)
+GrEExpr::GrEExpr(Expression * expr1, Expression * expr2)
+	: BinExpr(expr1, expr2)
 {
-	this->kind__ = GrTExpr_kind;
+	this->kind__ = GrEExpr_kind;
 }
 
-GrTExpr::~GrTExpr()
+GrEExpr::~GrEExpr()
 {
 	// not used
 }
 
-int GrTExpr::eval()
-#line 164 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ return expr1->eval() >= expr2->eval(); }
-#line 1298 "../src/ast.cpp"
-
-int GrTExpr::isA(int kind) const
+bool GrEExpr::genCode(IdentsHandler identHandler)
+#line 628 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
-	if(kind == GrTExpr_kind)
+     if (!expr1->genCode(identHandler))
+        return false;
+    
+    if (!expr2->genCode(identHandler)) 
+        return false;
+    place = identHandler.newTemp();
+
+    std::ostringstream ss;
+
+    place = identHandler.newTemp();
+    std::string label = identHandler.genNewLabel();
+    std::string fin = identHandler.genNewLabel();
+
+    ss << expr1->code << "\n"
+        << expr2->code << "\n"
+        << "mov eax, " << getPlace(expr1) << "\n"
+        << "cmp eax, " << getPlace(expr2) << "\n"
+        << "jge" << label <<"\n"
+        << "mov eax, 0\n"
+        << "jmp " << fin <<"\n"
+        << label << ":\n"
+        << "mov eax, 1\n"
+        << fin << ":\n"
+        << "mov dword [" << place << "], eax";
+    code = ss.str();
+    return true;
+}
+#line 1114 "../src/ast.cpp"
+
+int GrEExpr::isA(int kind) const
+{
+	if(kind == GrEExpr_kind)
 		return 1;
 	else
 		return BinExpr::isA(kind);
 }
 
-const char *GrTExpr::getKindName() const
+const char *GrEExpr::getKindName() const
 {
-	return "GrTExpr";
+	return "GrEExpr";
 }
 
-EquExpr::EquExpr(YYNODESTATE *state__, Expression * expr1, Expression * expr2)
-	: BinExpr(state__, expr1, expr2)
+EquExpr::EquExpr(Expression * expr1, Expression * expr2)
+	: BinExpr(expr1, expr2)
 {
 	this->kind__ = EquExpr_kind;
 }
@@ -1320,10 +1136,37 @@ EquExpr::~EquExpr()
 	// not used
 }
 
-int EquExpr::eval()
-#line 165 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ return expr1->eval() == expr2->eval(); }
-#line 1327 "../src/ast.cpp"
+bool EquExpr::genCode(IdentsHandler identHandler)
+#line 658 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+{
+    if (!expr1->genCode(identHandler))
+        return false;
+    
+    if (!expr2->genCode(identHandler)) 
+        return false;
+    place = identHandler.newTemp();
+
+    std::ostringstream ss;
+
+    place = identHandler.newTemp();
+    std::string label = identHandler.genNewLabel();
+    std::string fin = identHandler.genNewLabel();
+
+    ss << expr1->code << "\n"
+        << expr2->code << "\n"
+        << "mov eax, " << getPlace(expr1) << "\n"
+        << "cmp eax, " << getPlace(expr2) << "\n"
+        << "je" << label <<"\n"
+        << "mov eax, 0\n"
+        << "jmp " << fin <<"\n"
+        << label << ":\n"
+        << "mov eax, 1\n"
+        << fin << ":\n"
+        << "mov dword [" << place << "], eax";
+    code = ss.str();
+    return true;
+}
+#line 1170 "../src/ast.cpp"
 
 int EquExpr::isA(int kind) const
 {
@@ -1338,8 +1181,8 @@ const char *EquExpr::getKindName() const
 	return "EquExpr";
 }
 
-NEqExpr::NEqExpr(YYNODESTATE *state__, Expression * expr1, Expression * expr2)
-	: BinExpr(state__, expr1, expr2)
+NEqExpr::NEqExpr(Expression * expr1, Expression * expr2)
+	: BinExpr(expr1, expr2)
 {
 	this->kind__ = NEqExpr_kind;
 }
@@ -1349,10 +1192,37 @@ NEqExpr::~NEqExpr()
 	// not used
 }
 
-int NEqExpr::eval()
-#line 166 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ return expr1->eval() != expr2->eval(); }
-#line 1356 "../src/ast.cpp"
+bool NEqExpr::genCode(IdentsHandler identHandler)
+#line 688 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+{
+   if (!expr1->genCode(identHandler))
+        return false;
+    
+    if (!expr2->genCode(identHandler)) 
+        return false;
+    place = identHandler.newTemp();
+
+    std::ostringstream ss;
+
+    place = identHandler.newTemp();
+    std::string label = identHandler.genNewLabel();
+    std::string fin = identHandler.genNewLabel();
+
+    ss << expr1->code << "\n"
+        << expr2->code << "\n"
+        << "mov eax, " << getPlace(expr1) << "\n"
+        << "cmp eax, " << getPlace(expr2) << "\n"
+        << "jne" << label <<"\n"
+        << "mov eax, 0\n"
+        << "jmp " << fin <<"\n"
+        << label << ":\n"
+        << "mov eax, 1\n"
+        << fin << ":\n"
+        << "mov dword [" << place << "], eax";
+    code = ss.str();
+    return true;
+}
+#line 1226 "../src/ast.cpp"
 
 int NEqExpr::isA(int kind) const
 {
@@ -1367,8 +1237,8 @@ const char *NEqExpr::getKindName() const
 	return "NEqExpr";
 }
 
-AndExpr::AndExpr(YYNODESTATE *state__, Expression * expr1, Expression * expr2)
-	: BinExpr(state__, expr1, expr2)
+AndExpr::AndExpr(Expression * expr1, Expression * expr2)
+	: BinExpr(expr1, expr2)
 {
 	this->kind__ = AndExpr_kind;
 }
@@ -1378,10 +1248,25 @@ AndExpr::~AndExpr()
 	// not used
 }
 
-int AndExpr::eval()
-#line 167 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ return expr1->eval() && expr2->eval(); }
-#line 1385 "../src/ast.cpp"
+bool AndExpr::genCode(IdentsHandler identHandler)
+#line 379 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+{
+    if (!expr1->genCode(identHandler)) 
+        return false;
+    if (!expr2->genCode(identHandler)) 
+        return false;
+    std::ostringstream ss;
+
+    place = identHandler.newTemp();
+    ss << expr1->code << "\n"
+       << expr2->code << "\n"
+       << "mov eax, " << getPlace(expr1) << "\n"
+       << "and eax, " << getPlace(expr2) << "\n"
+       << "mov dword [" << place << "], eax";
+    code = ss.str();
+    return true;
+}
+#line 1270 "../src/ast.cpp"
 
 int AndExpr::isA(int kind) const
 {
@@ -1396,8 +1281,8 @@ const char *AndExpr::getKindName() const
 	return "AndExpr";
 }
 
-Or_Expr::Or_Expr(YYNODESTATE *state__, Expression * expr1, Expression * expr2)
-	: BinExpr(state__, expr1, expr2)
+Or_Expr::Or_Expr(Expression * expr1, Expression * expr2)
+	: BinExpr(expr1, expr2)
 {
 	this->kind__ = Or_Expr_kind;
 }
@@ -1407,10 +1292,27 @@ Or_Expr::~Or_Expr()
 	// not used
 }
 
-int Or_Expr::eval()
-#line 168 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ return expr1->eval() || expr2->eval(); }
-#line 1414 "../src/ast.cpp"
+bool Or_Expr::genCode(IdentsHandler identHandler)
+#line 397 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+{
+    if (!expr1->genCode(identHandler)) {
+        return false;
+    }
+    if (!expr2->genCode(identHandler)) {
+        return false;
+    }
+    std::ostringstream ss;
+
+    place = identHandler.newTemp();
+    ss << expr1->code << "\n"
+       << expr2->code << "\n"
+       << "mov eax, " << getPlace(expr1) << "\n"
+       << "or eax, " << getPlace(expr2) << "\n"
+       << "mov dword [" << place << "], eax";
+    code = ss.str();
+    return true;
+}
+#line 1316 "../src/ast.cpp"
 
 int Or_Expr::isA(int kind) const
 {
@@ -1423,503 +1325,5 @@ int Or_Expr::isA(int kind) const
 const char *Or_Expr::getKindName() const
 {
 	return "Or_Expr";
-}
-
-MultipleExpr::MultipleExpr(YYNODESTATE *state__, ExprList listaExprs)
-	: Statement(state__)
-{
-	this->kind__ = MultipleExpr_kind;
-	this->listaExprs = listaExprs;
-}
-
-MultipleExpr::~MultipleExpr()
-{
-	// not used
-}
-
-void MultipleExpr::exec()
-#line 174 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ 
-    for(int x = 0;x<listaExprs.size();x++)
-        listaInts.push_back(listaExprs.at(x)->eval());
-}
-#line 1447 "../src/ast.cpp"
-
-int MultipleExpr::isA(int kind) const
-{
-	if(kind == MultipleExpr_kind)
-		return 1;
-	else
-		return Statement::isA(kind);
-}
-
-const char *MultipleExpr::getKindName() const
-{
-	return "MultipleExpr";
-}
-
-FieldDecStmt::FieldDecStmt(YYNODESTATE *state__, string_t type, stringList lista)
-	: Statement(state__)
-{
-	this->kind__ = FieldDecStmt_kind;
-	this->type = type;
-	this->lista = lista;
-}
-
-FieldDecStmt::~FieldDecStmt()
-{
-	// not used
-}
-
-void FieldDecStmt::exec()
-#line 187 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{
-
-}
-#line 1480 "../src/ast.cpp"
-
-int FieldDecStmt::isA(int kind) const
-{
-	if(kind == FieldDecStmt_kind)
-		return 1;
-	else
-		return Statement::isA(kind);
-}
-
-const char *FieldDecStmt::getKindName() const
-{
-	return "FieldDecStmt";
-}
-
-PrintLNStmt::PrintLNStmt(YYNODESTATE *state__, Expression * expr)
-	: Statement(state__)
-{
-	this->kind__ = PrintLNStmt_kind;
-	this->expr = expr;
-}
-
-PrintLNStmt::~PrintLNStmt()
-{
-	// not used
-}
-
-void PrintLNStmt::exec()
-#line 198 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{
-    std::cout<<expr->eval()<<"\n";
-}
-#line 1512 "../src/ast.cpp"
-
-int PrintLNStmt::isA(int kind) const
-{
-	if(kind == PrintLNStmt_kind)
-		return 1;
-	else
-		return Statement::isA(kind);
-}
-
-const char *PrintLNStmt::getKindName() const
-{
-	return "PrintLNStmt";
-}
-
-PrintStmt::PrintStmt(YYNODESTATE *state__, Expression * expr)
-	: Statement(state__)
-{
-	this->kind__ = PrintStmt_kind;
-	this->expr = expr;
-}
-
-PrintStmt::~PrintStmt()
-{
-	// not used
-}
-
-void PrintStmt::exec()
-#line 206 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{
-    std::cout<<expr->eval();
-}
-#line 1544 "../src/ast.cpp"
-
-int PrintStmt::isA(int kind) const
-{
-	if(kind == PrintStmt_kind)
-		return 1;
-	else
-		return Statement::isA(kind);
-}
-
-const char *PrintStmt::getKindName() const
-{
-	return "PrintStmt";
-}
-
-ReadStmt::ReadStmt(YYNODESTATE *state__)
-	: Statement(state__)
-{
-	this->kind__ = ReadStmt_kind;
-}
-
-ReadStmt::~ReadStmt()
-{
-	// not used
-}
-
-void ReadStmt::exec()
-#line 214 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{
-    std::cerr << getFilename() << ":" << getLinenum() <<": warning: expression result unused" << endl;
-}
-#line 1575 "../src/ast.cpp"
-
-int ReadStmt::isA(int kind) const
-{
-	if(kind == ReadStmt_kind)
-		return 1;
-	else
-		return Statement::isA(kind);
-}
-
-const char *ReadStmt::getKindName() const
-{
-	return "ReadStmt";
-}
-
-NextIntStmt::NextIntStmt(YYNODESTATE *state__, Expression * expr)
-	: Statement(state__)
-{
-	this->kind__ = NextIntStmt_kind;
-	this->expr = expr;
-}
-
-NextIntStmt::~NextIntStmt()
-{
-	// not used
-}
-
-void NextIntStmt::exec()
-#line 225 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{
-    std::cerr << getFilename() << ":" << getLinenum() <<": warning: expression result unused" << endl;
-    rand();
-}
-#line 1608 "../src/ast.cpp"
-
-int NextIntStmt::isA(int kind) const
-{
-	if(kind == NextIntStmt_kind)
-		return 1;
-	else
-		return Statement::isA(kind);
-}
-
-const char *NextIntStmt::getKindName() const
-{
-	return "NextIntStmt";
-}
-
-FunctionCallStmt::FunctionCallStmt(YYNODESTATE *state__, string_t id, Expression * expr)
-	: Statement(state__)
-{
-	this->kind__ = FunctionCallStmt_kind;
-	this->id = id;
-	this->expr = expr;
-}
-
-FunctionCallStmt::~FunctionCallStmt()
-{
-	// not used
-}
-
-void FunctionCallStmt::exec()
-#line 238 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{
-    expr->eval();
-}
-#line 1641 "../src/ast.cpp"
-
-int FunctionCallStmt::isA(int kind) const
-{
-	if(kind == FunctionCallStmt_kind)
-		return 1;
-	else
-		return Statement::isA(kind);
-}
-
-const char *FunctionCallStmt::getKindName() const
-{
-	return "FunctionCallStmt";
-}
-
-AssignStmt::AssignStmt(YYNODESTATE *state__, string_t id, Expression * expr)
-	: Statement(state__)
-{
-	this->kind__ = AssignStmt_kind;
-	this->id = id;
-	this->expr = expr;
-}
-
-AssignStmt::~AssignStmt()
-{
-	// not used
-}
-
-void AssignStmt::exec()
-#line 250 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{
-    //vars[id] = expr->eval();
-}
-#line 1674 "../src/ast.cpp"
-
-int AssignStmt::isA(int kind) const
-{
-	if(kind == AssignStmt_kind)
-		return 1;
-	else
-		return Statement::isA(kind);
-}
-
-const char *AssignStmt::getKindName() const
-{
-	return "AssignStmt";
-}
-
-ForStmt::ForStmt(YYNODESTATE *state__, Statement * for_dec, Expression * cond, Statement * for_assign, Statement * block)
-	: Statement(state__)
-{
-	this->kind__ = ForStmt_kind;
-	this->for_dec = for_dec;
-	this->cond = cond;
-	this->for_assign = for_assign;
-	this->block = block;
-}
-
-ForStmt::~ForStmt()
-{
-	// not used
-}
-
-void ForStmt::exec()
-#line 264 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ 
-    for_dec->exec();
-    while(cond->eval())
-    {
-        block->exec();
-        for_assign->exec();
-    }
-}
-#line 1714 "../src/ast.cpp"
-
-int ForStmt::isA(int kind) const
-{
-	if(kind == ForStmt_kind)
-		return 1;
-	else
-		return Statement::isA(kind);
-}
-
-const char *ForStmt::getKindName() const
-{
-	return "ForStmt";
-}
-
-BlockStmt::BlockStmt(YYNODESTATE *state__, StmtList list)
-	: Statement(state__)
-{
-	this->kind__ = BlockStmt_kind;
-	this->list = list;
-}
-
-BlockStmt::~BlockStmt()
-{
-	// not used
-}
-
-void BlockStmt::exec()
-#line 280 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{
-    for(int x = 0;x<list.size();x++)
-        list.at(x)->exec();
-}
-#line 1747 "../src/ast.cpp"
-
-int BlockStmt::isA(int kind) const
-{
-	if(kind == BlockStmt_kind)
-		return 1;
-	else
-		return Statement::isA(kind);
-}
-
-const char *BlockStmt::getKindName() const
-{
-	return "BlockStmt";
-}
-
-IfStmt::IfStmt(YYNODESTATE *state__, Expression * cond, Statement * true_block, Statement * false_block)
-	: Statement(state__)
-{
-	this->kind__ = IfStmt_kind;
-	this->cond = cond;
-	this->true_block = true_block;
-	this->false_block = false_block;
-}
-
-IfStmt::~IfStmt()
-{
-	// not used
-}
-
-void IfStmt::exec()
-#line 294 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{
-    if(cond->eval())
-        true_block->exec();
-    else if(false_block != nullptr)
-        false_block->exec();
-}
-#line 1784 "../src/ast.cpp"
-
-int IfStmt::isA(int kind) const
-{
-	if(kind == IfStmt_kind)
-		return 1;
-	else
-		return Statement::isA(kind);
-}
-
-const char *IfStmt::getKindName() const
-{
-	return "IfStmt";
-}
-
-WhileStmt::WhileStmt(YYNODESTATE *state__, Expression * cond, Statement * block)
-	: Statement(state__)
-{
-	this->kind__ = WhileStmt_kind;
-	this->cond = cond;
-	this->block = block;
-}
-
-WhileStmt::~WhileStmt()
-{
-	// not used
-}
-
-void WhileStmt::exec()
-#line 309 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{ 
-    while(cond->eval())
-        block->exec();
-}
-#line 1818 "../src/ast.cpp"
-
-int WhileStmt::isA(int kind) const
-{
-	if(kind == WhileStmt_kind)
-		return 1;
-	else
-		return Statement::isA(kind);
-}
-
-const char *WhileStmt::getKindName() const
-{
-	return "WhileStmt";
-}
-
-ReturnStmt::ReturnStmt(YYNODESTATE *state__, Expression * expr)
-	: Statement(state__)
-{
-	this->kind__ = ReturnStmt_kind;
-	this->expr = expr;
-}
-
-ReturnStmt::~ReturnStmt()
-{
-	// not used
-}
-
-void ReturnStmt::exec()
-#line 321 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{
-
-}
-#line 1850 "../src/ast.cpp"
-
-int ReturnStmt::isA(int kind) const
-{
-	if(kind == ReturnStmt_kind)
-		return 1;
-	else
-		return Statement::isA(kind);
-}
-
-const char *ReturnStmt::getKindName() const
-{
-	return "ReturnStmt";
-}
-
-BreakStmt::BreakStmt(YYNODESTATE *state__)
-	: Statement(state__)
-{
-	this->kind__ = BreakStmt_kind;
-}
-
-BreakStmt::~BreakStmt()
-{
-	// not used
-}
-
-void BreakStmt::exec()
-#line 329 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{
-
-}
-#line 1881 "../src/ast.cpp"
-
-int BreakStmt::isA(int kind) const
-{
-	if(kind == BreakStmt_kind)
-		return 1;
-	else
-		return Statement::isA(kind);
-}
-
-const char *BreakStmt::getKindName() const
-{
-	return "BreakStmt";
-}
-
-ContinueStmt::ContinueStmt(YYNODESTATE *state__)
-	: Statement(state__)
-{
-	this->kind__ = ContinueStmt_kind;
-}
-
-ContinueStmt::~ContinueStmt()
-{
-	// not used
-}
-
-void ContinueStmt::exec()
-#line 337 "/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc"
-{
-
-}
-#line 1912 "../src/ast.cpp"
-
-int ContinueStmt::isA(int kind) const
-{
-	if(kind == ContinueStmt_kind)
-		return 1;
-	else
-		return Statement::isA(kind);
-}
-
-const char *ContinueStmt::getKindName() const
-{
-	return "ContinueStmt";
 }
 

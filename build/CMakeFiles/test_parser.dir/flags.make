@@ -6,5 +6,5 @@ CXX_FLAGS =  -std=c++14
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/boris/Desktop/CompiladoresII/Proyecto/build -I/home/boris/Desktop/CompiladoresII/Proyecto/src 
+CXX_INCLUDES = -I/home/boris/Desktop/Proyecto/build -I/home/boris/Desktop/Proyecto/src 
 

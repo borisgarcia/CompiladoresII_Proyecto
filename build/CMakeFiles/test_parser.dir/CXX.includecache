@@ -6,11 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/boris/Desktop/CompiladoresII/Proyecto/src/ast.cpp
+/home/boris/Desktop/Proyecto/src/ast.cpp
 ast.h
-/home/boris/Desktop/CompiladoresII/Proyecto/src/ast.h
+/home/boris/Desktop/Proyecto/src/ast.h
 
-/home/boris/Desktop/CompiladoresII/Proyecto/src/ast.h
+/home/boris/Desktop/Proyecto/src/ast.h
 iostream
 -
 stdio.h
@@ -23,10 +23,14 @@ string
 -
 vector
 -
+sstream
+-
+ident_handler.h
+/home/boris/Desktop/Proyecto/src/ident_handler.h
 new
 -
 
-/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_lexer.h
+/home/boris/Desktop/Proyecto/src/expr_lexer.h
 iostream
 -
 fstream
@@ -38,15 +42,29 @@ stdio.h
 string.h
 -
 tokens.h
-/home/boris/Desktop/CompiladoresII/Proyecto/src/tokens.h
+/home/boris/Desktop/Proyecto/src/tokens.h
 
-/home/boris/Desktop/CompiladoresII/Proyecto/src/lexer.cpp
+/home/boris/Desktop/Proyecto/src/ident_handler.h
+string
+-
+list
+-
+sstream
+-
+memory
+-
+unordered_set
+-
+unordered_map
+-
+
+/home/boris/Desktop/Proyecto/src/lexer.cpp
 cstdio
 -
 expr_lexer.h
-/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_lexer.h
+/home/boris/Desktop/Proyecto/src/expr_lexer.h
 
-/home/boris/Desktop/CompiladoresII/Proyecto/src/main.cpp
+/home/boris/Desktop/Proyecto/src/main.cpp
 unordered_map
 -
 fstream
@@ -54,7 +72,7 @@ fstream
 iostream
 -
 expr_lexer.h
-/home/boris/Desktop/CompiladoresII/Proyecto/src/expr_lexer.h
+/home/boris/Desktop/Proyecto/src/expr_lexer.h
 
-/home/boris/Desktop/CompiladoresII/Proyecto/src/tokens.h
+/home/boris/Desktop/Proyecto/src/tokens.h
 

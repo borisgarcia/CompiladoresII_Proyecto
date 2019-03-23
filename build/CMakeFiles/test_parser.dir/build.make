@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/boris/Desktop/CompiladoresII/Proyecto/src
+CMAKE_SOURCE_DIR = /home/boris/Desktop/Proyecto/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/boris/Desktop/CompiladoresII/Proyecto/build
+CMAKE_BINARY_DIR = /home/boris/Desktop/Proyecto/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/test_parser.dir/depend.make
@@ -57,33 +57,33 @@ include CMakeFiles/test_parser.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/test_parser.dir/flags.make
 
-/home/boris/Desktop/CompiladoresII/Proyecto/src/lexer.cpp: /home/boris/Desktop/CompiladoresII/Proyecto/src/expr_lexer.re
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/boris/Desktop/CompiladoresII/Proyecto/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating /home/boris/Desktop/CompiladoresII/Proyecto/src/lexer.cpp"
-	/usr/local/bin/re2c -o../src/lexer.cpp /home/boris/Desktop/CompiladoresII/Proyecto/src/expr_lexer.re
+/home/boris/Desktop/Proyecto/src/lexer.cpp: /home/boris/Desktop/Proyecto/src/expr_lexer.re
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/boris/Desktop/Proyecto/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating /home/boris/Desktop/Proyecto/src/lexer.cpp"
+	/usr/local/bin/re2c -o../src/lexer.cpp /home/boris/Desktop/Proyecto/src/expr_lexer.re
 
-/home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.cpp: /home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/boris/Desktop/CompiladoresII/Proyecto/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating /home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.cpp, tokens.h"
-	bison -o../src/Parser.cpp -rall --defines=../src/tokens.h /home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.y
+/home/boris/Desktop/Proyecto/src/Parser.cpp: /home/boris/Desktop/Proyecto/src/Parser.y
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/boris/Desktop/Proyecto/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating /home/boris/Desktop/Proyecto/src/Parser.cpp, tokens.h"
+	bison -o../src/Parser.cpp -rall --defines=../src/tokens.h /home/boris/Desktop/Proyecto/src/Parser.y
 
-tokens.h: /home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.cpp
+tokens.h: /home/boris/Desktop/Proyecto/src/Parser.cpp
 	@$(CMAKE_COMMAND) -E touch_nocreate tokens.h
 
-/home/boris/Desktop/CompiladoresII/Proyecto/src/ast.cpp: /home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/boris/Desktop/CompiladoresII/Proyecto/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating /home/boris/Desktop/CompiladoresII/Proyecto/src/ast.cpp"
-	/opt/treecc/bin/treecc -o ../src/ast.cpp /home/boris/Desktop/CompiladoresII/Proyecto/src/expr_ast.tc
+/home/boris/Desktop/Proyecto/src/ast.cpp: /home/boris/Desktop/Proyecto/src/AST.tc
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/boris/Desktop/Proyecto/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating /home/boris/Desktop/Proyecto/src/ast.cpp"
+	/opt/treecc/bin/treecc -o ../src/ast.cpp /home/boris/Desktop/Proyecto/src/AST.tc
 
 CMakeFiles/test_parser.dir/lexer.cpp.o: CMakeFiles/test_parser.dir/flags.make
-CMakeFiles/test_parser.dir/lexer.cpp.o: /home/boris/Desktop/CompiladoresII/Proyecto/src/lexer.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/boris/Desktop/CompiladoresII/Proyecto/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/test_parser.dir/lexer.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_parser.dir/lexer.cpp.o -c /home/boris/Desktop/CompiladoresII/Proyecto/src/lexer.cpp
+CMakeFiles/test_parser.dir/lexer.cpp.o: /home/boris/Desktop/Proyecto/src/lexer.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/boris/Desktop/Proyecto/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/test_parser.dir/lexer.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_parser.dir/lexer.cpp.o -c /home/boris/Desktop/Proyecto/src/lexer.cpp
 
 CMakeFiles/test_parser.dir/lexer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/test_parser.dir/lexer.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/boris/Desktop/CompiladoresII/Proyecto/src/lexer.cpp > CMakeFiles/test_parser.dir/lexer.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/boris/Desktop/Proyecto/src/lexer.cpp > CMakeFiles/test_parser.dir/lexer.cpp.i
 
 CMakeFiles/test_parser.dir/lexer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/test_parser.dir/lexer.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/boris/Desktop/CompiladoresII/Proyecto/src/lexer.cpp -o CMakeFiles/test_parser.dir/lexer.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/boris/Desktop/Proyecto/src/lexer.cpp -o CMakeFiles/test_parser.dir/lexer.cpp.s
 
 CMakeFiles/test_parser.dir/lexer.cpp.o.requires:
 
@@ -97,17 +97,17 @@ CMakeFiles/test_parser.dir/lexer.cpp.o.provides.build: CMakeFiles/test_parser.di
 
 
 CMakeFiles/test_parser.dir/Parser.cpp.o: CMakeFiles/test_parser.dir/flags.make
-CMakeFiles/test_parser.dir/Parser.cpp.o: /home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/boris/Desktop/CompiladoresII/Proyecto/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/test_parser.dir/Parser.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_parser.dir/Parser.cpp.o -c /home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.cpp
+CMakeFiles/test_parser.dir/Parser.cpp.o: /home/boris/Desktop/Proyecto/src/Parser.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/boris/Desktop/Proyecto/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/test_parser.dir/Parser.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_parser.dir/Parser.cpp.o -c /home/boris/Desktop/Proyecto/src/Parser.cpp
 
 CMakeFiles/test_parser.dir/Parser.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/test_parser.dir/Parser.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.cpp > CMakeFiles/test_parser.dir/Parser.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/boris/Desktop/Proyecto/src/Parser.cpp > CMakeFiles/test_parser.dir/Parser.cpp.i
 
 CMakeFiles/test_parser.dir/Parser.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/test_parser.dir/Parser.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.cpp -o CMakeFiles/test_parser.dir/Parser.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/boris/Desktop/Proyecto/src/Parser.cpp -o CMakeFiles/test_parser.dir/Parser.cpp.s
 
 CMakeFiles/test_parser.dir/Parser.cpp.o.requires:
 
@@ -121,17 +121,17 @@ CMakeFiles/test_parser.dir/Parser.cpp.o.provides.build: CMakeFiles/test_parser.d
 
 
 CMakeFiles/test_parser.dir/ast.cpp.o: CMakeFiles/test_parser.dir/flags.make
-CMakeFiles/test_parser.dir/ast.cpp.o: /home/boris/Desktop/CompiladoresII/Proyecto/src/ast.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/boris/Desktop/CompiladoresII/Proyecto/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/test_parser.dir/ast.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_parser.dir/ast.cpp.o -c /home/boris/Desktop/CompiladoresII/Proyecto/src/ast.cpp
+CMakeFiles/test_parser.dir/ast.cpp.o: /home/boris/Desktop/Proyecto/src/ast.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/boris/Desktop/Proyecto/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/test_parser.dir/ast.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_parser.dir/ast.cpp.o -c /home/boris/Desktop/Proyecto/src/ast.cpp
 
 CMakeFiles/test_parser.dir/ast.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/test_parser.dir/ast.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/boris/Desktop/CompiladoresII/Proyecto/src/ast.cpp > CMakeFiles/test_parser.dir/ast.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/boris/Desktop/Proyecto/src/ast.cpp > CMakeFiles/test_parser.dir/ast.cpp.i
 
 CMakeFiles/test_parser.dir/ast.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/test_parser.dir/ast.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/boris/Desktop/CompiladoresII/Proyecto/src/ast.cpp -o CMakeFiles/test_parser.dir/ast.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/boris/Desktop/Proyecto/src/ast.cpp -o CMakeFiles/test_parser.dir/ast.cpp.s
 
 CMakeFiles/test_parser.dir/ast.cpp.o.requires:
 
@@ -145,17 +145,17 @@ CMakeFiles/test_parser.dir/ast.cpp.o.provides.build: CMakeFiles/test_parser.dir/
 
 
 CMakeFiles/test_parser.dir/main.cpp.o: CMakeFiles/test_parser.dir/flags.make
-CMakeFiles/test_parser.dir/main.cpp.o: /home/boris/Desktop/CompiladoresII/Proyecto/src/main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/boris/Desktop/CompiladoresII/Proyecto/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/test_parser.dir/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_parser.dir/main.cpp.o -c /home/boris/Desktop/CompiladoresII/Proyecto/src/main.cpp
+CMakeFiles/test_parser.dir/main.cpp.o: /home/boris/Desktop/Proyecto/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/boris/Desktop/Proyecto/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/test_parser.dir/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/test_parser.dir/main.cpp.o -c /home/boris/Desktop/Proyecto/src/main.cpp
 
 CMakeFiles/test_parser.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/test_parser.dir/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/boris/Desktop/CompiladoresII/Proyecto/src/main.cpp > CMakeFiles/test_parser.dir/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/boris/Desktop/Proyecto/src/main.cpp > CMakeFiles/test_parser.dir/main.cpp.i
 
 CMakeFiles/test_parser.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/test_parser.dir/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/boris/Desktop/CompiladoresII/Proyecto/src/main.cpp -o CMakeFiles/test_parser.dir/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/boris/Desktop/Proyecto/src/main.cpp -o CMakeFiles/test_parser.dir/main.cpp.s
 
 CMakeFiles/test_parser.dir/main.cpp.o.requires:
 
@@ -184,7 +184,7 @@ test_parser: CMakeFiles/test_parser.dir/ast.cpp.o
 test_parser: CMakeFiles/test_parser.dir/main.cpp.o
 test_parser: CMakeFiles/test_parser.dir/build.make
 test_parser: CMakeFiles/test_parser.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/boris/Desktop/CompiladoresII/Proyecto/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable test_parser"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/boris/Desktop/Proyecto/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable test_parser"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_parser.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -203,10 +203,10 @@ CMakeFiles/test_parser.dir/clean:
 	$(CMAKE_COMMAND) -P CMakeFiles/test_parser.dir/cmake_clean.cmake
 .PHONY : CMakeFiles/test_parser.dir/clean
 
-CMakeFiles/test_parser.dir/depend: /home/boris/Desktop/CompiladoresII/Proyecto/src/lexer.cpp
-CMakeFiles/test_parser.dir/depend: /home/boris/Desktop/CompiladoresII/Proyecto/src/Parser.cpp
+CMakeFiles/test_parser.dir/depend: /home/boris/Desktop/Proyecto/src/lexer.cpp
+CMakeFiles/test_parser.dir/depend: /home/boris/Desktop/Proyecto/src/Parser.cpp
 CMakeFiles/test_parser.dir/depend: tokens.h
-CMakeFiles/test_parser.dir/depend: /home/boris/Desktop/CompiladoresII/Proyecto/src/ast.cpp
-	cd /home/boris/Desktop/CompiladoresII/Proyecto/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/boris/Desktop/CompiladoresII/Proyecto/src /home/boris/Desktop/CompiladoresII/Proyecto/src /home/boris/Desktop/CompiladoresII/Proyecto/build /home/boris/Desktop/CompiladoresII/Proyecto/build /home/boris/Desktop/CompiladoresII/Proyecto/build/CMakeFiles/test_parser.dir/DependInfo.cmake --color=$(COLOR)
+CMakeFiles/test_parser.dir/depend: /home/boris/Desktop/Proyecto/src/ast.cpp
+	cd /home/boris/Desktop/Proyecto/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/boris/Desktop/Proyecto/src /home/boris/Desktop/Proyecto/src /home/boris/Desktop/Proyecto/build /home/boris/Desktop/Proyecto/build /home/boris/Desktop/Proyecto/build/CMakeFiles/test_parser.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/test_parser.dir/depend
 

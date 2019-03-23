@@ -13,20 +13,21 @@
   extern int yylex();
   
   int errors;
-  extern bool state_ment_boolean;
-  extern bool method_dec_boolean;
+  bool state_ment_boolean;
+  bool method_dec_boolean;
   
   void yyerror(const char *msg) {
-        std::cerr << "Parsing Error" <<"Line: "<<lineNo<<"-" <<msg<<'\n';
+        std::cerr << "Parsing Error: " <<"Line: "<<lineNo<<"-" <<msg<<'\n';
         errors++;
   }
   YYNODESTATE *nodeState;
   #define YYERROR_VERBOSE 1
+  
 %}
 
 %union{
-        Statement * stmt_t;
-        Expression * expr_t;
+        //Statement * stmt_t;
+        //Expression * expr_t;
         char * str_t;
         int int_t;
 }
@@ -82,137 +83,150 @@
 
 %%
 
-program: KwClass Id "{" program_body "}"{
-                                                $4->exec();
-                                        }
+program: KwClass Id "{" program_body "}"{}
 |        KwClass Id "{" "}" {}
 ;       
 
-program_body:   program_body field_decl         {
-                                                        if(method_dec_boolean)
-                                                        {
-                                                                std::cerr << "PUTOELQUELOLEA" << std::endl;
-                                                                exit(0);
-                                                        }
-                                                }
-        |       program_body method_decl        {}
-        |       field_decl                      {
-                                                        if(method_dec_boolean)
-                                                        {
-                                                                std::cerr << "PUTOELQUELOLEA" << std::endl;
-                                                                exit(0);
-                                                        }
-                                                }
-        |       method_decl                     {}
+program_body:   program_body field_decl{
+                if(method_dec_boolean)
+                {
+                        yyerror("Can't declare fields after methods!");
+                        exit(0);
+                }
+                addToNodeList($1,$2);$$=$1;
+        }
+        |       program_body method_decl{
+                addToNodeList($1,$2);$$=$1;
+        }
+        |       field_decl{
+                if(method_dec_boolean)
+                {
+                        yyerror("Can't declare fields after methods!");
+                        exit(0);
+                }
+                $$ = nullptr; addToNodeList($$,$1);
+        }
+        |       method_decl{
+                $$ = nullptr; addToNodeList($$,$1);
+        }
 ;
 
-field_decl:     type mult-field ";"                 {}
-            |   type Id Assign constant ";"         {}
+field_decl:     type mult-field ";"                 {$$ = new FieldDecStmt($1,$2);}
+            |   type Id Assign constant ";"         {$$ = new FieldDecStmt_2($1,$2,$4);}
 ;
 
-mult-field:     mult-field "," Id                            {}
-        |       mult-field "," Id "[" intConstant "]"        {}
-        |       Id                                           {}
-        |       Id "[" intConstant "]"                       {}
+mult-field:     mult-field "," Id                            {addToNodeList($1,$2);$$=$1;}
+        |       mult-field "," Id "[" intConstant "]"        {addToNodeList($1,new ArrayDec($3,$5));$$=$1;}
+        |       Id                                           {$$ = nullptr; addToNodeList($$,$1);}
+        |       Id "[" intConstant "]"                       {$$ = nullptr; addToNodeList($$,new ArrayDec($1,$3));}
 ;
 
 method_decl:    type Id "(" params ")" block    {
                                                         method_dec_boolean = true;
+                                                        $$ = FunctionDecStmt($1,$2,$4,$6);
                                                 }
         |       KwVoid Id "(" params ")" block  {
                                                         method_dec_boolean = true;
+                                                        $$ = FunctionDecStmt("void",$2,$4,$6);
                                                 }
 ;
 
-params: params_p        {$$ = $1;}
-|                       {$$ = nullptr;}
+params: params_p        {$$=$1;}
+|                       {$$=nullptr;}
 ;
 
-params_p:       params "," type Id    {}
-        |       type Id               {}
+params_p:       params "," type Id    {addToNodeList($1,$2);$$=$1;}
+        |       type Id               {$$ = nullptr; addToNodeList($$,$1);}
 ;
 
-type:           KwInt   {$$=$1;}
-        |       KwBool  {$$=$1;}
+type:           KwInt   {}
+        |       KwBool  {}
 ;
 
 block:  "{" block_p "}"     {$$ = $2;}
 |       "{" "}"             {$$ = nullptr;}
 ;
 
-block_p:    block_p var-decl    {
-                                        if(state_ment_boolean)
-                                        {
-                                                std::cerr << "PUTOELQUELOLEA" << std::endl;
-                                                exit(0);
-                                        }
-                                }
-        |   var-decl            {
-                                        if(state_ment_boolean)
-                                        {
-                                                std::cerr << "PUTOELQUELOLEA" << std::endl;
-                                                exit(0);
-                                        }                                                
-                                }
-        |   block_p statement   {}
-        |   statement           {}       
+block_p: block_p var-decl{
+                if(state_ment_boolean)
+                {
+                        yyerror("Can't declare variables after statements!");
+                        exit(0);
+                }
+                addToNodeList($1,$2);
+                $$=$1;
+        }
+        |   var-decl{
+                if(state_ment_boolean)
+                {
+                        yyerror("Can't declare variables after statements!");
+                        exit(0);
+                }
+                $$ = nullptr; 
+                addToNodeList($$,$1);                                                
+        }
+        |   block_p statement{
+                addToNodeList($1,$2);
+                $$=$1;
+        }
+        |   statement{
+                $$ = nullptr; 
+                addToNodeList($$,$1);  
+        }       
 ;
 
-var-decl:   type  var-decl_p ";"   {}
+var-decl: type var-decl_p ";"   {$$ = new FieldDecStmt($1,$2);}
 ;
 
-var-decl_p:     var-decl_p "," Id       {}
-        |       Id                      {}
+var-decl_p:     var-decl_p "," Id       {addToNodeList($1,$2);$$=$1;}
+        |       Id                      {$$ = nullptr; addToNodeList($$,$1);}
 ;
 
-statement:  assign ";"                                                  {$$ = $1; state_ment_boolean = true;}
-        |   method-call_stmt ";"                                        {$$ = $1; state_ment_boolean = true;}
-        |   KwIf "(" expr ")" block else_opt                            {state_ment_boolean = true;}
-        |   KwWhile "(" expr ")" block                                  {state_ment_boolean = true;}
-        |   KwBreak ";"                                                 {state_ment_boolean = true;}
-        |   KwFor "(" for_assign ";" expr ";" for_assign ")" block      {state_ment_boolean = true;}
-        |   KwReturn return_expr ";"                                    {$$ = $1; state_ment_boolean = true;}
-        |   KwContinue ";"                                              {$$ = $1; state_ment_boolean = true;}
-        |   block                                                       {$$ = $1; state_ment_boolean = true;} 
+statement:  assign ";"                                                  {state_ment_boolean = true;$$ = $1;}
+        |   method-call_stmt ";"                                        {state_ment_boolean = true;$$ = $1;}
+        |   KwIf "(" expr ")" block else_opt                            {state_ment_boolean = true;$$ = new IfStmt($3,$5,$6);}
+        |   KwWhile "(" expr ")" block                                  {state_ment_boolean = true;$$ = new WhileStmt($3,$5);}
+        |   KwBreak ";"                                                 {state_ment_boolean = true;$$ = new BreakStmt();}
+        |   KwFor "(" for_assign ";" expr ";" for_assign ")" block      {state_ment_boolean = true;$$ = new ForStmt($3,$5,$7,$9);}
+        |   KwReturn return_expr ";"                                    {state_ment_boolean = true;$$ = new ReturnStmt($2);}
+        |   KwContinue ";"                                              {state_ment_boolean = true;$$ = new ContinueStmt();}
+        |   block                                                       {state_ment_boolean = true;$$ = $1;} 
 ;
 
 assign: lvalue Assign expr {$$ = new AssignStmt($1,$3);}
 ;
 
 else_opt:   KwElse block    {$$ = $2;}
-            |               {$$ = nullptr;}
+            | %empty        {$$ = nullptr;}
 ;
 
-for_assign: for_assign "," assign   {}
-        |   assign                  {
-                                        $$ = new BlockStmt();
-                                        ((BlockStmt*)$$)->AddStmt($1);
-                                    }
+for_assign: for_assign "," assign   {addToNodeList($1,$2);$$=$1;}
+        |   assign                  {$$ = nullptr; addToNodeList($$,$1);}
 ;
 
-return_exp: expr   {$$=new ReturnStmt($1);}
+return_expr: expr   {$$ = $1;}
 ;
 
-method-call_stmt:       Id "(" method-call_params ")"    {}
-                |       KwPrint "(" argument ")"         {}
-                |       KwPrintln "(" argument ")"       {}
-                |       KwRead "(" ")"                   {}
-                |       KwRandom "(" expr ")"            {}
+method-call_stmt:       Id "(" method-call_params ")"    {$$ = new FunctionCallStmt($1,$3);}
+                |       KwPrint "(" argument ")"         {$$ = new PrintStmt($3);}
+                |       KwPrintln "(" argument ")"       {$$ = new PrintlnStmt($3);}
+                |       KwRead "(" ")"                   {$$ = new ReadStmt();}
+                |       KwRandom "(" expr ")"            {$$ = new NextIntStmt($3);}
 ;
 
-method-call_expr:       Id "(" method-call_params ")"    {}
-                |       KwPrint "(" argument ")"         {}
-                |       KwPrintln "(" argument ")"       {}
-                |       KwRead "(" ")"                   {}
-                |       KwRandom "(" expr ")"            {}
+method-call_expr:       Id "(" method-call_params ")"    {$$ = new FunctionCallExpr($1,$3);}
+                |       KwPrint "(" argument ")"         {$$ = new PrintExpr($3);}
+                |       KwPrintln "(" argument ")"       {$$ = new PrintExpr($3);}
+                |       KwRead "(" ")"                   {$$ = new ReadExpr();}
+                |       KwRandom "(" expr ")"            {$$ = new NextIntExpr($3);}
 ;
 
-method-call_params: method-call_params "," expr {}
-                |   expr                        {}
+method-call_params: method-call_params "," expr {addToNodeList($1,$2);$$=$1;}
+                |   expr                        {$$ = nullptr; addToNodeList($$,$1);}
 ;
 
 argument:   StringConstant  {}
-        |   expr            {$$ = $1;}
+        |   expr            {}
 ;
 
 lvalue:  Id                     {}
@@ -223,8 +237,8 @@ expr:   lvalue                  {$$ = $1;}
 |       method-call_expr        {$$ = $1;}
 |       constant                {$$ = $1;}
 |       bin-op                  {$$ = $1;}
-|       "!" expr                {$$ = $1;}
-|       "-" expr                {$$ = $1;}
+|       "!" expr                {$$ = $2;}
+|       "-" expr                {$$ = $2;}
 |       "(" expr ")"            {$$ = $2;}
 ;
 
@@ -234,27 +248,27 @@ bin-op: arith-op        {$$ = $1;}
 |       eq-op           {$$ = $1;}
 ;
 
-arith-op:  expr "+"  expr   {}
-        |  expr "-"  expr   {}
-        |  expr "*"  expr   {}       
-        |  expr "/"  expr   {}       
-        |  expr "<<" expr   {}       
-        |  expr ">>" expr   {}       
-        |  expr "%"  expr   {}
+arith-op:  expr "+"  expr   {$$ = new AddExpr($1,$3);}
+        |  expr "-"  expr   {$$ = new SubExpr($1,$3);}
+        |  expr "*"  expr   {$$ = new MulExpr($1,$3);}       
+        |  expr "/"  expr   {$$ = new DivExpr($1,$3);}       
+        |  expr "<<" expr   {$$ = new SRLExpr($1,$3);}       
+        |  expr ">>" expr   {$$ = new SLLExpr($1,$3);}       
+        |  expr "%"  expr   {$$ = new ModExpr($1,$3);}
 ;
 
-rel-op: expr "<"  expr   {}
-|       expr ">"  expr   {}
-|       expr "<=" expr   {}
-|       expr ">=" expr   {}
+rel-op: expr "<"  expr   {$$ = new LesExpr($1,$3);}
+|       expr ">"  expr   {$$ = new GreExpr($1,$3);}
+|       expr "<=" expr   {$$ = new LeEExpr($1,$3);}
+|       expr ">=" expr   {$$ = new GrEExpr($1,$3);}
 ;
 
-eq-op:  expr "==" expr  {}
-|       expr "!=" expr  {}       
+eq-op:  expr "==" expr  {$$ = new EquExpr($1,$3);}
+|       expr "!=" expr  {$$ = new NEqExpr($1,$3);}       
 ;
 
-cond-op: expr "&&" expr   {}
-|        expr "||" expr   {}
+cond-op: expr "&&" expr   {$$ = new AndExpr($1,$3);}
+|        expr "||" expr   {$$ = new Or_Expr($1,$3);}
 ;
 
 constant: intConstant   {}
