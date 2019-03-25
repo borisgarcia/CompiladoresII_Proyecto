@@ -1,8 +1,3 @@
-; Variables
-number dd 0
-total dd 0
-count dd 0
-; Temp variables
 global main
 
 extern printf
@@ -11,15 +6,20 @@ section .data
 
 ; String Literals
 
-strl4 db '] = ', 0
-strl3 db '%d', 0
-strl2 db '%c', 0
+strl4 db '%d', 10, '', 0
+strl3 db '] = ', 0
+strl2 db '%d', 0
 strl5 db 'The total is ', 0
 strl0 db 'Number [', 0
 strl1 db '%s', 0
 
 section .text
 section .data
+; Variables
+number dd 0
+total dd 0
+count dd 0
+; Temp variables
 
 ; Array Declaration
 
@@ -66,27 +66,25 @@ mov dword [number], eax
 
 push strl0
 push strl1
-call printf
-add esp, 4
+call printf 
+add esp, 8
 
 
-push strl3
-call printf
-add esp, 4
-
-
-push strl4
-push strl1
-call printf
-add esp, 4
-
-
-push strl3
-call printf
-add esp, 4
-push 10
+push dword [count]
 push strl2
-call printf
+call printf 
+add esp, 8
+
+
+push strl3
+push strl1
+call printf 
+add esp, 8
+
+
+push dword [number]
+push strl4
+call printf 
 add esp, 8
 
 
@@ -110,16 +108,13 @@ lbl3:
 
 push strl5
 push strl1
-call printf
-add esp, 4
+call printf 
+add esp, 8
 
 
-push strl3
-call printf
-add esp, 4
-push 10
-push strl2
-call printf
+push dword [total]
+push strl4
+call printf 
 add esp, 8
 
 __lbl_main_epilog:

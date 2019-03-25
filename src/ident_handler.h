@@ -90,7 +90,7 @@ public:
     std::string newTemp();
     std::string registerStrLiteral(const std::string& str);
     std::string genVarNames();
-    std::string genConstNames();
+    std::string genStrNames();
 
     std::string genNewLabel() 
     {
@@ -169,6 +169,7 @@ private:
     std::unordered_map<std::string, std::string> strlitMap;
     std::unordered_map<std::string,int> varNames;
     std::unordered_map<std::string, UPFuncDef> funcDefMap;
+    std::unordered_map<std::string, std::string> strLitMap;
     std::list<std::string> tmpNames;
     FuncDef *currFD;
     int varCount;

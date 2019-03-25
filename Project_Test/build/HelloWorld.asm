@@ -1,5 +1,3 @@
-; Variables
-; Temp variables
 global main
 
 extern printf
@@ -8,13 +6,15 @@ section .data
 
 ; String Literals
 
-strl3 db 'Hola Mundo', 0
-strl2 db '%c', 0
-strl0 db 'Hello World!\n', 0
+strl3 db '%s', 10, '', 0
+strl2 db 'Hola Mundo', 0
+strl0 db 'Hello World!', 10, '', 0
 strl1 db '%s', 0
 
 section .text
 section .data
+; Variables
+; Temp variables
 
 ; Array Declaration
 
@@ -25,17 +25,13 @@ sub esp, 0
 
 push strl0
 push strl1
-call printf
-add esp, 4
+call printf 
+add esp, 8
 
 
-push strl3
-push strl1
-call printf
-add esp, 4
-push 10
 push strl2
-call printf
+push strl3
+call printf 
 add esp, 8
 
 __lbl_main_epilog:

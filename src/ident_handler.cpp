@@ -26,7 +26,7 @@ std::string IdentsHandler::registerStrLiteral(const std::string& str) {
     return name;
 }
 
-std::string IdentsHandler::genConstNames()
+std::string IdentsHandler::genStrNames()
 {
     std::ostringstream ss;
     ss << "\n; String Literals\n\n";
@@ -39,13 +39,20 @@ std::string IdentsHandler::genConstNames()
 }
 
 std::string IdentsHandler::genVarNames() {
-    std::cout << "; Variables\n";
+    std::ostringstream ss;
+    ss << "; Variables\n";
     for (const auto& s : varNames) {
-        std::cout << s.first << " dd " << (s.second == -1 ? 0 : s.second) << "\n";
+        ss << s.first << " dd " << (s.second == -1 ? 0 : s.second) << "\n";
     }
-    std::cout << "; Temp variables\n";
+    ss << "; Temp variables\n";
     for (const auto& s : tmpNames) {
-        std::cout << s << ": dd 0\n";
+        ss << s << " dd 0\n";
     }
-    return "";
+    return ss.str();
+}
+
+bool IdentsHandler::isGlobalVar(std::string name){
+    if(varNames.find(name) == varNames.end())
+        return false;
+    return true;
 }

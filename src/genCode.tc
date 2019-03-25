@@ -84,51 +84,6 @@ gen_Code(FunctionCallStmt)
     code = ss.str();
     return true;
 }
-gen_Code(FunctionCallExpr)
-{
-    FuncDef * fd = identHandler.getFuncDef(id);
-    if(fd == nullptr)
-    {
-        std::cerr<<"\n";
-        exit(1);
-    }
-    nodeList *args = static_cast<nodeList *>(param_list);
-    int argcount = 0;
-
-    std::ostringstream ss;
-    std::list<std::string> argscode;
-
-    while (args != nullptr) {
-        ASTNode *argn = args->node;
-
-        if (!argn->gen_Code(identHandler))
-            return false;
-
-        if(argn->getKind() == NumExpr_kind)
-            argscode.push_front("push " + argn->place);
-        else
-            argscode.push_front("push dword [" + argn->place + "]");
-        ss << argn->code << '\n';
-        argcount++;
-        args = args->next;
-    }
-    if (fd->getParamCount() != argcount) {
-        std::cerr << "Line " <<  ":Error: Invalid number of arguments in call"
-                  << "to function '" << id << "'.  Expected " << fd->getParamCount() << ", found " 
-                  << argcount << '\n';
-        return false;   
-    }
-    for (const auto& s : argscode) {
-        ss << s << '\n';
-    }
-    place = identHandler.newTemp();
-    ss << "call " << id << '\n'
-           << "add esp, " << (argcount * 4) << '\n'
-           << "mov dword [" << place << "], eax";
-
-    code = ss.str();
-    return true;
-}
 
 gen_Code(ContinueStmt)
 {
@@ -234,42 +189,29 @@ gen_Code(BlockStmt)
 
 gen_Code(PrintStmt)
 {
-    std::ostringstream ssfmt;
-    std::ostringstream sscode;
-    std::list<std::string> argscode;
-
     if (!expr->gen_Code(identHandler))
         return false;
+    
+    std::ostringstream ss,ss_2;
+    std::string ln="";
+    if(flag)ln="ln";
 
-    if (expr->isA(StringConstantExpr_kind)) {
-        ssfmt << "%s";
-        argscode.push_front("push " + expr->place);
-    } else if (expr->isA(CharExpr_kind)) {
-        CharExpr *cn = static_cast<CharExpr *>(expr);
-        ssfmt << "%c";
-        argscode.push_front("push " + std::to_string(cn->value));
-    } else {
-        ssfmt << "%d";
-        if(expr->getKind() == NumExpr_kind)
-            argscode.push_front(getPlace(expr));
-    }
-    sscode << expr->code << '\n';
-    for (const auto& s : argscode) {
-        sscode << s << '\n';
-    }
-    std::string strfmtplace = identHandler.registerStrLiteral(ssfmt.str());
-    std::string ln = identHandler.registerStrLiteral("%c");
-    sscode << "push " << strfmtplace << '\n'
-           << "call printf\n"
-           << "add esp, " << 4 << "\n";
-    if(flag)
-    {
-        sscode << "push " << 10 << "\n"
-               << "push " << ln << "\n"
-               << "call printf\n"
-               << "add esp, " << 8 << "\n";
-    }
-    code = sscode.str();
+
+    if (expr->isA(StringConstantExpr_kind))
+        ss_2 << "%s" << (ln == "ln" ? "\', 10, \'" : "");
+    else if (expr->isA(CharExpr_kind))
+        ss_2 << "%c" << (ln == "ln" ? "\', 10, \'" : "");
+    else
+        ss_2 << "%d" << (ln == "ln" ? "\', 10, \'" : "");
+    ss << expr->code << '\n'
+       << "push " << getPlace(expr) << "\n";
+    std::string strfmtplace = identHandler.registerStrLiteral(ss_2.str());
+
+    ss << "push " << strfmtplace << "\n"
+       << "call printf \n"
+       << "add esp, " << 8 << "\n";
+    
+    code = ss.str();
     return true;
 }
 
@@ -325,27 +267,42 @@ gen_Code(IfStmt)
 
 gen_Code(ForStmt)
 {
-  if(!for_dec->gen_Code(identHandler))
-    return false;
-  if(!cond->gen_Code(identHandler))
-    return false;
-  if(!for_assign->gen_Code(identHandler))
-    return false;
-  if(!block->gen_Code(identHandler))
-    return false;
+    nodeList * list = static_cast<nodeList*>(for_dec);
+    std::ostringstream forDecCode, forAssignCode;
+    while(list != nullptr){
+        ASTNode * temp = list->node;
+        if(!temp->gen_Code(identHandler))
+            return false;
+
+        forDecCode << temp->code << "\n";
+        list = list->next;
+    }
+    if(!cond->gen_Code(identHandler))
+        return false;
+    list = static_cast<nodeList*>(for_assign);
+    while(list != nullptr){
+        ASTNode * temp = list->node;
+        if(!temp->gen_Code(identHandler))
+            return false;
+
+        forAssignCode << temp->code << "\n";
+        list = list->next;
+    }
+    if(!block->gen_Code(identHandler))
+        return false;
 
   std::ostringstream ss;
   std::string beg = identHandler.genNewLabel();
   std::string end = identHandler.genNewLabel();
 
-  ss<<for_dec->code<<"\n" 
+  ss<<forDecCode.str()<<"\n" 
     <<beg<<":\n"
     <<cond->code<<"\n" 
     <<"mov eax, "<<getPlace(cond)<<"\n"
     <<"cmp eax, 0\n"
     <<"je "<<end<<"\n"
     <<block->code<<"\n"
-    <<for_assign->code<<"\n"
+    <<forAssignCode.str()<<"\n"
     <<"jmp "<<beg<<"\n"
     <<end<<":\n";
   
@@ -380,6 +337,10 @@ gen_Code(WhileStmt)
 
 /*Expresiones*/
 
+gen_Code(FunctionCallExpr)
+{
+    return true;
+}
 
 gen_Code(IdExpr)
 {
@@ -866,3 +827,20 @@ gen_Code(NotExpr)
     return true;
 
 }
+
+/*gen_Code(nodeList){
+    ASTNode * tmp = node;
+    std::ostringstream ss;
+
+    while(tmp != nullptr){
+        if(!tmp->gen_code(identHandler))
+            return false;
+
+        ss << tmp->code << "\n";
+        tmp = tmp->next;
+    }
+
+    code = ss.str();
+    return true;
+}
+*/

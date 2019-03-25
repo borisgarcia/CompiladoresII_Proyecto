@@ -642,6 +642,7 @@ public:
 public:
 
 	Expression * expr;
+	bool flag;
 
 	virtual bool gen_Code(IdentsHandler & identHandler);
 

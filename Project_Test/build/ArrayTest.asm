@@ -1,7 +1,3 @@
-; Variables
-i dd 0
-n dd 10
-; Temp variables
 global main
 
 extern printf
@@ -10,14 +6,18 @@ section .data
 
 ; String Literals
 
-strl4 db '', 0
-strl3 db '%s', 0
-strl2 db ' ', 0
+strl4 db '%s', 10, '', 0
+strl3 db '', 0
+strl2 db '%s', 0
 strl0 db '%d', 0
-strl1 db '%c', 0
+strl1 db ' ', 0
 
 section .text
 section .data
+; Variables
+i dd 0
+n dd 10
+; Temp variables
 
 ; Array Declaration
 
@@ -27,7 +27,7 @@ arr times 10 dd 0
 main:
 push ebp
 mov ebp, esp
-sub esp, 8
+sub esp, 12
 
 
 mov edx, 24
@@ -100,6 +100,9 @@ mov ecx, 9
 mov dword [arr+ecx*4], edx
 
 
+mov eax, 0
+mov dword [i], eax
+
 lbl2:
 
 
@@ -118,33 +121,37 @@ je lbl3
 
 mov ecx, dword [i]
 
+push dword [arr+ecx*4]
 push strl0
-call printf
-add esp, 4
+call printf 
+add esp, 8
 
 
+push strl1
 push strl2
-push strl3
-call printf
-add esp, 4
+call printf 
+add esp, 8
 
 
+
+
+mov eax, dword [i]
+add eax, 1
+mov dword [ebp - 12], eax
+mov eax, dword [ebp - 12]
+mov dword [i], eax
 
 jmp lbl2
 lbl3:
 
 
-push strl4
 push strl3
-call printf
-add esp, 4
-push 10
-push strl1
-call printf
+push strl4
+call printf 
 add esp, 8
 
 __lbl_main_epilog:
-add esp, 8
+add esp, 12
 leave
 ret
 

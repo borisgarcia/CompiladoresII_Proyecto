@@ -10,12 +10,6 @@
     {
         if(expr->getKind() == NumExpr_kind || expr->getKind() == StringConstantExpr_kind)
             return expr->place;
-        else if(expr->isA(NextIntStmt_kind))
-            return "eax";
-        else if(expr->isA(FunctionCallStmt_kind)||expr->isA(FunctionCallExpr_kind)){
-            if(expr->place == "")
-                return "eax";
-        }
         else
             return "dword [" + expr->place + "]";
     }
@@ -36,7 +30,7 @@
         }
     }
 
-#line 40 "../src/ast.cpp"
+#line 34 "../src/ast.cpp"
 
 #define YYNODESTATE_TRACK_LINES 1
 #define YYNODESTATE_USE_ALLOCATOR 1
@@ -315,7 +309,7 @@ long YYNODESTATE::currLinenum()
 }
 
 #endif
-#line 319 "../src/ast.cpp"
+#line 313 "../src/ast.cpp"
 void *ASTNode::operator new(size_t size__)
 {
 	return YYNODESTATE::getState()->alloc(size__);
@@ -345,14 +339,14 @@ bool ASTNode::Func_Decl(IdentsHandler & identHandler)
 {
     return true;
 }
-#line 349 "../src/ast.cpp"
+#line 343 "../src/ast.cpp"
 
 bool ASTNode::gen_Code(IdentsHandler & identHandler)
 #line 3 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     return true;
 }
-#line 356 "../src/ast.cpp"
+#line 350 "../src/ast.cpp"
 
 int ASTNode::isA(int kind) const
 {
@@ -394,7 +388,7 @@ bool Program::Func_Decl(IdentsHandler & identHandler)
     }
     return true;
 }
-#line 398 "../src/ast.cpp"
+#line 392 "../src/ast.cpp"
 
 bool Program::gen_Code(IdentsHandler & identHandler)
 #line 8 "/home/boris/Desktop/Proyecto/src/genCode.tc"
@@ -420,7 +414,7 @@ bool Program::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 424 "../src/ast.cpp"
+#line 418 "../src/ast.cpp"
 
 int Program::isA(int kind) const
 {
@@ -473,10 +467,10 @@ bool FnDec::Func_Decl(IdentsHandler & identHandler)
     identHandler.setCurrentFuncDef("");
     return true;
 }
-#line 477 "../src/ast.cpp"
+#line 471 "../src/ast.cpp"
 
 bool FnDec::gen_Code(IdentsHandler & identHandler)
-#line 190 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 145 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     identHandler.setCurrentFuncDef(name);
     FuncDef *fd = identHandler.getFuncDef(name);
@@ -498,7 +492,7 @@ bool FnDec::gen_Code(IdentsHandler & identHandler)
     identHandler.setCurrentFuncDef("");
     return true;
 }
-#line 502 "../src/ast.cpp"
+#line 496 "../src/ast.cpp"
 
 int FnDec::isA(int kind) const
 {
@@ -570,7 +564,7 @@ bool FieldDecStmt::Func_Decl(IdentsHandler & identHandler)
     }
     return true;
 }
-#line 574 "../src/ast.cpp"
+#line 568 "../src/ast.cpp"
 
 int FieldDecStmt::isA(int kind) const
 {
@@ -620,7 +614,7 @@ bool FieldDecStmt_2::Func_Decl(IdentsHandler & identHandler)
     }
     return true;
 }
-#line 624 "../src/ast.cpp"
+#line 618 "../src/ast.cpp"
 
 int FieldDecStmt_2::isA(int kind) const
 {
@@ -749,12 +743,12 @@ NumExpr::~NumExpr()
 }
 
 bool NumExpr::gen_Code(IdentsHandler & identHandler)
-#line 429 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 390 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     place = std::to_string(value);
     return true;    
 }
-#line 758 "../src/ast.cpp"
+#line 752 "../src/ast.cpp"
 
 int NumExpr::isA(int kind) const
 {
@@ -782,12 +776,12 @@ StringConstantExpr::~StringConstantExpr()
 }
 
 bool StringConstantExpr::gen_Code(IdentsHandler & identHandler)
-#line 423 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 384 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     place = identHandler.registerStrLiteral(value);
     return true;
 }
-#line 791 "../src/ast.cpp"
+#line 785 "../src/ast.cpp"
 
 int StringConstantExpr::isA(int kind) const
 {
@@ -840,12 +834,12 @@ BoolExpr::~BoolExpr()
 }
 
 bool BoolExpr::gen_Code(IdentsHandler & identHandler)
-#line 401 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 362 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     place = std::to_string(value);
     return true;
 }
-#line 849 "../src/ast.cpp"
+#line 843 "../src/ast.cpp"
 
 int BoolExpr::isA(int kind) const
 {
@@ -924,7 +918,7 @@ IdExpr::~IdExpr()
 }
 
 bool IdExpr::gen_Code(IdentsHandler & identHandler)
-#line 385 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 346 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     int Offset = identHandler.getVarOffset(id);
     if (Offset == -1) {
@@ -939,7 +933,7 @@ bool IdExpr::gen_Code(IdentsHandler & identHandler)
         place = "ebp - " + std::to_string(-Offset);
     return true;
 }
-#line 943 "../src/ast.cpp"
+#line 937 "../src/ast.cpp"
 
 int IdExpr::isA(int kind) const
 {
@@ -968,7 +962,7 @@ IdArrayExpr::~IdArrayExpr()
 }
 
 bool IdArrayExpr::gen_Code(IdentsHandler & identHandler)
-#line 407 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 368 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if(!pos->gen_Code(identHandler))
         return false;
@@ -983,7 +977,7 @@ bool IdArrayExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 987 "../src/ast.cpp"
+#line 981 "../src/ast.cpp"
 
 int IdArrayExpr::isA(int kind) const
 {
@@ -1037,7 +1031,7 @@ NextIntExpr::~NextIntExpr()
 }
 
 bool NextIntExpr::gen_Code(IdentsHandler & identHandler)
-#line 452 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 413 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if (!expr->gen_Code(identHandler))
         return false;
@@ -1060,7 +1054,7 @@ bool NextIntExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1064 "../src/ast.cpp"
+#line 1058 "../src/ast.cpp"
 
 int NextIntExpr::isA(int kind) const
 {
@@ -1087,7 +1081,7 @@ ReadExpr::~ReadExpr()
 }
 
 bool ReadExpr::gen_Code(IdentsHandler & identHandler)
-#line 442 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 403 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     std::ostringstream ss;  
     ss << "push %d\n"
@@ -1096,7 +1090,7 @@ bool ReadExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1100 "../src/ast.cpp"
+#line 1094 "../src/ast.cpp"
 
 int ReadExpr::isA(int kind) const
 {
@@ -1124,13 +1118,13 @@ PrintExpr::~PrintExpr()
 }
 
 bool PrintExpr::gen_Code(IdentsHandler & identHandler)
-#line 435 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 396 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     std::cerr << "error: can't assign void to expr" << std::endl;
     exit(0);
     return false;
 }
-#line 1134 "../src/ast.cpp"
+#line 1128 "../src/ast.cpp"
 
 int PrintExpr::isA(int kind) const
 {
@@ -1159,52 +1153,11 @@ FunctionCallExpr::~FunctionCallExpr()
 }
 
 bool FunctionCallExpr::gen_Code(IdentsHandler & identHandler)
-#line 88 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 341 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
-    FuncDef * fd = identHandler.getFuncDef(id);
-    if(fd == nullptr)
-    {
-        std::cerr<<"\n";
-        exit(1);
-    }
-    nodeList *args = static_cast<nodeList *>(param_list);
-    int argcount = 0;
-
-    std::ostringstream ss;
-    std::list<std::string> argscode;
-
-    while (args != nullptr) {
-        ASTNode *argn = args->node;
-
-        if (!argn->gen_Code(identHandler))
-            return false;
-
-        if(argn->getKind() == NumExpr_kind)
-            argscode.push_front("push " + argn->place);
-        else
-            argscode.push_front("push dword [" + argn->place + "]");
-        ss << argn->code << '\n';
-        argcount++;
-        args = args->next;
-    }
-    if (fd->getParamCount() != argcount) {
-        std::cerr << "Line " <<  ":Error: Invalid number of arguments in call"
-                  << "to function '" << id << "'.  Expected " << fd->getParamCount() << ", found " 
-                  << argcount << '\n';
-        return false;   
-    }
-    for (const auto& s : argscode) {
-        ss << s << '\n';
-    }
-    place = identHandler.newTemp();
-    ss << "call " << id << '\n'
-           << "add esp, " << (argcount * 4) << '\n'
-           << "mov dword [" << place << "], eax";
-
-    code = ss.str();
     return true;
 }
-#line 1208 "../src/ast.cpp"
+#line 1161 "../src/ast.cpp"
 
 int FunctionCallExpr::isA(int kind) const
 {
@@ -1231,7 +1184,7 @@ NotExpr::~NotExpr()
 }
 
 bool NotExpr::gen_Code(IdentsHandler & identHandler)
-#line 845 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 806 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if(!expr->gen_Code(identHandler))
         return false;
@@ -1256,7 +1209,7 @@ bool NotExpr::gen_Code(IdentsHandler & identHandler)
     return true;
 
 }
-#line 1260 "../src/ast.cpp"
+#line 1213 "../src/ast.cpp"
 
 int NotExpr::isA(int kind) const
 {
@@ -1283,7 +1236,7 @@ NegExpr::~NegExpr()
 }
 
 bool NegExpr::gen_Code(IdentsHandler & identHandler)
-#line 824 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 785 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if (!expr->gen_Code(identHandler))
         return false;
@@ -1303,7 +1256,7 @@ bool NegExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1307 "../src/ast.cpp"
+#line 1260 "../src/ast.cpp"
 
 int NegExpr::isA(int kind) const
 {
@@ -1330,7 +1283,7 @@ AddExpr::~AddExpr()
 }
 
 bool AddExpr::gen_Code(IdentsHandler & identHandler)
-#line 476 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 437 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if (!expr1->gen_Code(identHandler))
         return false;
@@ -1347,7 +1300,7 @@ bool AddExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1351 "../src/ast.cpp"
+#line 1304 "../src/ast.cpp"
 
 int AddExpr::isA(int kind) const
 {
@@ -1374,7 +1327,7 @@ SubExpr::~SubExpr()
 }
 
 bool SubExpr::gen_Code(IdentsHandler & identHandler)
-#line 573 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 534 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if (!expr1->gen_Code(identHandler))
         return false;
@@ -1391,7 +1344,7 @@ bool SubExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1395 "../src/ast.cpp"
+#line 1348 "../src/ast.cpp"
 
 int SubExpr::isA(int kind) const
 {
@@ -1418,7 +1371,7 @@ MulExpr::~MulExpr()
 }
 
 bool MulExpr::gen_Code(IdentsHandler & identHandler)
-#line 591 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 552 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if (!expr1->gen_Code(identHandler))
         return false;
@@ -1436,7 +1389,7 @@ bool MulExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1440 "../src/ast.cpp"
+#line 1393 "../src/ast.cpp"
 
 int MulExpr::isA(int kind) const
 {
@@ -1463,7 +1416,7 @@ DivExpr::~DivExpr()
 }
 
 bool DivExpr::gen_Code(IdentsHandler & identHandler)
-#line 610 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 571 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if (!expr1->gen_Code(identHandler))
         return false;
@@ -1482,7 +1435,7 @@ bool DivExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1486 "../src/ast.cpp"
+#line 1439 "../src/ast.cpp"
 
 int DivExpr::isA(int kind) const
 {
@@ -1509,7 +1462,7 @@ SRLExpr::~SRLExpr()
 }
 
 bool SRLExpr::gen_Code(IdentsHandler & identHandler)
-#line 532 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 493 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if (!expr1->gen_Code(identHandler)) {
         return false;
@@ -1528,7 +1481,7 @@ bool SRLExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1532 "../src/ast.cpp"
+#line 1485 "../src/ast.cpp"
 
 int SRLExpr::isA(int kind) const
 {
@@ -1555,7 +1508,7 @@ SLLExpr::~SLLExpr()
 }
 
 bool SLLExpr::gen_Code(IdentsHandler & identHandler)
-#line 552 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 513 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if (!expr1->gen_Code(identHandler)) {
         return false;
@@ -1575,7 +1528,7 @@ bool SLLExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1579 "../src/ast.cpp"
+#line 1532 "../src/ast.cpp"
 
 int SLLExpr::isA(int kind) const
 {
@@ -1602,7 +1555,7 @@ ModExpr::~ModExpr()
 }
 
 bool ModExpr::gen_Code(IdentsHandler & identHandler)
-#line 630 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 591 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if (!expr1->gen_Code(identHandler))
         return false;
@@ -1621,7 +1574,7 @@ bool ModExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1625 "../src/ast.cpp"
+#line 1578 "../src/ast.cpp"
 
 int ModExpr::isA(int kind) const
 {
@@ -1648,7 +1601,7 @@ LesExpr::~LesExpr()
 }
 
 bool LesExpr::gen_Code(IdentsHandler & identHandler)
-#line 650 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 611 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if (!expr1->gen_Code(identHandler))
         return false;
@@ -1676,7 +1629,7 @@ bool LesExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1680 "../src/ast.cpp"
+#line 1633 "../src/ast.cpp"
 
 int LesExpr::isA(int kind) const
 {
@@ -1703,7 +1656,7 @@ GreExpr::~GreExpr()
 }
 
 bool GreExpr::gen_Code(IdentsHandler & identHandler)
-#line 679 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 640 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
      if (!expr1->gen_Code(identHandler))
         return false;
@@ -1731,7 +1684,7 @@ bool GreExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1735 "../src/ast.cpp"
+#line 1688 "../src/ast.cpp"
 
 int GreExpr::isA(int kind) const
 {
@@ -1758,7 +1711,7 @@ LeEExpr::~LeEExpr()
 }
 
 bool LeEExpr::gen_Code(IdentsHandler & identHandler)
-#line 708 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 669 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if (!expr1->gen_Code(identHandler))
         return false;
@@ -1786,7 +1739,7 @@ bool LeEExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1790 "../src/ast.cpp"
+#line 1743 "../src/ast.cpp"
 
 int LeEExpr::isA(int kind) const
 {
@@ -1813,7 +1766,7 @@ GrEExpr::~GrEExpr()
 }
 
 bool GrEExpr::gen_Code(IdentsHandler & identHandler)
-#line 737 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 698 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
      if (!expr1->gen_Code(identHandler))
         return false;
@@ -1841,7 +1794,7 @@ bool GrEExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1845 "../src/ast.cpp"
+#line 1798 "../src/ast.cpp"
 
 int GrEExpr::isA(int kind) const
 {
@@ -1868,7 +1821,7 @@ EquExpr::~EquExpr()
 }
 
 bool EquExpr::gen_Code(IdentsHandler & identHandler)
-#line 766 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 727 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if (!expr1->gen_Code(identHandler))
         return false;
@@ -1896,7 +1849,7 @@ bool EquExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1900 "../src/ast.cpp"
+#line 1853 "../src/ast.cpp"
 
 int EquExpr::isA(int kind) const
 {
@@ -1923,7 +1876,7 @@ NEqExpr::~NEqExpr()
 }
 
 bool NEqExpr::gen_Code(IdentsHandler & identHandler)
-#line 795 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 756 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
    if (!expr1->gen_Code(identHandler))
         return false;
@@ -1951,7 +1904,7 @@ bool NEqExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1955 "../src/ast.cpp"
+#line 1908 "../src/ast.cpp"
 
 int NEqExpr::isA(int kind) const
 {
@@ -1978,7 +1931,7 @@ AndExpr::~AndExpr()
 }
 
 bool AndExpr::gen_Code(IdentsHandler & identHandler)
-#line 494 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 455 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if (!expr1->gen_Code(identHandler)) 
         return false;
@@ -1995,7 +1948,7 @@ bool AndExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1999 "../src/ast.cpp"
+#line 1952 "../src/ast.cpp"
 
 int AndExpr::isA(int kind) const
 {
@@ -2022,7 +1975,7 @@ Or_Expr::~Or_Expr()
 }
 
 bool Or_Expr::gen_Code(IdentsHandler & identHandler)
-#line 512 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 473 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if (!expr1->gen_Code(identHandler)) {
         return false;
@@ -2041,7 +1994,7 @@ bool Or_Expr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 2045 "../src/ast.cpp"
+#line 1998 "../src/ast.cpp"
 
 int Or_Expr::isA(int kind) const
 {
@@ -2076,10 +2029,10 @@ bool WhileStmt::Func_Decl(IdentsHandler & identHandler)
         return false;
     return true;
 }
-#line 2080 "../src/ast.cpp"
+#line 2033 "../src/ast.cpp"
 
 bool WhileStmt::gen_Code(IdentsHandler & identHandler)
-#line 358 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 315 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if(!cond->gen_Code(identHandler))
         return false;
@@ -2102,7 +2055,7 @@ bool WhileStmt::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 2106 "../src/ast.cpp"
+#line 2059 "../src/ast.cpp"
 
 int WhileStmt::isA(int kind) const
 {
@@ -2139,32 +2092,47 @@ bool ForStmt::Func_Decl(IdentsHandler & identHandler)
         return false;
     return true;
 }
-#line 2143 "../src/ast.cpp"
+#line 2096 "../src/ast.cpp"
 
 bool ForStmt::gen_Code(IdentsHandler & identHandler)
-#line 327 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 269 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
-  if(!for_dec->gen_Code(identHandler))
-    return false;
-  if(!cond->gen_Code(identHandler))
-    return false;
-  if(!for_assign->gen_Code(identHandler))
-    return false;
-  if(!block->gen_Code(identHandler))
-    return false;
+    nodeList * list = static_cast<nodeList*>(for_dec);
+    std::ostringstream forDecCode, forAssignCode;
+    while(list != nullptr){
+        ASTNode * temp = list->node;
+        if(!temp->gen_Code(identHandler))
+            return false;
+
+        forDecCode << temp->code << "\n";
+        list = list->next;
+    }
+    if(!cond->gen_Code(identHandler))
+        return false;
+    list = static_cast<nodeList*>(for_assign);
+    while(list != nullptr){
+        ASTNode * temp = list->node;
+        if(!temp->gen_Code(identHandler))
+            return false;
+
+        forAssignCode << temp->code << "\n";
+        list = list->next;
+    }
+    if(!block->gen_Code(identHandler))
+        return false;
 
   std::ostringstream ss;
   std::string beg = identHandler.genNewLabel();
   std::string end = identHandler.genNewLabel();
 
-  ss<<for_dec->code<<"\n" 
+  ss<<forDecCode.str()<<"\n" 
     <<beg<<":\n"
     <<cond->code<<"\n" 
     <<"mov eax, "<<getPlace(cond)<<"\n"
     <<"cmp eax, 0\n"
     <<"je "<<end<<"\n"
     <<block->code<<"\n"
-    <<for_assign->code<<"\n"
+    <<forAssignCode.str()<<"\n"
     <<"jmp "<<beg<<"\n"
     <<end<<":\n";
   
@@ -2172,7 +2140,7 @@ bool ForStmt::gen_Code(IdentsHandler & identHandler)
   return true;
   
 }
-#line 2176 "../src/ast.cpp"
+#line 2144 "../src/ast.cpp"
 
 int ForStmt::isA(int kind) const
 {
@@ -2210,10 +2178,10 @@ bool IfStmt::Func_Decl(IdentsHandler & identHandler)
         return false;
     return true;
 }
-#line 2214 "../src/ast.cpp"
+#line 2182 "../src/ast.cpp"
 
 bool IfStmt::gen_Code(IdentsHandler & identHandler)
-#line 296 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 238 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if (!cond->gen_Code(identHandler)) {
         return false;
@@ -2243,7 +2211,7 @@ bool IfStmt::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 2247 "../src/ast.cpp"
+#line 2215 "../src/ast.cpp"
 
 int IfStmt::isA(int kind) const
 {
@@ -2272,7 +2240,7 @@ AssignStmt::~AssignStmt()
 }
 
 bool AssignStmt::gen_Code(IdentsHandler & identHandler)
-#line 166 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 121 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if(!lhs->gen_Code(identHandler))
         return false;
@@ -2295,7 +2263,7 @@ bool AssignStmt::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 2299 "../src/ast.cpp"
+#line 2267 "../src/ast.cpp"
 
 int AssignStmt::isA(int kind) const
 {
@@ -2324,47 +2292,34 @@ PrintStmt::~PrintStmt()
 }
 
 bool PrintStmt::gen_Code(IdentsHandler & identHandler)
-#line 236 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 191 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
-    std::ostringstream ssfmt;
-    std::ostringstream sscode;
-    std::list<std::string> argscode;
-
     if (!expr->gen_Code(identHandler))
         return false;
+    
+    std::ostringstream ss,ss_2;
+    std::string ln="";
+    if(flag)ln="ln";
 
-    if (expr->isA(StringConstantExpr_kind)) {
-        ssfmt << "%s";
-        argscode.push_front("push " + expr->place);
-    } else if (expr->isA(CharExpr_kind)) {
-        CharExpr *cn = static_cast<CharExpr *>(expr);
-        ssfmt << "%c";
-        argscode.push_front("push " + std::to_string(cn->value));
-    } else {
-        ssfmt << "%d";
-        if(expr->getKind() == NumExpr_kind)
-            argscode.push_front(getPlace(expr));
-    }
-    sscode << expr->code << '\n';
-    for (const auto& s : argscode) {
-        sscode << s << '\n';
-    }
-    std::string strfmtplace = identHandler.registerStrLiteral(ssfmt.str());
-    std::string ln = identHandler.registerStrLiteral("%c");
-    sscode << "push " << strfmtplace << '\n'
-           << "call printf\n"
-           << "add esp, " << 4 << "\n";
-    if(flag)
-    {
-        sscode << "push " << 10 << "\n"
-               << "push " << ln << "\n"
-               << "call printf\n"
-               << "add esp, " << 8 << "\n";
-    }
-    code = sscode.str();
+
+    if (expr->isA(StringConstantExpr_kind))
+        ss_2 << "%s" << (ln == "ln" ? "\', 10, \'" : "");
+    else if (expr->isA(CharExpr_kind))
+        ss_2 << "%c" << (ln == "ln" ? "\', 10, \'" : "");
+    else
+        ss_2 << "%d" << (ln == "ln" ? "\', 10, \'" : "");
+    ss << expr->code << '\n'
+       << "push " << getPlace(expr) << "\n";
+    std::string strfmtplace = identHandler.registerStrLiteral(ss_2.str());
+
+    ss << "push " << strfmtplace << "\n"
+       << "call printf \n"
+       << "add esp, " << 8 << "\n";
+    
+    code = ss.str();
     return true;
 }
-#line 2368 "../src/ast.cpp"
+#line 2323 "../src/ast.cpp"
 
 int PrintStmt::isA(int kind) const
 {
@@ -2396,7 +2351,7 @@ bool ReadStmt::gen_Code(IdentsHandler & identHandler)
     std::cerr << "Line: "<< this->getLinenum() << ": error: expression result unused!" << std::endl;
     exit(0);
 }
-#line 2400 "../src/ast.cpp"
+#line 2355 "../src/ast.cpp"
 
 int ReadStmt::isA(int kind) const
 {
@@ -2429,7 +2384,7 @@ bool NextIntStmt::gen_Code(IdentsHandler & identHandler)
     std::cerr << "Line: "<< expr->getLinenum() << ": error: expression result unused!" << std::endl;
     return false;
 }
-#line 2433 "../src/ast.cpp"
+#line 2388 "../src/ast.cpp"
 
 int NextIntStmt::isA(int kind) const
 {
@@ -2458,7 +2413,7 @@ ReturnStmt::~ReturnStmt()
 }
 
 bool ReturnStmt::gen_Code(IdentsHandler & identHandler)
-#line 277 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 219 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     FuncDef *fd = identHandler.getCurrentFuncDef();
     if (!expr->gen_Code(identHandler) && expr == nullptr)
@@ -2476,7 +2431,7 @@ bool ReturnStmt::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 2480 "../src/ast.cpp"
+#line 2435 "../src/ast.cpp"
 
 int ReturnStmt::isA(int kind) const
 {
@@ -2504,7 +2459,7 @@ ContinueStmt::~ContinueStmt()
 }
 
 bool ContinueStmt::gen_Code(IdentsHandler & identHandler)
-#line 134 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 89 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if(ContinueLabel != "")
     {
@@ -2519,7 +2474,7 @@ bool ContinueStmt::gen_Code(IdentsHandler & identHandler)
         exit(1);
     }
 }
-#line 2523 "../src/ast.cpp"
+#line 2478 "../src/ast.cpp"
 
 int ContinueStmt::isA(int kind) const
 {
@@ -2547,7 +2502,7 @@ BreakStmt::~BreakStmt()
 }
 
 bool BreakStmt::gen_Code(IdentsHandler & identHandler)
-#line 150 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 105 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     if(BreakLabel != "")
     {
@@ -2562,7 +2517,7 @@ bool BreakStmt::gen_Code(IdentsHandler & identHandler)
         exit(1);
     }
 }
-#line 2566 "../src/ast.cpp"
+#line 2521 "../src/ast.cpp"
 
 int BreakStmt::isA(int kind) const
 {
@@ -2636,7 +2591,7 @@ bool FunctionCallStmt::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 2640 "../src/ast.cpp"
+#line 2595 "../src/ast.cpp"
 
 int FunctionCallStmt::isA(int kind) const
 {
@@ -2687,7 +2642,7 @@ bool VarDecStmt::Func_Decl(IdentsHandler & identHandler)
     }
     return true;
 }
-#line 2691 "../src/ast.cpp"
+#line 2646 "../src/ast.cpp"
 
 int VarDecStmt::isA(int kind) const
 {
@@ -2727,10 +2682,10 @@ bool BlockStmt::Func_Decl(IdentsHandler & identHandler)
     }
     return true;
 }
-#line 2731 "../src/ast.cpp"
+#line 2686 "../src/ast.cpp"
 
 bool BlockStmt::gen_Code(IdentsHandler & identHandler)
-#line 213 "/home/boris/Desktop/Proyecto/src/genCode.tc"
+#line 168 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     std::ostringstream ss;
     nodeList *lista = static_cast<nodeList *>(stmt_list);
@@ -2752,7 +2707,7 @@ bool BlockStmt::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 2756 "../src/ast.cpp"
+#line 2711 "../src/ast.cpp"
 
 int BlockStmt::isA(int kind) const
 {

@@ -160,8 +160,18 @@ int ExprLexer::getNextToken() {
         */
         string_c:
         /*!re2c
-            "\""                            {state = 0;yylval.str_t = strdup(text.c_str());return yytokentype::StringConstant;}
-            ("\\\""|[^\n\"\x00\r])+   {   
+            "\""                            {
+                                                state = 0;
+                                                int pos = text.find("\\n");
+
+                                                while(pos != string::npos){
+                                                    text.replace(pos, 2, "\', 10, \'");
+                                                    pos = text.find("\\n", pos+9);
+                                                }
+                                                yylval.str_t = strdup(text.c_str());
+                                                return yytokentype::StringConstant;
+                                            }
+            [\x20\x21\x23-\x26\x28-\x7F]+   {   
                                                 std::string temp(ctx.tok, ctx.cur-ctx.tok);
                                                 text += std::move(temp);
                                                 state = 4; 
