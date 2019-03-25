@@ -11,9 +11,10 @@ section .data
 
 ; String Literals
 
-strl3 db '] = ', 0
-strl2 db '%d', 0
-strl4 db 'The total is ', 0
+strl4 db '] = ', 0
+strl3 db '%d', 0
+strl2 db '%c', 0
+strl5 db 'The total is ', 0
 strl0 db 'Number [', 0
 strl1 db '%s', 0
 
@@ -65,25 +66,27 @@ mov dword [number], eax
 
 push strl0
 push strl1
-call printf 
-add esp, 4
-
-
-push dword [count]
-push strl2
-call printf 
+call printf
 add esp, 4
 
 
 push strl3
-push strl1
-call printf 
+call printf
 add esp, 4
 
 
-push dword [number]
+push strl4
+push strl1
+call printf
+add esp, 4
+
+
+push strl3
+call printf
+add esp, 4
+push 10
 push strl2
-call printf 
+call printf
 add esp, 4
 
 
@@ -105,15 +108,18 @@ jmp lbl2
 lbl3:
 
 
-push strl4
+push strl5
 push strl1
-call printf 
+call printf
 add esp, 4
 
 
-push dword [total]
+push strl3
+call printf
+add esp, 4
+push 10
 push strl2
-call printf 
+call printf
 add esp, 4
 
 __lbl_main_epilog:

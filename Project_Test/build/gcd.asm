@@ -13,6 +13,7 @@ section .data
 
 ; String Literals
 
+strl1 db '%c', 0
 strl0 db '%d', 0
 
 section .text
@@ -37,9 +38,12 @@ mov dword [y], eax
 mov eax, dword []
 mov dword [z], eax
 
-push dword [z]
 push strl0
-call printf 
+call printf
+add esp, 4
+push 10
+push strl1
+call printf
 add esp, 4
 
 __lbl_main_epilog:

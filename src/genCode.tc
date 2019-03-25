@@ -189,28 +189,42 @@ gen_Code(BlockStmt)
 
 gen_Code(PrintStmt)
 {
+    std::ostringstream ssfmt;
+    std::ostringstream sscode;
+    std::list<std::string> argscode;
+
     if (!expr->gen_Code(identHandler))
         return false;
-    
-    std::ostringstream ss,ss_2;
-    std::string ln="";
-    if(flag)ln="ln";
 
-
-    if (expr->isA(StringConstantExpr_kind))
-        ss_2 << "%s";
-    else if (expr->isA(CharExpr_kind))
-        ss_2 << "%c";
-    else
-        ss_2 << "%d";
-    ss << expr->code << '\n'
-       << "push " << getPlace(expr) << "\n";
-    std::string strfmtplace = identHandler.registerStrLiteral(ss_2.str());
-    ss << "push " << strfmtplace << '\n'
-       << "call printf \n"
-       << "add esp, " << 4 << "\n";
-    
-    code = ss.str();
+    if (expr->isA(StringConstantExpr_kind)) {
+        ssfmt << "%s";
+        argscode.push_front("push " + expr->place);
+    } else if (expr->isA(CharExpr_kind)) {
+        CharExpr *cn = static_cast<CharExpr *>(expr);
+        ssfmt << "%c";
+        argscode.push_front("push " + std::to_string(cn->value));
+    } else {
+        ssfmt << "%d";
+        if(expr->getKind() == NumExpr_kind)
+            argscode.push_front(getPlace(expr));
+    }
+    sscode << expr->code << '\n';
+    for (const auto& s : argscode) {
+        sscode << s << '\n';
+    }
+    std::string strfmtplace = identHandler.registerStrLiteral(ssfmt.str());
+    std::string ln = identHandler.registerStrLiteral("%c");
+    sscode << "push " << strfmtplace << '\n'
+           << "call printf\n"
+           << "add esp, " << 4 << "\n";
+    if(flag)
+    {
+        sscode << "push " << 10 << "\n"
+               << "push " << ln << "\n"
+               << "call printf\n"
+               << "add esp, " << 4 << "\n";
+    }
+    code = sscode.str();
     return true;
 }
 

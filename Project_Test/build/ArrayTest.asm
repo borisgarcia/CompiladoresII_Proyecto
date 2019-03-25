@@ -10,10 +10,11 @@ section .data
 
 ; String Literals
 
-strl3 db '', 0
-strl2 db '%s', 0
+strl4 db '', 0
+strl3 db '%s', 0
+strl2 db ' ', 0
 strl0 db '%d', 0
-strl1 db ' ', 0
+strl1 db '%c', 0
 
 section .text
 section .data
@@ -117,15 +118,14 @@ je lbl3
 
 mov ecx, dword [i]
 
-push dword [arr+ecx*4]
 push strl0
-call printf 
+call printf
 add esp, 4
 
 
-push strl1
 push strl2
-call printf 
+push strl3
+call printf
 add esp, 4
 
 
@@ -134,9 +134,13 @@ jmp lbl2
 lbl3:
 
 
+push strl4
 push strl3
-push strl2
-call printf 
+call printf
+add esp, 4
+push 10
+push strl1
+call printf
 add esp, 4
 
 __lbl_main_epilog:

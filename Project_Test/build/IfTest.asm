@@ -10,12 +10,13 @@ section .data
 
 ; String Literals
 
-strl5 db 'X is not equal to Y\n', 0
-strl2 db '%d', 0
-strl4 db 'X is equal to Y\n', 0
-strl3 db ' Y = ', 0
-strl0 db 'X = ', 0
+strl6 db 'X is not equal to Y\n', 0
 strl1 db '%s', 0
+strl0 db 'X = ', 0
+strl4 db ' Y = ', 0
+strl5 db 'X is equal to Y\n', 0
+strl2 db '%c', 0
+strl3 db '%d', 0
 
 section .text
 section .data
@@ -36,25 +37,27 @@ mov dword [y], eax
 
 push strl0
 push strl1
-call printf 
-add esp, 4
-
-
-push dword [x]
-push strl2
-call printf 
+call printf
 add esp, 4
 
 
 push strl3
-push strl1
-call printf 
+call printf
 add esp, 4
 
 
-push dword [y]
+push strl4
+push strl1
+call printf
+add esp, 4
+
+
+push strl3
+call printf
+add esp, 4
+push 10
 push strl2
-call printf 
+call printf
 add esp, 4
 
 
@@ -71,18 +74,18 @@ mov dword [ebp - 8], eax
 cmp dword [ebp - 8], 0
 je lbl2
 
-push strl4
+push strl5
 push strl1
-call printf 
+call printf
 add esp, 4
 
 
 jmp lbl3
 lbl2:
 
-push strl5
+push strl6
 push strl1
-call printf 
+call printf
 add esp, 4
 
 
@@ -96,25 +99,27 @@ mov dword [y], eax
 
 push strl0
 push strl1
-call printf 
-add esp, 4
-
-
-push dword [x]
-push strl2
-call printf 
+call printf
 add esp, 4
 
 
 push strl3
-push strl1
-call printf 
+call printf
 add esp, 4
 
 
-push dword [y]
+push strl4
+push strl1
+call printf
+add esp, 4
+
+
+push strl3
+call printf
+add esp, 4
+push 10
 push strl2
-call printf 
+call printf
 add esp, 4
 
 
@@ -131,18 +136,18 @@ mov dword [ebp - 16], eax
 cmp dword [ebp - 16], 0
 je lbl6
 
-push strl4
+push strl5
 push strl1
-call printf 
+call printf
 add esp, 4
 
 
 jmp lbl7
 lbl6:
 
-push strl5
+push strl6
 push strl1
-call printf 
+call printf
 add esp, 4
 
 
