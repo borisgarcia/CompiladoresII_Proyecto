@@ -161,7 +161,7 @@ int ExprLexer::getNextToken() {
         string_c:
         /*!re2c
             "\""                            {state = 0;yylval.str_t = strdup(text.c_str());return yytokentype::StringConstant;}
-            [\x20\x21\x23-\x26\x28-\x7F]+   {   
+            ("\\\""|[^\n\"\x00\r])+   {   
                                                 std::string temp(ctx.tok, ctx.cur-ctx.tok);
                                                 text += std::move(temp);
                                                 state = 4; 

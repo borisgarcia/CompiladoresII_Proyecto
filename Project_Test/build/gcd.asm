@@ -26,7 +26,7 @@ section .data
 main:
 push ebp
 mov ebp, esp
-sub esp, 0
+sub esp, 4
 
 
 mov eax, dword [a]
@@ -35,7 +35,13 @@ mov dword [x], eax
 mov eax, dword [b]
 mov dword [y], eax
 
-mov eax, dword []
+
+push dword [y]
+push dword [x]
+call gcd
+add esp, 8
+mov dword [ebp - 4], eax
+mov eax, 
 mov dword [z], eax
 
 push strl0
@@ -44,16 +50,16 @@ add esp, 4
 push 10
 push strl1
 call printf
-add esp, 4
+add esp, 8
 
 __lbl_main_epilog:
-add esp, 0
+add esp, 4
 leave
 ret
 gcd:
 push ebp
 mov ebp, esp
-sub esp, 8
+sub esp, 16
 
 
 mov eax, dword [ebp + 12]
@@ -74,12 +80,24 @@ jmp __lbl_gcd_epilog
 jmp lbl3
 lbl2:
 
-mov eax, dword []
+
+
+mov eax, dword [ebp + 8]
+mov ebx, dword [ebp + 12]
+cdq
+idiv ebx
+mov dword [ebp - 12], edx
+push dword [ebp - 12]
+push dword [ebp + 12]
+call gcd
+add esp, 8
+mov dword [ebp - 16], eax
+mov eax, 
 jmp __lbl_gcd_epilog
 
 lbl3:
 __lbl_gcd_epilog:
-add esp, 8
+add esp, 16
 leave
 ret
 

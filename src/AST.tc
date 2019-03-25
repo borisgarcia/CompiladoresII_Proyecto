@@ -32,6 +32,12 @@
     {
         if(expr->getKind() == NumExpr_kind || expr->getKind() == StringConstantExpr_kind)
             return expr->place;
+        else if(expr->isA(NextIntStmt_kind))
+            return "eax";
+        else if(expr->isA(FunctionCallStmt_kind)||expr->isA(FunctionCallExpr_kind)){
+            if(expr->place == "")
+                return "eax";
+        }
         else
             return "dword [" + expr->place + "]";
     }

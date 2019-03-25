@@ -141,7 +141,7 @@ add esp, 4
 push 10
 push strl1
 call printf
-add esp, 4
+add esp, 8
 
 __lbl_main_epilog:
 add esp, 8

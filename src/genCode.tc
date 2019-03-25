@@ -84,6 +84,51 @@ gen_Code(FunctionCallStmt)
     code = ss.str();
     return true;
 }
+gen_Code(FunctionCallExpr)
+{
+    FuncDef * fd = identHandler.getFuncDef(id);
+    if(fd == nullptr)
+    {
+        std::cerr<<"\n";
+        exit(1);
+    }
+    nodeList *args = static_cast<nodeList *>(param_list);
+    int argcount = 0;
+
+    std::ostringstream ss;
+    std::list<std::string> argscode;
+
+    while (args != nullptr) {
+        ASTNode *argn = args->node;
+
+        if (!argn->gen_Code(identHandler))
+            return false;
+
+        if(argn->getKind() == NumExpr_kind)
+            argscode.push_front("push " + argn->place);
+        else
+            argscode.push_front("push dword [" + argn->place + "]");
+        ss << argn->code << '\n';
+        argcount++;
+        args = args->next;
+    }
+    if (fd->getParamCount() != argcount) {
+        std::cerr << "Line " <<  ":Error: Invalid number of arguments in call"
+                  << "to function '" << id << "'.  Expected " << fd->getParamCount() << ", found " 
+                  << argcount << '\n';
+        return false;   
+    }
+    for (const auto& s : argscode) {
+        ss << s << '\n';
+    }
+    place = identHandler.newTemp();
+    ss << "call " << id << '\n'
+           << "add esp, " << (argcount * 4) << '\n'
+           << "mov dword [" << place << "], eax";
+
+    code = ss.str();
+    return true;
+}
 
 gen_Code(ContinueStmt)
 {
@@ -222,7 +267,7 @@ gen_Code(PrintStmt)
         sscode << "push " << 10 << "\n"
                << "push " << ln << "\n"
                << "call printf\n"
-               << "add esp, " << 4 << "\n";
+               << "add esp, " << 8 << "\n";
     }
     code = sscode.str();
     return true;
@@ -335,10 +380,6 @@ gen_Code(WhileStmt)
 
 /*Expresiones*/
 
-gen_Code(FunctionCallExpr)
-{
-    return true;
-}
 
 gen_Code(IdExpr)
 {

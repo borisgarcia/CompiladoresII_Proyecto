@@ -61,7 +61,7 @@ add esp, 4
 push 10
 push strl2
 call printf
-add esp, 4
+add esp, 8
 
 
 push strl5
@@ -80,7 +80,7 @@ add esp, 4
 push 10
 push strl2
 call printf
-add esp, 4
+add esp, 8
 
 
 push strl6
@@ -99,7 +99,7 @@ add esp, 4
 push 10
 push strl2
 call printf
-add esp, 4
+add esp, 8
 
 
 push strl7
@@ -119,7 +119,7 @@ add esp, 4
 push 10
 push strl2
 call printf
-add esp, 4
+add esp, 8
 
 
 push strl8
@@ -140,7 +140,7 @@ add esp, 4
 push 10
 push strl2
 call printf
-add esp, 4
+add esp, 8
 
 
 push strl9
@@ -161,7 +161,7 @@ add esp, 4
 push 10
 push strl2
 call printf
-add esp, 4
+add esp, 8
 
 __lbl_main_epilog:
 add esp, 20
