@@ -87,7 +87,6 @@ Func_Decl(FieldDecStmt_2)
     nodeList *lst = static_cast<nodeList *>(list);
     while (lst != nullptr) {
         ASTNode *curr = lst->node;
-
         if(curr->isA(stringNode_kind))
         {
             temp = static_cast<stringNode *>(curr);

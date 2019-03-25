@@ -27,6 +27,7 @@
     std::unordered_map<std::string,int> arrays;
     std::string ContinueLabel = "";
     std::string BreakLabel = "";
+
     std::string getPlace(ASTNode * expr)
     {
         if(expr->getKind() == NumExpr_kind)

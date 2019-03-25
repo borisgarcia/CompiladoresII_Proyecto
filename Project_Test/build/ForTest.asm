@@ -1,16 +1,16 @@
 ; Variables
 i dd 0
 ; Temp variables
-global main
+
+; String Literals
+
+strl0strl1strl2strl3global main
 
 extern printf
 
 section .data
 
 section .text
-
-; String Literals
-
 
 ; Array Declaration
 

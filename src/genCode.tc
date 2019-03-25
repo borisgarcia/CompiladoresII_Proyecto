@@ -13,6 +13,7 @@ gen_Code(Program)
 
     for(auto arr : arrays )
         ss << arr.first << " times " << arr.second << " dd 0\n";
+        
     FnDec * temp;
     nodeList *lst = static_cast<nodeList *>(dec_list);
     while (lst != nullptr) 
@@ -186,39 +187,14 @@ gen_Code(BlockStmt)
     return true;
 }
 
-/*gen_Code(PrintlnStmt)
-{
-    if (!expr->gen_Code(identHandler))
-        return false;
-    
-    int argsize = 0;
-    std::ostringstream ss, ss_2;
-
-    if (expr->isA(StringConstantExpr_kind))
-        ss_2 << "%s";
-    else if (expr->isA(CharExpr_kind))
-        ss_2 << "%c";
-    else
-        ss_2 << "%d";
-    ss << expr->code << '\n'
-       << "push " << getPlace(expr) << "\n";
-    std::string strfmtplace = identHandler.registerStrLiteral(ss_2.str());
-    ss << "push " << strfmtplace << '\n'
-       << "call printf \n"
-       << "add esp, " << (argsize + 4) << "\n";
-    
-    code = ss.str();
-    return true;
-}*/
-
 gen_Code(PrintStmt)
 {
     if (!expr->gen_Code(identHandler))
         return false;
     
-    /*std::ostringstream ss;
+    std::ostringstream ss,ss_2;
     std::string ln="";
-    if(flag)ln="ln"
+    if(flag)ln="ln";
 
 
     if (expr->isA(StringConstantExpr_kind))
@@ -232,9 +208,9 @@ gen_Code(PrintStmt)
     std::string strfmtplace = identHandler.registerStrLiteral(ss_2.str());
     ss << "push " << strfmtplace << '\n'
        << "call printf \n"
-       << "add esp, " << (argsize + 4) << "\n";
+       << "add esp, " << 4 << "\n";
     
-    code = ss.str();*/
+    code = ss.str();
     return true;
 }
 

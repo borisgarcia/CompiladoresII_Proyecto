@@ -3,16 +3,16 @@ number dd 0
 total dd 0
 count dd 0
 ; Temp variables
-global main
+
+; String Literals
+
+strl0strl1strl2strl3strl4global main
 
 extern printf
 
 section .data
 
 section .text
-
-; String Literals
-
 
 ; Array Declaration
 

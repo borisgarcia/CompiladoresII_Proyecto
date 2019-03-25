@@ -2,16 +2,16 @@
 y dd 0
 x dd 0
 ; Temp variables
-global main
+
+; String Literals
+
+strl0strl1strl2strl3strl4strl5strl6strl7strl8global main
 
 extern printf
 
 section .data
 
 section .text
-
-; String Literals
-
 
 ; Array Declaration
 

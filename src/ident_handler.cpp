@@ -22,21 +22,19 @@ std::string IdentsHandler::registerStrLiteral(const std::string& str) {
     ss << "strl" << slitCount++;
 
     std::string name = ss.str();
-    strlitMap.emplace(str, name);
-
+    strlitMap[str] = name;
     return name;
 }
 
 std::string IdentsHandler::genStrNames()
 {
-    std::ostringstream ss;
-    ss << "\n; String Literals\n\n";
+    std::cout << "\n; String Literals\n\n";
     for(const auto & s : strLitMap)
         if(s.first.find("\"") == std::string::npos)
-            ss << s.second << " db \'" << s.first << "\', 0\n";
+            std::cout << s.second << " db \'" << s.first << "\', 0\n";
         else
-            ss << s.second << " db \'" << s.first << "\', 0\n";
-    return ss.str();
+            std::cout << s.second << " db \'" << s.first << "\', 0\n";
+    return "";
 }
 
 std::string IdentsHandler::genVarNames() {
