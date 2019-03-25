@@ -6,6 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/boris/Desktop/Proyecto/src/Parser.cpp" "/home/boris/Desktop/Proyecto/build/CMakeFiles/test_parser.dir/Parser.cpp.o"
   "/home/boris/Desktop/Proyecto/src/ast.cpp" "/home/boris/Desktop/Proyecto/build/CMakeFiles/test_parser.dir/ast.cpp.o"
+  "/home/boris/Desktop/Proyecto/src/ident_handler.cpp" "/home/boris/Desktop/Proyecto/build/CMakeFiles/test_parser.dir/ident_handler.cpp.o"
   "/home/boris/Desktop/Proyecto/src/lexer.cpp" "/home/boris/Desktop/Proyecto/build/CMakeFiles/test_parser.dir/lexer.cpp.o"
   "/home/boris/Desktop/Proyecto/src/main.cpp" "/home/boris/Desktop/Proyecto/build/CMakeFiles/test_parser.dir/main.cpp.o"
   )

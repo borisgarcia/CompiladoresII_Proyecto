@@ -62,7 +62,11 @@ int ExprLexer::getNextToken() {
             "\""                        {text = "";state = 4; continue;}
             "System"                    {state = 5; continue;}
 
-            "bool"                      {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwBool);}
+            "bool"                      {
+                                            yytokentype tok = makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwBool);
+                                            yylval.str_t = strdup(text.c_str());
+                                            return tok;                                            
+                                        }
             "break"                     {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwBreak);}
             "continue"                  {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwContinue);}
             "class"                     {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwClass);}
@@ -71,13 +75,21 @@ int ExprLexer::getNextToken() {
             "false"                     {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwFalse);}
             "for"                       {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwFor);}
             "if"                        {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwIf);}
-            "int"                       {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwInt);}
+            "int"                       {
+                                            yytokentype tok = makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwInt);
+                                            yylval.str_t = strdup(text.c_str());
+                                            return tok;
+                                        }
             "new"                       {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwNew);}
             "null"                      {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwNull);}
             "return"                    {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwReturn);}
             "rot"                       {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwRot);}
             "true"                      {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwTrue);}
-            "void"                      {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwVoid);}
+            "void"                      {
+                                            yytokentype tok = makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwVoid);
+                                            yylval.str_t = strdup(text.c_str());
+                                            return tok;
+                                        }
             "while"                     {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::KwWhile);}
         
             "+"                         {return makeToken(ctx.tok,ctx.cur-ctx.tok,yytokentype::OpAdd);}
@@ -138,7 +150,7 @@ int ExprLexer::getNextToken() {
         */
         char_c:
         /*!re2c
-            "\'"                            {state = 0;return yytokentype::CharConstant;}
+            "\'"                            {state = 0;yylval.str_t = strdup(text.c_str());return yytokentype::CharConstant;}
             [\x20\x21\x23-\x26\x28-\x7F]    {   
                                                 std::string temp(ctx.tok, ctx.cur-ctx.tok);
                                                 text = std::move(temp);
@@ -148,7 +160,7 @@ int ExprLexer::getNextToken() {
         */
         string_c:
         /*!re2c
-            "\""                            {state = 0;return yytokentype::StringConstant;}
+            "\""                            {state = 0;yylval.str_t = strdup(text.c_str());return yytokentype::StringConstant;}
             [\x20\x21\x23-\x26\x28-\x7F]+   {   
                                                 std::string temp(ctx.tok, ctx.cur-ctx.tok);
                                                 text += std::move(temp);

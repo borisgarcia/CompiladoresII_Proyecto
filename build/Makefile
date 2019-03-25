@@ -177,6 +177,33 @@ ast.cpp.s:
 	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/ast.cpp.s
 .PHONY : ast.cpp.s
 
+ident_handler.o: ident_handler.cpp.o
+
+.PHONY : ident_handler.o
+
+# target to build an object file
+ident_handler.cpp.o:
+	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/ident_handler.cpp.o
+.PHONY : ident_handler.cpp.o
+
+ident_handler.i: ident_handler.cpp.i
+
+.PHONY : ident_handler.i
+
+# target to preprocess a source file
+ident_handler.cpp.i:
+	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/ident_handler.cpp.i
+.PHONY : ident_handler.cpp.i
+
+ident_handler.s: ident_handler.cpp.s
+
+.PHONY : ident_handler.s
+
+# target to generate assembly for a file
+ident_handler.cpp.s:
+	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/ident_handler.cpp.s
+.PHONY : ident_handler.cpp.s
+
 lexer.o: lexer.cpp.o
 
 .PHONY : lexer.o
@@ -246,6 +273,9 @@ help:
 	@echo "... ast.o"
 	@echo "... ast.i"
 	@echo "... ast.s"
+	@echo "... ident_handler.o"
+	@echo "... ident_handler.i"
+	@echo "... ident_handler.s"
 	@echo "... lexer.o"
 	@echo "... lexer.i"
 	@echo "... lexer.s"

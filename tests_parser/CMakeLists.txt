@@ -9,14 +9,14 @@ set( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++14" )
 
 add_custom_command (
   OUTPUT lexer.cpp
-  COMMAND ${RE2C} -olexer.cpp ${PROJECT_SOURCE_DIR}/../expr_lexer.re
-  MAIN_DEPENDENCY ${PROJECT_SOURCE_DIR}/../expr_lexer.re
+  COMMAND ${RE2C} -olexer.cpp ${PROJECT_SOURCE_DIR}/../src/expr_lexer.re
+  MAIN_DEPENDENCY ${PROJECT_SOURCE_DIR}/../src/expr_lexer.re
 )
 
 add_custom_command (
   OUTPUT Parser.cpp tokens.h
-  COMMAND bison -oParser.cpp -rall --defines=tokens.h ${PROJECT_SOURCE_DIR}/../Parser.y
-  MAIN_DEPENDENCY ${PROJECT_SOURCE_DIR}/../Parser.y
+  COMMAND bison -oParser.cpp -rall --defines=tokens.h ${PROJECT_SOURCE_DIR}/../src/Parser.y
+  MAIN_DEPENDENCY ${PROJECT_SOURCE_DIR}/../src/Parser.y
 )
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})

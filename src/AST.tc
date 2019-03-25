@@ -16,19 +16,15 @@
     class Statement;
     class Expression;
     class NumExpr;
-
-    using StmtList = std::vector<Statement*>;
-    using ExprList = std::vector<Expression*>;
-    using stringList = std::vector<std::string>;
-    using intList = std::vector<int>;
     
     using string_t = std::string;
+    void addToNodeList(ASTNode *&lst, ASTNode *node);
 
 %}
 
 %{
     #include "ast.h"
-    
+
     std::string getPlace(ASTNode * expr)
     {
         if(expr->getKind() == NumExpr_kind)
@@ -52,6 +48,7 @@
             lst->last = l;
         }
     }
+
 %}
 
 %node ASTNode %abstract %typedef = {
@@ -59,10 +56,44 @@
     %nocreate string_t place = {""};
 }
 
+%node Program ASTNode = {
+    ASTNode *dec_list;
+}
+
+%node FnDec ASTNode %typedef= 
+{
+    string_t type; 
+    string_t name;
+    ASTNode * params;
+    Statement * block; 
+}
+
+%node stringNode ASTNode %typedef = 
+{
+    string_t id;
+}
+
+%node FieldDecStmt ASTNode %typedef = 
+{
+    string_t type; 
+    string_t id;
+    Expression * value; 
+}
+
+%node FieldDecStmt_2 ASTNode %typedef = 
+{
+    string_t type; 
+    ASTNode * list;
+}
 %node nodeList ASTNode = {
     ASTNode *node;
-    ASTNode_list *next;
+    nodeList *next;
     %nocreate nodeList *last = {nullptr};
+}
+
+%node FnParamsDec ASTNode %typedef= {
+    string_t type;
+    string_t id;
 }
 
 %node Expression ASTNode %abstract
@@ -72,7 +103,7 @@
     int value;
 }
 
-%node StringConstant Expression =
+%node StringConstantExpr Expression =
 {
     string_t value;
 }
@@ -80,6 +111,11 @@
 %node CharExpr Expression = 
 {
     int value; 
+}
+
+%node BoolExpr Expression = 
+{
+    bool value; 
 }
 
 //Unary Expression
@@ -125,9 +161,14 @@
 %node IdArrayExpr Expression =
 {
     string_t id;
-    int_t pos;
+    Expression * pos;
 }
 
+%node ArrayDec Expression = 
+{
+    string_t id;
+    int size;
+}
 //Funciones
 
 %node NextIntExpr Expression =
@@ -144,7 +185,7 @@
 
 %node FunctionCallExpr Expression = 
 {
-    string_t *id;
+    string_t id;
     ASTNode * param_list;
 }
 
@@ -168,9 +209,24 @@
     Statement * false_block;
 }
 
-%node Assign Statement = {
+%node AssignStmt Statement = {
     Expression * lhs;
     Expression * rhs;
+}
+
+%node PrintlnStmt Statement = {
+    Expression * expr;
+}
+
+%node PrintStmt Statement = {
+    Expression * expr;
+}
+
+%node ReadStmt Statement
+
+%node NextIntStmt Statement =
+{
+    Expression * expr;
 }
 
 %node ReturnStmt Statement = {
@@ -178,31 +234,31 @@
     %nocreate string_t label = {""};
 }
 
-%node Continue Statement = {
+%node ContinueStmt Statement = {
     %nocreate string_t label = {""};
 }
 
-%node Break Statement = {
+%node BreakStmt Statement %typedef= {
     %nocreate string_t label = {""};
 }
 
-%node FunctionDecStmt = {
-    string_t type; 
-    string_t name;
-    ASTNode * params;
-    Statement * block; 
+%node FunctionCallStmt Statement %typedef= 
+{
+    string_t id;
+    ASTNode * param_list;
 }
 
-%node FieldDec = {
+%node VarDecStmt Statement %typedef = 
+{
     string_t type; 
     ASTNode * list;
 }
 
-%node FieldDec_2 = {
-    string_t type; 
-    ASTNode * id;
-    ASTNode * value; 
+%node BlockStmt Statement = {
+    ASTNode * stmt_list;
 }
 
-%operation %virtual bool genCode(ASTNode * this, IdentsHandler& identHandler)
+%operation %virtual bool Func_Decl(ASTNode *this, IdentsHandler& identHandler)
+%operation %virtual bool gen_Code(ASTNode * this, IdentsHandler& identHandler)
 %include "genCode.tc"
+%include "LoadFunc.tc"

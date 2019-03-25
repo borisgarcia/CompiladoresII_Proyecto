@@ -44,6 +44,14 @@ string.h
 tokens.h
 /home/boris/Desktop/Proyecto/src/tokens.h
 
+/home/boris/Desktop/Proyecto/src/ident_handler.cpp
+iostream
+-
+sstream
+-
+ident_handler.h
+/home/boris/Desktop/Proyecto/src/ident_handler.h
+
 /home/boris/Desktop/Proyecto/src/ident_handler.h
 string
 -
@@ -75,4 +83,6 @@ expr_lexer.h
 /home/boris/Desktop/Proyecto/src/expr_lexer.h
 
 /home/boris/Desktop/Proyecto/src/tokens.h
+ast.h
+/home/boris/Desktop/Proyecto/src/ast.h
 

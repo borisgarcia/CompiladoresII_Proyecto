@@ -32,6 +32,7 @@ include_directories(${PROJECT_SOURCE_DIR})
 add_executable(${PROJECT_NAME} 
                         lexer.cpp
                         Parser.cpp
-                        ast.cpp                        
+                        ast.cpp
+                        ident_handler.cpp                        
                         main.cpp)
 

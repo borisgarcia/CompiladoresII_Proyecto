@@ -39,62 +39,68 @@
 #if YYDEBUG
 extern int yydebug;
 #endif
+/* "%code requires" blocks.  */
+#line 2 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1909  */
+
+#include "ast.h"
+
+#line 48 "../src/tokens.h" /* yacc.c:1909  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    KwBool = 258,
-    KwBreak = 259,
-    KwContinue = 260,
-    KwClass = 261,
-    KwElse = 262,
-    KwExtends = 263,
-    KwFalse = 264,
-    KwFor = 265,
-    KwIf = 266,
-    KwInt = 267,
-    KwNew = 268,
-    KwNull = 269,
-    KwReturn = 270,
-    KwRot = 271,
-    KwTrue = 272,
-    KwVoid = 273,
-    KwWhile = 274,
-    KwPrint = 275,
-    KwPrintln = 276,
-    KwRead = 277,
-    KwRandom = 278,
-    OpenBrace = 279,
-    CloseBrace = 280,
-    OpenBracket = 281,
-    CloseBracket = 282,
-    Comma = 283,
-    Semicolon = 284,
-    OpenPar = 285,
-    ClosePar = 286,
-    Not = 287,
-    OpAdd = 288,
-    OpSub = 289,
-    OpDiv = 290,
-    OpMul = 291,
-    OpMod = 292,
-    Assign = 293,
-    OpGreater = 294,
-    OpLess = 295,
-    OpGreaterEqual = 296,
-    OpLessEqual = 297,
-    NotEqual = 298,
-    OpAnd = 299,
-    OpOr = 300,
-    OpEqual = 301,
-    SLL = 302,
-    SLR = 303,
-    intConstant = 304,
-    CharConstant = 305,
-    Id = 306,
-    StringConstant = 307,
+    intConstant = 258,
+    CharConstant = 259,
+    KwBool = 260,
+    KwVoid = 261,
+    Id = 262,
+    StringConstant = 263,
+    KwInt = 264,
+    KwBreak = 265,
+    KwContinue = 266,
+    KwClass = 267,
+    KwElse = 268,
+    KwExtends = 269,
+    KwFor = 270,
+    KwIf = 271,
+    KwFalse = 272,
+    KwTrue = 273,
+    KwNew = 274,
+    KwNull = 275,
+    KwReturn = 276,
+    KwRot = 277,
+    KwWhile = 278,
+    KwPrint = 279,
+    KwPrintln = 280,
+    KwRead = 281,
+    KwRandom = 282,
+    OpenBrace = 283,
+    CloseBrace = 284,
+    OpenBracket = 285,
+    CloseBracket = 286,
+    Comma = 287,
+    Semicolon = 288,
+    OpenPar = 289,
+    ClosePar = 290,
+    Not = 291,
+    OpAdd = 292,
+    OpSub = 293,
+    OpDiv = 294,
+    OpMul = 295,
+    OpMod = 296,
+    Assign = 297,
+    OpGreater = 298,
+    OpLess = 299,
+    OpGreaterEqual = 300,
+    OpLessEqual = 301,
+    NotEqual = 302,
+    OpAnd = 303,
+    OpOr = 304,
+    OpEqual = 305,
+    SLL = 306,
+    SLR = 307,
     Eof = 308,
     Error = 309
   };
@@ -105,14 +111,15 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 28 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1909  */
+#line 31 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1909  */
 
-        //Statement * stmt_t;
-        //Expression * expr_t;
+        Statement * stmt_t;
+        Expression * expr_t;
+        ASTNode * ast_t;
         char * str_t;
         int int_t;
 
-#line 116 "../src/tokens.h" /* yacc.c:1909  */
+#line 123 "../src/tokens.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

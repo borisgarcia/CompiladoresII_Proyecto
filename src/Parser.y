@@ -1,3 +1,7 @@
+
+%code requires {
+#include "ast.h"
+}
 %{
   #include <stdio.h>
   #include <iostream>
@@ -20,25 +24,28 @@
         std::cerr << "Parsing Error: " <<"Line: "<<lineNo<<"-" <<msg<<'\n';
         errors++;
   }
-  YYNODESTATE *nodeState;
-  #define YYERROR_VERBOSE 1
+
   
 %}
 
 %union{
-        //Statement * stmt_t;
-        //Expression * expr_t;
+        Statement * stmt_t;
+        Expression * expr_t;
+        ASTNode * ast_t;
         char * str_t;
         int int_t;
 }
 
-%type<expr_t> constant cond-op eq-op rel-op arith-op bin-op expr 
-%type<expr_t> lvalue argument method-call_expr method-call_params
-%type<stmt_t> field_decl mult-field method_decl params params_p
-%type<stmt_t> block block_p var-decl var-decl_p statement assign else_opt 
-%type<stmt_t> for_assign return_expr method-call_stmt
-%token KwBool KwBreak KwContinue KwClass KwElse KwExtends KwFalse KwFor KwIf KwInt 
-%token KwNew KwNull KwReturn KwRot KwTrue KwVoid KwWhile KwPrint KwPrintln KwRead KwRandom  
+%type<ast_t> program program_body id mult-field method_decl params params_p block_p var-decl_p parametro for_assign field_decl method-call_params
+%type<expr_t> return_expr method-call_expr argument lvalue expr bin-op arith-op rel-op cond-op
+%type<expr_t> eq-op constant
+%type<stmt_t> var-decl statement assign else_opt method-call_stmt block
+%type<str_t> type
+
+%token<int_t> intConstant CharConstant
+%token<str_t> KwBool KwVoid Id StringConstant KwInt
+%token KwBreak KwContinue KwClass KwElse KwExtends KwFor KwIf KwFalse KwTrue
+%token KwNew KwNull KwReturn KwRot KwWhile KwPrint KwPrintln KwRead KwRandom  
 
 %token OpenBrace "{"
 %token CloseBrace "}"
@@ -64,9 +71,7 @@
 %token OpOr "||"
 %token OpEqual "=="
 %token SLL "<<"
-%token SLR ">>"
-%token intConstant CharConstant
-%token Id StringConstant                       
+%token SLR ">>"                  
 %token Eof "end of input"
 %token Error
 
@@ -83,8 +88,8 @@
 
 %%
 
-program: KwClass Id "{" program_body "}"{}
-|        KwClass Id "{" "}" {}
+program: KwClass Id "{" program_body "}"{$$ = new BlockStmt($4);}
+|        KwClass Id "{" "}" {$$=nullptr;}
 ;       
 
 program_body:   program_body field_decl{
@@ -111,39 +116,42 @@ program_body:   program_body field_decl{
         }
 ;
 
-field_decl:     type mult-field ";"                 {$$ = new FieldDecStmt($1,$2);}
-            |   type Id Assign constant ";"         {$$ = new FieldDecStmt_2($1,$2,$4);}
+field_decl:     type mult-field ";"                 {$$ = new FieldDecStmt_2($1,$2);}
+            |   type Id Assign constant ";"         {$$ = new FieldDecStmt($1,$2,$4);}
 ;
 
-mult-field:     mult-field "," Id                            {addToNodeList($1,$2);$$=$1;}
+mult-field:     mult-field "," id                            {addToNodeList($1,$3);$$=$1;}
         |       mult-field "," Id "[" intConstant "]"        {addToNodeList($1,new ArrayDec($3,$5));$$=$1;}
-        |       Id                                           {$$ = nullptr; addToNodeList($$,$1);}
+        |       id                                           {$$ = nullptr; addToNodeList($$,$1);}
         |       Id "[" intConstant "]"                       {$$ = nullptr; addToNodeList($$,new ArrayDec($1,$3));}
 ;
 
 method_decl:    type Id "(" params ")" block    {
+                                                        $$ = new FnDec($1,$2,$4,$6);
                                                         method_dec_boolean = true;
-                                                        $$ = FunctionDecStmt($1,$2,$4,$6);
                                                 }
         |       KwVoid Id "(" params ")" block  {
+                                                        $$ = new FnDec($1,$2,$4,$6);
                                                         method_dec_boolean = true;
-                                                        $$ = FunctionDecStmt("void",$2,$4,$6);
                                                 }
 ;
 
 params: params_p        {$$=$1;}
-|                       {$$=nullptr;}
+|       %empty          {$$=nullptr;}
 ;
 
-params_p:       params "," type Id    {addToNodeList($1,$2);$$=$1;}
-        |       type Id               {$$ = nullptr; addToNodeList($$,$1);}
+params_p:       params_p "," parametro    {addToNodeList($1,$3);$$=$1;}
+        |       parametro                 {$$ = nullptr; addToNodeList($$,$1);}
 ;
 
-type:           KwInt   {}
-        |       KwBool  {}
+parametro:      type Id {$$=new FnParamsDec($1,$2);}
 ;
 
-block:  "{" block_p "}"     {$$ = $2;}
+type:           KwInt   {$$ = $1;}
+        |       KwBool  {$$ = $1;}
+;
+
+block:  "{" block_p "}"     {$$ = new BlockStmt($2);}
 |       "{" "}"             {$$ = nullptr;}
 ;
 
@@ -175,11 +183,14 @@ block_p: block_p var-decl{
         }       
 ;
 
-var-decl: type var-decl_p ";"   {$$ = new FieldDecStmt($1,$2);}
+var-decl: type var-decl_p ";"   {$$ = new VarDecStmt($1,$2);}
 ;
 
-var-decl_p:     var-decl_p "," Id       {addToNodeList($1,$2);$$=$1;}
-        |       Id                      {$$ = nullptr; addToNodeList($$,$1);}
+var-decl_p:     var-decl_p "," id       {addToNodeList($1,$3);$$=$1;}
+        |       id                      {$$ = nullptr; addToNodeList($$,$1);}
+;
+
+id:     Id      {$$ = new stringNode($1);}
 ;
 
 statement:  assign ";"                                                  {state_ment_boolean = true;$$ = $1;}
@@ -200,7 +211,7 @@ else_opt:   KwElse block    {$$ = $2;}
             | %empty        {$$ = nullptr;}
 ;
 
-for_assign: for_assign "," assign   {addToNodeList($1,$2);$$=$1;}
+for_assign: for_assign "," assign   {addToNodeList($1,$3);$$=$1;}
         |   assign                  {$$ = nullptr; addToNodeList($$,$1);}
 ;
 
@@ -221,16 +232,17 @@ method-call_expr:       Id "(" method-call_params ")"    {$$ = new FunctionCallE
                 |       KwRandom "(" expr ")"            {$$ = new NextIntExpr($3);}
 ;
 
-method-call_params: method-call_params "," expr {addToNodeList($1,$2);$$=$1;}
+method-call_params: method-call_params "," expr {addToNodeList($1,$3);$$=$1;}
                 |   expr                        {$$ = nullptr; addToNodeList($$,$1);}
 ;
 
-argument:   StringConstant  {}
-        |   expr            {}
+argument:   StringConstant  {$$ = new StringConstantExpr($1);}
+        |   expr            {$$ = $1;}
 ;
 
-lvalue:  Id                     {}
-       | Id "[" expr "]"        {}
+lvalue:   Id                     {$$=new IdExpr($1);}
+        | Id "[" expr "]"        {$$=new IdArrayExpr($1,$3);}
+
 ;
 
 expr:   lvalue                  {$$ = $1;}
@@ -271,9 +283,9 @@ cond-op: expr "&&" expr   {$$ = new AndExpr($1,$3);}
 |        expr "||" expr   {$$ = new Or_Expr($1,$3);}
 ;
 
-constant: intConstant   {}
-        | CharConstant  {}
-        | KwTrue        {}
-        | KwFalse       {}
+constant: intConstant   {$$=new NumExpr($1);}
+        | CharConstant  {$$=new CharExpr($1);}
+        | KwTrue        {$$=new BoolExpr(1);}
+        | KwFalse       {$$=new BoolExpr(0);}
 ;
 %%

@@ -6,6 +6,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/test_parser.dir/lexer.cpp.o"
   "CMakeFiles/test_parser.dir/Parser.cpp.o"
   "CMakeFiles/test_parser.dir/ast.cpp.o"
+  "CMakeFiles/test_parser.dir/ident_handler.cpp.o"
   "CMakeFiles/test_parser.dir/main.cpp.o"
   "test_parser.pdb"
   "test_parser"

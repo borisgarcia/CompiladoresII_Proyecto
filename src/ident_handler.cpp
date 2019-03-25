@@ -27,25 +27,20 @@ std::string IdentsHandler::registerStrLiteral(const std::string& str) {
     return name;
 }
 
-void IdentsHandler::genConstNames() {
-    std::cout << "; Numeric constants\n";
-    for (const auto& c : constMap) {
-        std::cout << c.second << " dd " << c.first << "\n";
-    }
-    std::cout << "; String literals\n";
-    for (const auto& s : strlitMap) {
-        std::cout << s.second << " db \"" << s.first << "\", 0\n";
-    }
-}
-
-void IdentsHandler::genVarNames() {
+std::string IdentsHandler::genVarNames() {
     std::cout << "; Variables\n";
     for (const auto& s : varNames) {
-        std::cout << s << ": dd 0\n";
+        std::cout << s.first << " dd " << (s.second == -1 ? 0 : s.second) << "\n";
     }
     std::cout << "; Temp variables\n";
     for (const auto& s : tmpNames) {
         std::cout << s << ": dd 0\n";
     }
+    return "";
 }
-    
+
+bool IdentsHandler::isGlobalVar(std::string name){
+    if(varNames.find(name) == varNames.end())
+        return false;
+    return true;
+}

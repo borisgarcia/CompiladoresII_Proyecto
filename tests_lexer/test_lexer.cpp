@@ -25,7 +25,7 @@ const char *test7 = "/* Block comment ### \n"
 const char *test8 = "int a = 10;int b = 20;";
 const char *keywords = "else extends false bool break continue class for if int new null return rot true void while System.out.println System.out.print";
 const char *operators = "{}[],;()=-!+*/<<>><>%<=>===!=&&||";
-const char *stringConst = "\"hola\"";
+const char *stringConst = "\"hola\" \"hola\"";
 
 
 TEST_CASE("String Constant")

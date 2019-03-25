@@ -10,8 +10,8 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++14")
 # Run RE2C to generate the lexer
 add_custom_command (
   OUTPUT expr_lexer.cpp
-  COMMAND ${RE2C} -o expr_lexer.cpp ${PROJECT_SOURCE_DIR}/../expr_lexer.re
-  MAIN_DEPENDENCY ${PROJECT_SOURCE_DIR}/../expr_lexer.re
+  COMMAND ${RE2C} -o expr_lexer.cpp ${PROJECT_SOURCE_DIR}/../src/expr_lexer.re
+  MAIN_DEPENDENCY ${PROJECT_SOURCE_DIR}/../src/expr_lexer.re
   )
   
 include_directories(${PROJECT_SOURCE_DIR})

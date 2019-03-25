@@ -1,249 +1,144 @@
-/*
-genCode(ast_node_list) {
+/*Statements*/
+gen_Code(ASTNode)
+{
+    return true;
+}
+
+gen_Code(NextIntStmt)
+{
+    std::cerr << "Line: "<< expr->getLinenum() << ": error: expression result unused!" << std::endl;
     return false;
 }
-
-genCode(block_stmt) {
-    ast_node_list *lst = static_cast<ast_node_list *>(stmt_list);
-
-    std::ostringstream ss;
-
-    while (lst != nullptr) {
-        if (!lst->node->genCode(identHandler)) {
-            return false;
-        }
-        ss << lst->node->code << '\n';
-        lst = lst->next;
-    }
-
-    code = ss.str();
-    return true;
-}
-genCode(program_node) {
-    std::ostringstream sscode;
-
-    ast_node_list *lst = static_cast<ast_node_list *>(func_decl_list);
-    while (lst != nullptr) {
-        ast_node *fd = lst->node;
-
-        if (!fd->genCode(identHandler)) {
-            return false;
-        }
-        sscode << fd->code << '\n';
-        lst = lst->next;
-    }
-    code = sscode.str();
-
-    return true;
+gen_Code(ReadStmt)
+{
+    std::cerr << "Line: "<< this->getLinenum() << ": error: expression result unused!" << std::endl;
+    exit(0);
 }
 
-genCode(func_decl) {
-    std::string funcname = static_cast<strnode *>(name)->value;
-    std::ostringstream sscode;
-
-    identHandler.setCurrentFuncDef(funcname);
-    if (!stmt->genCode(identHandler)) {
-        return false;
-    }
-    FuncDef *fd = identHandler.getFuncDef(funcname);
-    sscode << funcname << ":\n"
-           << "push ebp\n"
-           << "mov ebp, esp\n"
-           << "sub esp, " << fd->getVarSize()  << '\n'
-           << stmt->code
-           << fd->getEpilogLabel() << ":\n"
-           << "leave\n"
-           << "ret";
+gen_Code(FunctionCallStmt)
+{
     
-    code = sscode.str();
+
+}
+gen_Code(ContinueStmt)
+{
+    
+}
+
+gen_Code(BreakStmt)
+{
+    
+}
+
+gen_Code(AssignStmt) 
+{   
+    return true;
+}
+
+gen_Code(FnDec)
+{
+    if(!block->gen_Code(identHandler))
+        return false;
+    std::ostringstream ss;
+    identHandler.setCurrentFuncDef(name);
+    FuncDef *fd = identHandler.getFuncDef(name);
+
+    ss << name << ":\n"
+       << "pusb ebp\n"
+       << "mov ebp, esp\n"
+       << "sub esp, " << fd->getVarSize() << "\n"
+       << block->code
+       << fd->getEpilogLabel() << ":\n"
+       << "leave\n"
+       << "ret";
+    
+    code = ss.str();
     identHandler.setCurrentFuncDef("");
     return true;
 }
 
-genCode(strnode) {
-    place = value;
-    return true;
-}
-
-genCode(strliteralnode) {
-    place = identHandler.registerStrLiteral(value);
-    return true;
-}
-
-genCode(chrliteralnode) {
-    return true;
-}
-
-
-genCode(funccall_expr) {
-    std::string fname = static_cast<strnode *>(name)->value;
-    FuncDef *fd = identHandler.getFuncDef(fname);
-    if (fd == nullptr) {
-        std::cerr << "Line " << name->getLinenum() << ":Error: Function '" << fname << "' is not declared\n";
-        return false;
-    }
-
-    ast_node_list *args = static_cast<ast_node_list *>(arg_list);
-    size_t argcount = 0;
-
-    std::ostringstream sscode;
-    std::list<std::string> argscode;
-
-    while (args != nullptr) {
-        ast_node *argn = args->node;
-
-        if (!argn->genCode(identHandler)) {
-            return false;
-        }
-        if(argn->getKind() == intnum_expr_kind)
-            argscode.push_front("push " + argn->place);
-        else
-            argscode.push_front("push dword [" + argn->place + "]");
-        sscode << argn->code << '\n';
-        argcount++;
-        args = args->next;
-    }
-    if (fd->getParamCount() != argcount) {
-        std::cerr << "Line " << name->getLinenum() << ":Error: Invalid number of arguments in call"
-                  << "to function '" << fname << "'.  Expected " << fd->getParamCount() << ", found " 
-                  << argcount << '\n';
-        return false;   
-    }
-    for (const auto& s : argscode) {
-        sscode << s << '\n';
-    }
-    place = identHandler.newTemp();
-    sscode << "call " << fname << '\n'
-           << "add esp, " << (argcount * 4) << '\n'
-           << "mov dword [" << place << "], eax";
-
-    code = sscode.str();
-    return true;
-}
-
-genCode(intnum_expr) {
-    value->genCode(identHandler);
-    place = value->place;
-    return true;
-}
-
-genCode(IdExpr) {
-    if (!value->genCode(identHandler)) {
-        return false;
-    }
-
-    int offset = identHandler.getVarOffset(value->place);
-    if (offset == 0) {
-        std::cerr << "Line " << value->getLinenum() << ":Error:Variable '" << value->place << "' not found\n";
-        return false;
-    }
-    if (offset > 0) {
-        place = "ebp + " + std::to_string(offset);
-    } else {
-        place = "ebp - " + std::to_string(-offset);
-    }
-    return true;
-}
-
-genCode(lvalue) {
-    if (!ident->genCode(identHandler)) {
-        return false;
-    }
-
-    int offset = identHandler.getVarOffset(ident->place);
-    if (offset == 0) {
-        std::cerr << "Line " << ident->getLinenum() << ":Error:Variable '" << ident->place << "' not found\n";
-        return false;
-    }
-    if (offset > 0) {
-        place = "ebp + " + std::to_string(offset);
-    } else {
-        place = "ebp - " + std::to_string(-offset);
-    }
-    return true;
-}
-
-genCode(funccall_stmt) {
-    //TODO: Implement this
-}
-*/
-genCode(PrintLNStmt)
+gen_Code(BlockStmt)
 {
-    if (!argn->genCode(identHandler))
+    std::ostringstream ss;
+    nodeList *lista = static_cast<nodeList *>(stmt_list);
+    while(lista != nullptr)
+    {
+        if(!lista->node->gen_Code(identHandler))
+            return false;
+        if(lista->node->isA(NextIntStmt_kind))
+            std::cerr<<"Line: "<<lista->node->getLinenum()<<" -> warning: expression result unused\n";
+        if(lista->node->isA(ReadStmt_kind))
+        {
+            std::cerr<<"Line: "<<lista->node->getLinenum()<<" -> Error: System.in.read value result unused\n";
+            exit(1);
+        }
+        ss << lista->node->code <<"\n";
+        lista = lista->next;
+        
+    }
+    code = ss.str();
+    return true;
+}
+
+gen_Code(PrintlnStmt)
+{
+    if (!expr->gen_Code(identHandler))
         return false;
     
     int argsize = 4;
     std::ostringstream ss;
 
-    if (argn->isA(StringConstant_kind)) {
+    if (expr->isA(StringConstantExpr_kind)) {
         ss << "%s"
-           << "push " << argn->place << "\n";
-    } else if (argn->isA(CharExpr_kind)) {
+           << "push " << expr->place << "\n";
+    } else if (expr->isA(CharExpr_kind)) {
         ss << "%c"
-           << "push " << std::to_string(cn->value) << "\n";
+           << "push " << expr->place << "\n";
     } else {
-        ss << "%d";
+        ss << "%d"
            << "push " << getPlace(expr) << "\n";
     }
     ss << expr->code << '\n';
-    std::string strfmtplace = identHandler.registerStrLiteral(ssfmt.str());
+    std::string strfmtplace = identHandler.registerStrLiteral(ss.str());
     ss << "push " << strfmtplace << '\n'
        << "call printf \n"
-       << "add esp, " << (argsize + 4);
+       << "add esp, " << (argsize + 4) << "\n";
     
-    code = sscode.str();
+    code = ss.str();
     return true;
 }
 
-genCode(PrintStmt)
+gen_Code(PrintStmt)
 {
-    if (!argn->genCode(identHandler))
+    if (!expr->gen_Code(identHandler))
         return false;
     
-    int argsize = 4;
     std::ostringstream ss;
 
-    if (argn->isA(StringConstant_kind)) {
+    if (expr->isA(StringConstantExpr_kind)) {
         ss << "%s"
-           << "push " << argn->place << "\n";
-    } else if (argn->isA(CharExpr_kind)) {
+           << "push " << expr->place << "\n";
+    } else if (expr->isA(CharExpr_kind)) {
         ss << "%c"
-           << "push " << std::to_string(cn->value) << "\n";
+           << "push " << expr->place << "\n";
     } else {
-        ss << "%d";
+        ss << "%d"
            << "push " << getPlace(expr) << "\n";
     }
     ss << expr->code << '\n';
-    std::string strfmtplace = identHandler.registerStrLiteral(ssfmt.str());
+    std::string strfmtplace = identHandler.registerStrLiteral(ss.str());
+    
     ss << "push " << strfmtplace << '\n'
        << "call printf"
-       << "add esp, " << (argsize + 4);
+       << "add esp, 8 \n";
     
-    code = sscode.str();
+    code = ss.str();
     return true;
 }
 
-/*Statements*/
-
-genCode(AssignStmt) 
+gen_Code(ReturnStmt) 
 {
-    /*if (!lhs->genCode(identHandler))
-        return false;
-    if (!rhs->genCode(identHandler))
-        return false;
-
-    std::ostringstream ss;
-    ss << rhs->code << '\n';
-       << "mov eax, " << getPlace(rhs) << "\n"
-       << "mov dword [" << lhs->place << "], eax";
-    code = ss.str();*/
-    
-    return true;
-}
-
-genCode(ReturnStmt) 
-{
-    if (!expr->genCode(identHandler))
+    if (!expr->gen_Code(identHandler) && expr == nullptr)
         return false;
     
     std::ostringstream ss;
@@ -251,36 +146,37 @@ genCode(ReturnStmt)
     FuncDef *fd = identHandler.getCurrentFuncDef();
     
     ss << expr->code << '\n';
-       << "mov eax, " << getPlace(expr) << "\n"
-       << "jmp " << fd->getEpilogLabel();
+    //if()
+    ss << "mov eax, " << getPlace(expr) << "\n";
+    ss << "jmp " << fd->getEpilogLabel();
     code = ss.str();
     return true;
 }
 
-genCode(IfStmt) 
+gen_Code(IfStmt) 
 {
-    if (!cond->genCode(identHandler)) {
+    if (!cond->gen_Code(identHandler)) {
         return false;
     }
-    if (!true_block->genCode(identHandler)) {
+    if (!true_block->gen_Code(identHandler)) {
         return false;
     }
     if (false_block != nullptr) {
-        if (!false_block->genCode(identHandler)) {
+        if (!false_block->gen_Code(identHandler)) {
             return false;
         }
     }
     std::ostringstream ss;
     std::string lblelse = identHandler.genNewLabel();
     std::string lblendif = identHandler.genNewLabel();
-    ss << cond->code << '\n';
-        << "cmp " << getPlace(condn) << ", 0\n"
+    ss << cond->code << '\n'
+        << "cmp " << getPlace(cond) << ", 0\n"
         << "je " << lblelse << '\n'
         << true_block->code << '\n'
         << "jmp " << lblendif << '\n'
         << lblelse << ":\n";
 
-    if (stmts2 != nullptr)
+    if (true_block != nullptr)
         ss << false_block->code << '\n';
     ss << lblendif << ':';
 
@@ -288,30 +184,30 @@ genCode(IfStmt)
     return true;
 }
 
-genCode(ForStmt)
+gen_Code(ForStmt)
 {
-  if(!for_dec->genCode(identHandler))
+  if(!for_dec->gen_Code(identHandler))
     return false;
-  if(!cond->genCode(identHandler))
+  if(!cond->gen_Code(identHandler))
     return false;
-  if(!for_assign->genCode(identHandler))
+  if(!for_assign->gen_Code(identHandler))
     return false;
-  if(!block->genCode(identHandler))
+  if(!block->gen_Code(identHandler))
     return false;
 
   std::ostringstream ss;
   std::string beg = identHandler.genNewLabel();
   std::string end = identHandler.genNewLabel();
 
-  ss<<decla->code<<"\n" 
+  ss<<for_dec->code<<"\n" 
     <<beg<<":\n"
     <<cond->code<<"\n" 
     <<"mov eax, "<<getPlace(cond)<<"\n"
     <<"cmp eax, 0\n"
     <<"je "<<end<<"\n"
     <<block->code<<"\n"
-    <<assign->code<<"\n"
-    <<"j "<<beg<<"\n"
+    <<for_assign->code<<"\n"
+    <<"jmp "<<beg<<"\n"
     <<end<<":\n";
   
   code = ss.str();
@@ -319,109 +215,128 @@ genCode(ForStmt)
   
 }
 
-genCode(WhileStmt)
+gen_Code(WhileStmt)
 {
-    if(!cond->genCode(identHandler))
+    if(!cond->gen_Code(identHandler))
         return false;
-    if(!block->genCode(identHandler))
+    if(!block->gen_Code(identHandler))
         return false;
     
     std::ostringstream ss;
     std::string beg = identHandler.genNewLabel();
     std::string end = identHandler.genNewLabel();
     
-    <<beg<<":\n"
-    <<cond->code<<"\n" 
-    <<"mov eax, "<<getPlace(cond)<<"\n"
-    <<"cmp eax, 0\n"
-    <<"je "<<end<<"\n"
-    <<block->code<<"\n"
-    <<"j "<<beg<<"\n"
-    <<end<<":\n";
+    ss<<beg<<":\n"
+      <<cond->code<<"\n" 
+      <<"mov eax, "<<getPlace(cond)<<"\n"
+      <<"cmp eax, 0\n"
+      <<"je "<<end<<"\n"
+      <<block->code<<"\n"
+      <<"jmp "<<beg<<"\n"
+      <<end<<":\n";
   
     code = ss.str();
 }
 
 /*Expresiones*/
 
-genCode(IdExpr)
+gen_Code(FunctionCallExpr)
 {
     return true;
 }
 
-genCode(IdArrayExpr)
+gen_Code(IdExpr)
 {
-    return true;
-}
-
-genCode(FunctionCallExpr)
-{
-    return true;
-}
-
-genCode(PrintExpr)
-{
-    std::cerr << "Cant assign void to expr" << std::endl;
-    exit(0);
-    return false;
-}
-
-genCode(ReadExpr)
-{
-   return true;
-
-}
-
-genCode(NextIntExpr)
-{
-    if (!expr1->genCode(identHandler))
+    int Offset = identHandler.getVarOffset(id);
+    if (Offset == -1) {
+        std::cerr << "Line: " << this->getLinenum() << ":Error:Var '" << this->place << "' not found\n";
         return false;
-    
-    std::ostringstream ss;
-    place = identHandler.newTemp();
-    
-    ss << expr->code << "\n"
-       << "mov eax, 0" << "\n"
-	   << "push eax" << "\n"
-	   << "call time" << "\n"
-	   << "add esp, 4" << "\n"
-	   << "push eax" << "\n"
-       << "call srand" << "\n"
-	   << "add esp, 4" << "\n"
-	   
-       << "call rand" << "\n"
-	   << "mov ecx, dword [ebp-4]" << "\n"
-	   << "cdq" << "\n"
-	   << "idiv ecx" << "\n"
-	   << "mov eax, edx" << "\n";
-    code = ss.str;
+    }
+    if(Offset == 0)
+        place = id;
+    else if(Offset > 0)
+        place = "ebp + " + std::to_string(Offset);
+    else
+        place = "ebp - " + std::to_string(-Offset);
+    return true;
+}
+
+gen_Code(BoolExpr)
+{
+    place = std::to_string(value);
+    return true;
+}
+
+gen_Code(IdArrayExpr)
+{
 
     return true;
-} 
+}
 
-genCode(StringConstant)
+gen_Code(StringConstantExpr)
 {
     place = identHandler.registerStrLiteral(value);
     return true;
 }
 
-genCode(NumExpr) 
+gen_Code(NumExpr) 
 {
     place = std::to_string(value);
     return true;    
 }
 
-genCode(CharExpr) 
+gen_Code(CharExpr) 
 {
     place = std::to_string(value);
     return true;    
 }
 
-genCode(AddExpr) 
+gen_Code(PrintExpr)
 {
-    if (!expr1->genCode(identHandler))
+    std::cerr << "error: can't assign void to expr" << std::endl;
+    exit(0);
+    return false;
+}
+
+gen_Code(ReadExpr)
+{
+    std::ostringstream ss;  
+    ss << "push %d\n"
+       << "call scanf\n"
+       << "add esp, 8\n";
+    code = ss.str();
+    return true;
+}
+
+gen_Code(NextIntExpr)
+{
+    if (!expr->gen_Code(identHandler))
         return false;
-    if (!expr2->genCode(identHandler))
+    
+    std::ostringstream ss;
+     ss << "mov eax, 0\n"
+        << "push eax\n"
+        << "call time\n"
+        << "add esp, 4\n"
+        << "push eax\n"
+        << "call srand\n"
+        << "add esp, 4\n"
+        << "call rand\n"
+        << "mov ecx, " << getPlace(expr) << "\n"
+        << "cdq\n"
+        << "add ecx, 1\n"
+        << "idiv ecx\n"
+        << "mov eax, edx\n";
+    
+    code = ss.str();
+    return true;
+} 
+
+gen_Code(AddExpr) 
+{
+    if (!expr1->gen_Code(identHandler))
+        return false;
+    if (!expr2->gen_Code(identHandler))
         return false;
     std::ostringstream ss;
 
@@ -435,11 +350,11 @@ genCode(AddExpr)
     return true;
 }
 
-genCode(AndExpr) 
+gen_Code(AndExpr) 
 {
-    if (!expr1->genCode(identHandler)) 
+    if (!expr1->gen_Code(identHandler)) 
         return false;
-    if (!expr2->genCode(identHandler)) 
+    if (!expr2->gen_Code(identHandler)) 
         return false;
     std::ostringstream ss;
 
@@ -453,12 +368,12 @@ genCode(AndExpr)
     return true;
 }
 
-genCode(Or_Expr)
+gen_Code(Or_Expr)
  {
-    if (!expr1->genCode(identHandler)) {
+    if (!expr1->gen_Code(identHandler)) {
         return false;
     }
-    if (!expr2->genCode(identHandler)) {
+    if (!expr2->gen_Code(identHandler)) {
         return false;
     }
     std::ostringstream ss;
@@ -473,12 +388,12 @@ genCode(Or_Expr)
     return true;
 }
 
-genCode(SRLExpr)
- {
-    if (!expr1->genCode(identHandler)) {
+gen_Code(SRLExpr)
+{
+    if (!expr1->gen_Code(identHandler)) {
         return false;
     }
-    if (!expr2->genCode(identHandler)) {
+    if (!expr2->gen_Code(identHandler)) {
         return false;
     }
     std::ostringstream ss;
@@ -493,12 +408,12 @@ genCode(SRLExpr)
     return true;
 }
 
-genCode(SLLExpr)
- {
-    if (!expr1->genCode(identHandler)) {
+gen_Code(SLLExpr)
+{
+    if (!expr1->gen_Code(identHandler)) {
         return false;
     }
-    if (!expr2->genCode(identHandler)) {
+    if (!expr2->gen_Code(identHandler)) {
         return false;
     }
     std::ostringstream ss;
@@ -513,11 +428,11 @@ genCode(SLLExpr)
     return true;
 }
 
-genCode(SubExpr) 
+gen_Code(SubExpr) 
 {
-    if (!expr1->genCode(identHandler))
+    if (!expr1->gen_Code(identHandler))
         return false;
-    if (!expr2->genCode(identHandler))
+    if (!expr2->gen_Code(identHandler))
         return false;
     std::ostringstream ss;
 
@@ -531,11 +446,11 @@ genCode(SubExpr)
     return true;
 }
 
-genCode(MulExpr) 
+gen_Code(MulExpr) 
 {
-    if (!expr1->genCode(identHandler))
+    if (!expr1->gen_Code(identHandler))
         return false;
-    if (!expr2->genCode(identHandler))
+    if (!expr2->gen_Code(identHandler))
         return false;
 
     std::ostringstream ss;
@@ -550,14 +465,12 @@ genCode(MulExpr)
     return true;
 }
 
-genCode(DivExpr) 
+gen_Code(DivExpr) 
 {
-    if (!expr1->genCode(identHandler)) {
+    if (!expr1->gen_Code(identHandler))
         return false;
-    }
-    if (!expr2->genCode(identHandler)) {
+    if (!expr2->gen_Code(identHandler)) 
         return false;
-    }
     std::ostringstream ss;
 
     place = identHandler.newTemp();
@@ -572,14 +485,12 @@ genCode(DivExpr)
     return true;
 }
 
-genCode(ModExpr) 
+gen_Code(ModExpr) 
 {
-    if (!expr1->genCode(identHandler)) {
+    if (!expr1->gen_Code(identHandler))
         return false;
-    }
-    if (!expr2->genCode(identHandler)) {
+    if (!expr2->gen_Code(identHandler)) 
         return false;
-    }
     std::ostringstream ss;
 
     place = identHandler.newTemp();
@@ -594,12 +505,11 @@ genCode(ModExpr)
     return true;
 }
 
-genCode(LesExpr)
+gen_Code(LesExpr)
 {
-    if (!expr1->genCode(identHandler))
+    if (!expr1->gen_Code(identHandler))
         return false;
-    
-    if (!expr2->genCode(identHandler)) 
+    if (!expr2->gen_Code(identHandler)) 
         return false;
     place = identHandler.newTemp();
 
@@ -624,12 +534,11 @@ genCode(LesExpr)
     return true;
 }
 
-genCode(GreExpr)
+gen_Code(GreExpr)
 {
-     if (!expr1->genCode(identHandler))
+     if (!expr1->gen_Code(identHandler))
         return false;
-    
-    if (!expr2->genCode(identHandler)) 
+    if (!expr2->gen_Code(identHandler)) 
         return false;
     place = identHandler.newTemp();
 
@@ -654,12 +563,11 @@ genCode(GreExpr)
     return true;
 }
 
-genCode(LeEExpr)
+gen_Code(LeEExpr)
 {
-    if (!expr1->genCode(identHandler))
+    if (!expr1->gen_Code(identHandler))
         return false;
-    
-    if (!expr2->genCode(identHandler)) 
+    if (!expr2->gen_Code(identHandler)) 
         return false;
     place = identHandler.newTemp();
 
@@ -684,12 +592,11 @@ genCode(LeEExpr)
     return true;
 }
 
-genCode(GrEExpr)
+gen_Code(GrEExpr)
 {
-     if (!expr1->genCode(identHandler))
+     if (!expr1->gen_Code(identHandler))
         return false;
-    
-    if (!expr2->genCode(identHandler)) 
+    if (!expr2->gen_Code(identHandler)) 
         return false;
     place = identHandler.newTemp();
 
@@ -714,12 +621,11 @@ genCode(GrEExpr)
     return true;
 }
 
-genCode(EquExpr)
+gen_Code(EquExpr)
 {
-    if (!expr1->genCode(identHandler))
+    if (!expr1->gen_Code(identHandler))
         return false;
-    
-    if (!expr2->genCode(identHandler)) 
+    if (!expr2->gen_Code(identHandler)) 
         return false;
     place = identHandler.newTemp();
 
@@ -744,12 +650,11 @@ genCode(EquExpr)
     return true;
 }
 
-genCode(NEqExpr)
+gen_Code(NEqExpr)
 {
-   if (!expr1->genCode(identHandler))
+   if (!expr1->gen_Code(identHandler))
         return false;
-    
-    if (!expr2->genCode(identHandler)) 
+    if (!expr2->gen_Code(identHandler)) 
         return false;
     place = identHandler.newTemp();
 
@@ -774,11 +679,10 @@ genCode(NEqExpr)
     return true;
 }
 
-genCode(NegExpr) 
+gen_Code(NegExpr) 
 {
-    if (!expr->genCode(identHandler)) {
+    if (!expr->gen_Code(identHandler))
         return false;
-    }
     place = identHandler.newTemp();
     std::ostringstream ss;
 
@@ -796,7 +700,28 @@ genCode(NegExpr)
     return true;
 }
 
-genCode(NotExpr)
+gen_Code(NotExpr)
 {
+    if(!expr->gen_Code(identHandler))
+        return false;
+    
+    std::string lbl = identHandler.genNewLabel();
+    std::string lbl_end = identHandler.genNewLabel();
+
+    std::ostringstream ss;
+    place = identHandler.newTemp();
+
+    ss << expr->code << "\n"
+       << "mov eax, " << getPlace(expr) << "\n"
+       << "cmp eax, 0 \n"
+       << "je " << lbl << "\n"
+       << "mov eax , 0 \n"
+       << "jmp " << lbl_end << "\n"
+       << lbl <<":\n"
+       << "mov eax , 1 \n"
+       << lbl_end << ":\n"
+       << "mov dword [" << place << "], eax\n";
+    code = ss.str();
+    return true;
 
 }

@@ -10,9 +10,12 @@
 
 class FuncDef {
 public:
-    FuncDef(const std::string& name): name(name), paramOffset(4), varOffset(0) {}
+    FuncDef(const std::string& name, std::string type): name(name), paramOffset(4), varOffset(0) {
+        type = type;
+    };
 
-    bool registerParam(const std::string& pname) {
+    bool registerParam(const std::string& pname) 
+    {
         if (params.find(pname) != params.end()) {
             return false;
         }
@@ -22,7 +25,8 @@ public:
         return true;
     }
 
-    bool registerVar(const std::string& vname) {
+    bool registerVar(const std::string& vname) 
+    {
         if (vars.find(vname) != vars.end()) {
             return false;
         }
@@ -32,7 +36,8 @@ public:
         return true;
     }
 
-    int getVarOffset(const std::string& vname) {
+    int getVarOffset(const std::string& vname) 
+    {
         auto it = vars.find(vname); 
         if (it == vars.end()) {
             return 0;
@@ -40,7 +45,13 @@ public:
         return it->second; 
     }
 
-    int getParamOffset(const std::string& pname) {
+    std::string getType()
+    {
+        return type;
+    }
+
+    int getParamOffset(const std::string& pname) 
+    {
         auto it = params.find(pname); 
         if (it == params.end()) {
             return 0;
@@ -65,31 +76,39 @@ private:
     std::unordered_map<std::string, int> vars;
     int paramOffset;
     int varOffset;
+    std::string type;
 };
 
 using UPFuncDef = std::unique_ptr<FuncDef>;
 
 class IdentsHandler {
 public:
-    IdentsHandler(): constCount(0), varCount(0), slitCount(0), lblCount(0) {}
+    IdentsHandler(): varCount(0), slitCount(0), lblCount(0) {}
     ~IdentsHandler() {}
 
-    std::string genNewLabel() {
+    bool isGlobalVar(std::string name);
+    void genPrintLiterals();
+
+    std::string newTemp();
+    std::string registerStrLiteral(const std::string& str);
+    std::string genVarNames();
+    std::string genStrNames();
+
+    std::string genNewLabel() 
+    {
         std::ostringstream ss;
 
         ss << "lbl" << lblCount++;
         return ss.str();
     }
 
-    std::string newTemp();
-    std::string registerStrLiteral(const std::string& str);
-    void genVarNames();
-
-    bool findFunc(const std::string& name) {
+    bool findFunc(const std::string& name) 
+    {
         return (funcDefMap.find(name) != funcDefMap.end());
     }
 
-    void setCurrentFuncDef(const std::string& funcName) {
+    void setCurrentFuncDef(const std::string& funcName) 
+    {
         auto it = funcDefMap.find(funcName);
 
         if (it == funcDefMap.end()) {
@@ -99,18 +118,21 @@ public:
         }
     }
 
-    void registerVar(const std::string& vname) {
+    void registerVar(const std::string& vname, int val) 
+    {
         if (varNames.find(vname) == varNames.end()) {
-            varNames.insert(vname);
+            varNames[vname] = val;
         }
     }
 
-    bool registerFuncDef(UPFuncDef&& funcDef) {
+    bool registerFuncDef(UPFuncDef&& funcDef) 
+    {
         funcDefMap.insert( std::make_pair(funcDef->getName(), std::move(funcDef)) );
         return true;
     }
 
-    bool registerLocalVar(const std::string& vname) {
+    bool registerLocalVar(const std::string& vname) 
+    {
         if (currFD == nullptr) {
             return false;
         }
@@ -118,7 +140,8 @@ public:
         return true;
     }
 
-    int getVarOffset(const std::string& name) {
+    int getVarOffset(const std::string& name) 
+    {
         if (currFD == nullptr) {
             return 0;
         }
@@ -129,7 +152,8 @@ public:
         return offset;
     }
 
-    FuncDef *getFuncDef(const std::string& fname) {
+    FuncDef *getFuncDef(const std::string& fname) 
+    {
         auto it = funcDefMap.find(fname);
 
         if (it == funcDefMap.end()) {
@@ -139,16 +163,17 @@ public:
         }
     }
 
-    FuncDef *getCurrentFuncDef() { return currFD; }
-    
+    FuncDef *getCurrentFuncDef() 
+    { 
+        return currFD; 
+    }
+   
 private:
-    std::unordered_map<int, std::string> constMap;
     std::unordered_map<std::string, std::string> strlitMap;
-    std::unordered_set<std::string> varNames;
+    std::unordered_map<std::string,int> varNames;
     std::unordered_map<std::string, UPFuncDef> funcDefMap;
     std::list<std::string> tmpNames;
     FuncDef *currFD;
-    int constCount;
     int varCount;
     int slitCount;
     int lblCount;

@@ -18,50 +18,92 @@
     class Statement;
     class Expression;
     class NumExpr;
-
-    using StmtList = std::vector<Statement*>;
-    using ExprList = std::vector<Expression*>;
-    using stringList = std::vector<std::string>;
-    using intList = std::vector<int>;
     
     using string_t = std::string;
+    void addToNodeList(ASTNode *&lst, ASTNode *node);
 
-#line 30 "../src/ast.h"
+#line 26 "../src/ast.h"
 
 #include <new>
 
 const int ASTNode_kind = 1;
-const int Expression_kind = 2;
-const int OneExpr_kind = 3;
-const int NumExpr_kind = 6;
-const int StringConstant_kind = 7;
-const int CharExpr_kind = 8;
-const int BinExpr_kind = 9;
-const int NotExpr_kind = 4;
-const int NegExpr_kind = 5;
-const int AddExpr_kind = 10;
-const int SubExpr_kind = 11;
-const int MulExpr_kind = 12;
-const int DivExpr_kind = 13;
-const int SRLExpr_kind = 14;
-const int SLLExpr_kind = 15;
-const int ModExpr_kind = 16;
-const int LesExpr_kind = 17;
-const int GreExpr_kind = 18;
-const int LeEExpr_kind = 19;
-const int GrEExpr_kind = 20;
-const int EquExpr_kind = 21;
-const int NEqExpr_kind = 22;
-const int AndExpr_kind = 23;
-const int Or_Expr_kind = 24;
+const int Program_kind = 2;
+const int FnDec_kind = 3;
+const int stringNode_kind = 4;
+const int FieldDecStmt_kind = 5;
+const int FieldDecStmt_2_kind = 6;
+const int nodeList_kind = 7;
+const int FnParamsDec_kind = 8;
+const int Expression_kind = 9;
+const int Statement_kind = 40;
+const int NumExpr_kind = 10;
+const int StringConstantExpr_kind = 11;
+const int CharExpr_kind = 12;
+const int BoolExpr_kind = 13;
+const int OneExpr_kind = 14;
+const int BinExpr_kind = 17;
+const int IdExpr_kind = 33;
+const int IdArrayExpr_kind = 34;
+const int ArrayDec_kind = 35;
+const int NextIntExpr_kind = 36;
+const int ReadExpr_kind = 37;
+const int PrintExpr_kind = 38;
+const int FunctionCallExpr_kind = 39;
+const int NotExpr_kind = 15;
+const int NegExpr_kind = 16;
+const int AddExpr_kind = 18;
+const int SubExpr_kind = 19;
+const int MulExpr_kind = 20;
+const int DivExpr_kind = 21;
+const int SRLExpr_kind = 22;
+const int SLLExpr_kind = 23;
+const int ModExpr_kind = 24;
+const int LesExpr_kind = 25;
+const int GreExpr_kind = 26;
+const int LeEExpr_kind = 27;
+const int GrEExpr_kind = 28;
+const int EquExpr_kind = 29;
+const int NEqExpr_kind = 30;
+const int AndExpr_kind = 31;
+const int Or_Expr_kind = 32;
+const int WhileStmt_kind = 41;
+const int ForStmt_kind = 42;
+const int IfStmt_kind = 43;
+const int AssignStmt_kind = 44;
+const int PrintlnStmt_kind = 45;
+const int PrintStmt_kind = 46;
+const int ReadStmt_kind = 47;
+const int NextIntStmt_kind = 48;
+const int ReturnStmt_kind = 49;
+const int ContinueStmt_kind = 50;
+const int BreakStmt_kind = 51;
+const int FunctionCallStmt_kind = 52;
+const int VarDecStmt_kind = 53;
+const int BlockStmt_kind = 54;
 
 class ASTNode;
+class Program;
+class FnDec;
+class stringNode;
+class FieldDecStmt;
+class FieldDecStmt_2;
+class nodeList;
+class FnParamsDec;
 class Expression;
-class OneExpr;
+class Statement;
 class NumExpr;
-class StringConstant;
+class StringConstantExpr;
 class CharExpr;
+class BoolExpr;
+class OneExpr;
 class BinExpr;
+class IdExpr;
+class IdArrayExpr;
+class ArrayDec;
+class NextIntExpr;
+class ReadExpr;
+class PrintExpr;
+class FunctionCallExpr;
 class NotExpr;
 class NegExpr;
 class AddExpr;
@@ -79,6 +121,20 @@ class EquExpr;
 class NEqExpr;
 class AndExpr;
 class Or_Expr;
+class WhileStmt;
+class ForStmt;
+class IfStmt;
+class AssignStmt;
+class PrintlnStmt;
+class PrintStmt;
+class ReadStmt;
+class NextIntStmt;
+class ReturnStmt;
+class ContinueStmt;
+class BreakStmt;
+class FunctionCallStmt;
+class VarDecStmt;
+class BlockStmt;
 
 class YYNODESTATE
 {
@@ -93,7 +149,7 @@ private:
 	struct YYNODESTATE_block *blocks__;
 	struct YYNODESTATE_push *push_stack__;
 	int used__;
-#line 97 "../src/ast.h"
+#line 153 "../src/ast.h"
 private:
 
 	static YYNODESTATE *state__;
@@ -148,7 +204,8 @@ public:
 	string_t code;
 	string_t place;
 
-	virtual bool genCode(IdentsHandler identHandler) = 0;
+	virtual bool Func_Decl(IdentsHandler & identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -156,6 +213,160 @@ public:
 protected:
 
 	virtual ~ASTNode();
+
+};
+
+class Program : public ASTNode
+{
+public:
+
+	Program(ASTNode * dec_list);
+
+public:
+
+	ASTNode * dec_list;
+
+	virtual bool Func_Decl(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~Program();
+
+};
+
+class FnDec : public ASTNode
+{
+public:
+
+	FnDec(string_t type, string_t name, ASTNode * params, Statement * block);
+
+public:
+
+	string_t type;
+	string_t name;
+	ASTNode * params;
+	Statement * block;
+
+	virtual bool Func_Decl(IdentsHandler & identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~FnDec();
+
+};
+
+class stringNode : public ASTNode
+{
+public:
+
+	stringNode(string_t id);
+
+public:
+
+	string_t id;
+
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~stringNode();
+
+};
+
+class FieldDecStmt : public ASTNode
+{
+public:
+
+	FieldDecStmt(string_t type, string_t id, Expression * value);
+
+public:
+
+	string_t type;
+	string_t id;
+	Expression * value;
+
+	virtual bool Func_Decl(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~FieldDecStmt();
+
+};
+
+class FieldDecStmt_2 : public ASTNode
+{
+public:
+
+	FieldDecStmt_2(string_t type, ASTNode * list);
+
+public:
+
+	string_t type;
+	ASTNode * list;
+
+	virtual bool Func_Decl(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~FieldDecStmt_2();
+
+};
+
+class nodeList : public ASTNode
+{
+public:
+
+	nodeList(ASTNode * node, nodeList * next);
+
+public:
+
+	ASTNode * node;
+	nodeList * next;
+	nodeList * last;
+
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~nodeList();
+
+};
+
+class FnParamsDec : public ASTNode
+{
+public:
+
+	FnParamsDec(string_t type, string_t id);
+
+public:
+
+	string_t type;
+	string_t id;
+
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~FnParamsDec();
 
 };
 
@@ -167,7 +378,6 @@ protected:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler) = 0;
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -178,24 +388,21 @@ protected:
 
 };
 
-class OneExpr : public Expression
+class Statement : public ASTNode
 {
 protected:
 
-	OneExpr(Expression * expr);
+	Statement();
 
 public:
 
-	Expression * expr;
-
-	virtual bool genCode(IdentsHandler identHandler) = 0;
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
 
 protected:
 
-	virtual ~OneExpr();
+	virtual ~Statement();
 
 };
 
@@ -209,7 +416,7 @@ public:
 
 	int value;
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -220,24 +427,24 @@ protected:
 
 };
 
-class StringConstant : public Expression
+class StringConstantExpr : public Expression
 {
 public:
 
-	StringConstant(string_t value);
+	StringConstantExpr(string_t value);
 
 public:
 
 	string_t value;
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
 
 protected:
 
-	virtual ~StringConstant();
+	virtual ~StringConstantExpr();
 
 };
 
@@ -251,7 +458,7 @@ public:
 
 	int value;
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -259,6 +466,47 @@ public:
 protected:
 
 	virtual ~CharExpr();
+
+};
+
+class BoolExpr : public Expression
+{
+public:
+
+	BoolExpr(bool value);
+
+public:
+
+	bool value;
+
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~BoolExpr();
+
+};
+
+class OneExpr : public Expression
+{
+protected:
+
+	OneExpr(Expression * expr);
+
+public:
+
+	Expression * expr;
+
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~OneExpr();
 
 };
 
@@ -273,7 +521,6 @@ public:
 	Expression * expr1;
 	Expression * expr2;
 
-	virtual bool genCode(IdentsHandler identHandler) = 0;
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -281,6 +528,153 @@ public:
 protected:
 
 	virtual ~BinExpr();
+
+};
+
+class IdExpr : public Expression
+{
+public:
+
+	IdExpr(string_t id);
+
+public:
+
+	string_t id;
+
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~IdExpr();
+
+};
+
+class IdArrayExpr : public Expression
+{
+public:
+
+	IdArrayExpr(string_t id, Expression * pos);
+
+public:
+
+	string_t id;
+	Expression * pos;
+
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~IdArrayExpr();
+
+};
+
+class ArrayDec : public Expression
+{
+public:
+
+	ArrayDec(string_t id, int size);
+
+public:
+
+	string_t id;
+	int size;
+
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~ArrayDec();
+
+};
+
+class NextIntExpr : public Expression
+{
+public:
+
+	NextIntExpr(Expression * expr);
+
+public:
+
+	Expression * expr;
+
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~NextIntExpr();
+
+};
+
+class ReadExpr : public Expression
+{
+public:
+
+	ReadExpr();
+
+public:
+
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~ReadExpr();
+
+};
+
+class PrintExpr : public Expression
+{
+public:
+
+	PrintExpr(Expression * expr);
+
+public:
+
+	Expression * expr;
+
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~PrintExpr();
+
+};
+
+class FunctionCallExpr : public Expression
+{
+public:
+
+	FunctionCallExpr(string_t id, ASTNode * param_list);
+
+public:
+
+	string_t id;
+	ASTNode * param_list;
+
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~FunctionCallExpr();
 
 };
 
@@ -292,7 +686,7 @@ public:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -311,7 +705,7 @@ public:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -330,7 +724,7 @@ public:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -349,7 +743,7 @@ public:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -368,7 +762,7 @@ public:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -387,7 +781,7 @@ public:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -406,7 +800,7 @@ public:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -425,7 +819,7 @@ public:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -444,7 +838,7 @@ public:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -463,7 +857,7 @@ public:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -482,7 +876,7 @@ public:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -501,7 +895,7 @@ public:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -520,7 +914,7 @@ public:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -539,7 +933,7 @@ public:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -558,7 +952,7 @@ public:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -577,7 +971,7 @@ public:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -596,7 +990,7 @@ public:
 
 public:
 
-	virtual bool genCode(IdentsHandler identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -604,6 +998,311 @@ public:
 protected:
 
 	virtual ~Or_Expr();
+
+};
+
+class WhileStmt : public Statement
+{
+public:
+
+	WhileStmt(Expression * cond, Statement * block);
+
+public:
+
+	Expression * cond;
+	Statement * block;
+
+	virtual bool Func_Decl(IdentsHandler & identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~WhileStmt();
+
+};
+
+class ForStmt : public Statement
+{
+public:
+
+	ForStmt(ASTNode * for_dec, Expression * cond, ASTNode * for_assign, Statement * block);
+
+public:
+
+	ASTNode * for_dec;
+	Expression * cond;
+	ASTNode * for_assign;
+	Statement * block;
+
+	virtual bool Func_Decl(IdentsHandler & identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~ForStmt();
+
+};
+
+class IfStmt : public Statement
+{
+public:
+
+	IfStmt(Expression * cond, Statement * true_block, Statement * false_block);
+
+public:
+
+	Expression * cond;
+	Statement * true_block;
+	Statement * false_block;
+
+	virtual bool Func_Decl(IdentsHandler & identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~IfStmt();
+
+};
+
+class AssignStmt : public Statement
+{
+public:
+
+	AssignStmt(Expression * lhs, Expression * rhs);
+
+public:
+
+	Expression * lhs;
+	Expression * rhs;
+
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~AssignStmt();
+
+};
+
+class PrintlnStmt : public Statement
+{
+public:
+
+	PrintlnStmt(Expression * expr);
+
+public:
+
+	Expression * expr;
+
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~PrintlnStmt();
+
+};
+
+class PrintStmt : public Statement
+{
+public:
+
+	PrintStmt(Expression * expr);
+
+public:
+
+	Expression * expr;
+
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~PrintStmt();
+
+};
+
+class ReadStmt : public Statement
+{
+public:
+
+	ReadStmt();
+
+public:
+
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~ReadStmt();
+
+};
+
+class NextIntStmt : public Statement
+{
+public:
+
+	NextIntStmt(Expression * expr);
+
+public:
+
+	Expression * expr;
+
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~NextIntStmt();
+
+};
+
+class ReturnStmt : public Statement
+{
+public:
+
+	ReturnStmt(Expression * expr);
+
+public:
+
+	Expression * expr;
+	string_t label;
+
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~ReturnStmt();
+
+};
+
+class ContinueStmt : public Statement
+{
+public:
+
+	ContinueStmt();
+
+public:
+
+	string_t label;
+
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~ContinueStmt();
+
+};
+
+class BreakStmt : public Statement
+{
+public:
+
+	BreakStmt();
+
+public:
+
+	string_t label;
+
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~BreakStmt();
+
+};
+
+class FunctionCallStmt : public Statement
+{
+public:
+
+	FunctionCallStmt(string_t id, ASTNode * param_list);
+
+public:
+
+	string_t id;
+	ASTNode * param_list;
+
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~FunctionCallStmt();
+
+};
+
+class VarDecStmt : public Statement
+{
+public:
+
+	VarDecStmt(string_t type, ASTNode * list);
+
+public:
+
+	string_t type;
+	ASTNode * list;
+
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~VarDecStmt();
+
+};
+
+class BlockStmt : public Statement
+{
+public:
+
+	BlockStmt(ASTNode * stmt_list);
+
+public:
+
+	ASTNode * stmt_list;
+
+	virtual bool Func_Decl(IdentsHandler & identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
+
+	virtual int isA(int kind) const;
+	virtual const char *getKindName() const;
+
+protected:
+
+	virtual ~BlockStmt();
 
 };
 
