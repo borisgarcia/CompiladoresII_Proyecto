@@ -60,39 +60,39 @@ CMAKE_SOURCE_DIR = /home/boris/Desktop/Proyecto/src
 CMAKE_BINARY_DIR = /home/boris/Desktop/Proyecto/build
 
 #=============================================================================
-# Target rules for target CMakeFiles/test_parser.dir
+# Target rules for target CMakeFiles/decaf.dir
 
 # All Build rule for target.
-CMakeFiles/test_parser.dir/all:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/depend
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/boris/Desktop/Proyecto/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9 "Built target test_parser"
-.PHONY : CMakeFiles/test_parser.dir/all
+CMakeFiles/decaf.dir/all:
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/depend
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/boris/Desktop/Proyecto/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9 "Built target decaf"
+.PHONY : CMakeFiles/decaf.dir/all
 
 # Include target in all.
-all: CMakeFiles/test_parser.dir/all
+all: CMakeFiles/decaf.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/test_parser.dir/rule: cmake_check_build_system
+CMakeFiles/decaf.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/boris/Desktop/Proyecto/build/CMakeFiles 9
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/test_parser.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/decaf.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/boris/Desktop/Proyecto/build/CMakeFiles 0
-.PHONY : CMakeFiles/test_parser.dir/rule
+.PHONY : CMakeFiles/decaf.dir/rule
 
 # Convenience name for target.
-test_parser: CMakeFiles/test_parser.dir/rule
+decaf: CMakeFiles/decaf.dir/rule
 
-.PHONY : test_parser
-
-# clean rule for target.
-CMakeFiles/test_parser.dir/clean:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/clean
-.PHONY : CMakeFiles/test_parser.dir/clean
+.PHONY : decaf
 
 # clean rule for target.
-clean: CMakeFiles/test_parser.dir/clean
+CMakeFiles/decaf.dir/clean:
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/clean
+.PHONY : CMakeFiles/decaf.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/decaf.dir/clean
 
 .PHONY : clean
 

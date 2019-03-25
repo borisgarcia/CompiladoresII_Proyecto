@@ -24,7 +24,8 @@ Func_Decl(FnDec)
     }
     UPFuncDef funcDef = std::make_unique<FuncDef>(name,type);
     FnParamsDec * temp;
-
+    if(temp == nullptr)
+        std::cout<<"MIERDAAAAAAAAAAAAA3333333333333333\n";
     nodeList *lst = static_cast<nodeList *>(params);
     while (lst != nullptr) {
         ASTNode *fd = lst->node;
@@ -37,6 +38,29 @@ Func_Decl(FnDec)
     if (!block->Func_Decl(identHandler))
         return false;
     identHandler.setCurrentFuncDef("");
+    return true;
+}
+
+Func_Decl(VarDecStmt)
+{
+    stringNode * temp;
+    ArrayDec * temp_2;
+    nodeList *lst = static_cast<nodeList *>(list);
+        
+    while (lst != nullptr) {
+        ASTNode *curr = lst->node;
+        if(curr->isA(stringNode_kind))
+        {
+            temp = static_cast<stringNode *>(curr);
+            identHandler.registerVar(temp->id, -1);
+        }
+        else if(curr->isA(ArrayDec_kind))
+        {
+            temp_2 = static_cast<ArrayDec *>(curr);
+            arrays.insert({temp_2->id,temp_2->size});
+        }
+        lst = lst->next;
+    }
     return true;
 }
 
@@ -55,6 +79,7 @@ Func_Decl(FieldDecStmt)
             val = static_cast<BoolExpr*>(value)->value;
         identHandler.registerVar(id, val);
     }
+    return true;
 }
 
 Func_Decl(FieldDecStmt_2)
@@ -64,27 +89,28 @@ Func_Decl(FieldDecStmt_2)
     nodeList *lst = static_cast<nodeList *>(list);
     while (lst != nullptr) {
         ASTNode *curr = lst->node;
-        if(isA(stringNode_kind))
+
+        if(curr->isA(stringNode_kind))
         {
             temp = static_cast<stringNode *>(curr);
             identHandler.registerVar(temp->id, -1);
         }
-        else if(isA(ArrayDec_kind))
+        else if(curr->isA(ArrayDec_kind))
         {
             temp_2 = static_cast<ArrayDec *>(curr);
-
+            arrays.insert({temp_2->id,temp_2->size});
         }
         lst = lst->next;
     }
+    return true;
 }
 
 Func_Decl(BlockStmt){
     nodeList *lst = static_cast<nodeList *>(stmt_list);
-    
     while (lst != nullptr) 
     {
         ASTNode *curr = lst->node;
-        if(!lst->Func_Decl(identHandler))
+        if(!curr->Func_Decl(identHandler))
             return false;
         lst = lst->next;
     }

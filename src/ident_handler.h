@@ -10,9 +10,7 @@
 
 class FuncDef {
 public:
-    FuncDef(const std::string& name, std::string type): name(name), paramOffset(4), varOffset(0) {
-        type = type;
-    };
+    FuncDef(const std::string& name, const std::string& type): name(name), type(type),paramOffset(4), varOffset(0) {}
 
     bool registerParam(const std::string& pname) 
     {
@@ -97,7 +95,6 @@ public:
     std::string genNewLabel() 
     {
         std::ostringstream ss;
-
         ss << "lbl" << lblCount++;
         return ss.str();
     }
@@ -172,6 +169,7 @@ private:
     std::unordered_map<std::string, std::string> strlitMap;
     std::unordered_map<std::string,int> varNames;
     std::unordered_map<std::string, UPFuncDef> funcDefMap;
+    std::unordered_map<std::string, std::string> strLitMap;
     std::list<std::string> tmpNames;
     FuncDef *currFD;
     int varCount;

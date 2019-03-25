@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++14  -rdynamic CMakeFiles/GenCode.dir/lexer.cpp.o CMakeFiles/GenCode.dir/Parser.cpp.o CMakeFiles/GenCode.dir/ast.cpp.o CMakeFiles/GenCode.dir/ident_handler.cpp.o CMakeFiles/GenCode.dir/main.cpp.o  -o GenCode 

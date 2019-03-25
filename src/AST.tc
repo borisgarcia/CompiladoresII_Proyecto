@@ -19,12 +19,12 @@
     
     using string_t = std::string;
     void addToNodeList(ASTNode *&lst, ASTNode *node);
-
+    
 %}
 
 %{
     #include "ast.h"
-
+    std::unordered_map<std::string,int> arrays;
     std::string getPlace(ASTNode * expr)
     {
         if(expr->getKind() == NumExpr_kind)

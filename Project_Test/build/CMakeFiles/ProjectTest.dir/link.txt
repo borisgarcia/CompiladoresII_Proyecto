@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++14  -rdynamic CMakeFiles/ProjectTest.dir/ProjectTest.cpp.o  -o ProjectTest 

@@ -4,6 +4,29 @@ gen_Code(ASTNode)
     return true;
 }
 
+gen_Code(Program)
+{
+    std::ostringstream ss; 
+    ss << identHandler.genVarNames()
+       << identHandler.genStrNames()
+       << "\n; Array Declaration\n\n";
+
+    for(auto arr : arrays )
+        ss << arr.first << " times " << arr.second << " dd 0\n";
+    FnDec * temp;
+    nodeList *lst = static_cast<nodeList *>(dec_list);
+    while (lst != nullptr) 
+    {
+        ASTNode *curr = lst->node;
+        curr->gen_Code(identHandler);
+        ss << curr->code <<"\n";
+        lst = lst->next;
+    }
+
+    code = ss.str();
+    return true;
+}
+
 gen_Code(NextIntStmt)
 {
     std::cerr << "Line: "<< expr->getLinenum() << ": error: expression result unused!" << std::endl;
@@ -17,9 +40,50 @@ gen_Code(ReadStmt)
 
 gen_Code(FunctionCallStmt)
 {
-    
+    FuncDef * fd = identHandler.getFuncDef(id);
+    if(fd == nullptr)
+    {
+        std::cerr<<"\n";
+        exit(1);
+    }
+    nodeList *args = static_cast<nodeList *>(param_list);
+    int argcount = 0;
 
+    std::ostringstream ss;
+    std::list<std::string> argscode;
+
+    while (args != nullptr) {
+        ASTNode *argn = args->node;
+
+        if (!argn->gen_Code(identHandler))
+            return false;
+
+        if(argn->getKind() == NumExpr_kind)
+            argscode.push_front("push " + argn->place);
+        else
+            argscode.push_front("push dword [" + argn->place + "]");
+        ss << argn->code << '\n';
+        argcount++;
+        args = args->next;
+    }
+    if (fd->getParamCount() != argcount) {
+        std::cerr << "Line " <<  ":Error: Invalid number of arguments in call"
+                  << "to function '" << id << "'.  Expected " << fd->getParamCount() << ", found " 
+                  << argcount << '\n';
+        return false;   
+    }
+    for (const auto& s : argscode) {
+        ss << s << '\n';
+    }
+    place = identHandler.newTemp();
+    ss << "call " << id << '\n'
+           << "add esp, " << (argcount * 4) << '\n'
+           << "mov dword [" << place << "], eax";
+
+    code = ss.str();
+    return true;
 }
+
 gen_Code(ContinueStmt)
 {
     
@@ -31,7 +95,26 @@ gen_Code(BreakStmt)
 }
 
 gen_Code(AssignStmt) 
-{   
+{
+    if(!lhs->gen_Code(identHandler))
+        return false;
+    if(!rhs->gen_Code(identHandler))
+        return false;
+    
+    std::ostringstream ss;
+    ss << rhs->code << "\n";
+    if(lhs->isA(IdArrayExpr_kind))
+    {
+        ss << "mov edx, " << getPlace(rhs) << "\n"
+           << lhs->code << "\n"
+           << "mov dword [" << lhs->place <<"], edx\n";
+    }
+    else
+    {
+        ss << "mov eax, " << getPlace(rhs) << "\n"
+           << "mov dword [" << lhs->place << "], eax";
+    }
+    code = ss.str();
     return true;
 }
 
@@ -44,11 +127,12 @@ gen_Code(FnDec)
     FuncDef *fd = identHandler.getFuncDef(name);
 
     ss << name << ":\n"
-       << "pusb ebp\n"
+       << "push ebp\n"
        << "mov ebp, esp\n"
        << "sub esp, " << fd->getVarSize() << "\n"
        << block->code
        << fd->getEpilogLabel() << ":\n"
+       << "add esp, " << fd->getVarSize() << "\n"
        << "leave\n"
        << "ret";
     
@@ -85,21 +169,18 @@ gen_Code(PrintlnStmt)
     if (!expr->gen_Code(identHandler))
         return false;
     
-    int argsize = 4;
-    std::ostringstream ss;
+    int argsize = 0;
+    std::ostringstream ss, ss_2;
 
-    if (expr->isA(StringConstantExpr_kind)) {
-        ss << "%s"
-           << "push " << expr->place << "\n";
-    } else if (expr->isA(CharExpr_kind)) {
-        ss << "%c"
-           << "push " << expr->place << "\n";
-    } else {
-        ss << "%d"
-           << "push " << getPlace(expr) << "\n";
-    }
-    ss << expr->code << '\n';
-    std::string strfmtplace = identHandler.registerStrLiteral(ss.str());
+    if (expr->isA(StringConstantExpr_kind))
+        ss_2 << "%s";
+    else if (expr->isA(CharExpr_kind))
+        ss_2 << "%c";
+    else
+        ss_2 << "%d";
+    ss << expr->code << '\n'
+       << "push " << getPlace(expr) << "\n";
+    std::string strfmtplace = identHandler.registerStrLiteral(ss_2.str());
     ss << "push " << strfmtplace << '\n'
        << "call printf \n"
        << "add esp, " << (argsize + 4) << "\n";
@@ -113,24 +194,21 @@ gen_Code(PrintStmt)
     if (!expr->gen_Code(identHandler))
         return false;
     
-    std::ostringstream ss;
+    int argsize = 0;
+    std::ostringstream ss, ss_2;
 
-    if (expr->isA(StringConstantExpr_kind)) {
-        ss << "%s"
-           << "push " << expr->place << "\n";
-    } else if (expr->isA(CharExpr_kind)) {
-        ss << "%c"
-           << "push " << expr->place << "\n";
-    } else {
-        ss << "%d"
-           << "push " << getPlace(expr) << "\n";
-    }
-    ss << expr->code << '\n';
-    std::string strfmtplace = identHandler.registerStrLiteral(ss.str());
-    
+    if (expr->isA(StringConstantExpr_kind))
+        ss_2 << "%s";
+    else if (expr->isA(CharExpr_kind))
+        ss_2 << "%c";
+    else
+        ss_2 << "%d";
+    ss << expr->code << '\n'
+       << "push " << getPlace(expr) << "\n";
+    std::string strfmtplace = identHandler.registerStrLiteral(ss_2.str());
     ss << "push " << strfmtplace << '\n'
-       << "call printf"
-       << "add esp, 8 \n";
+       << "call printf \n"
+       << "add esp, " << (argsize + 4) << "\n";
     
     code = ss.str();
     return true;
@@ -236,6 +314,7 @@ gen_Code(WhileStmt)
       <<end<<":\n";
   
     code = ss.str();
+    return true;
 }
 
 /*Expresiones*/
@@ -249,7 +328,7 @@ gen_Code(IdExpr)
 {
     int Offset = identHandler.getVarOffset(id);
     if (Offset == -1) {
-        std::cerr << "Line: " << this->getLinenum() << ":Error:Var '" << this->place << "' not found\n";
+        std::cerr << "Line: " << getLinenum() << ":Error:Var '" << this->place << "' not found\n";
         return false;
     }
     if(Offset == 0)
@@ -269,7 +348,17 @@ gen_Code(BoolExpr)
 
 gen_Code(IdArrayExpr)
 {
+    if(!pos->gen_Code(identHandler))
+        return false;
 
+    if(arrays.find(id) == arrays.end())
+        std::cerr <<"Line:"<<getLinenum()<<":"<<id <<" no existe\n";
+    place = id;
+    std::ostringstream ss;
+    ss << pos->code <<"\n"
+       <<"mov ecx, "<<getPlace(pos) <<"\n";
+    place = id+"+ecx*4";
+    code = ss.str();
     return true;
 }
 
@@ -280,12 +369,6 @@ gen_Code(StringConstantExpr)
 }
 
 gen_Code(NumExpr) 
-{
-    place = std::to_string(value);
-    return true;    
-}
-
-gen_Code(CharExpr) 
 {
     place = std::to_string(value);
     return true;    
@@ -341,6 +424,7 @@ gen_Code(AddExpr)
     std::ostringstream ss;
 
     place = identHandler.newTemp();
+    std::cout<<"PLACE : "<<place<<"\n";
     ss << expr1->code << "\n"
        << expr2->code << "\n"
        << "mov eax, " << getPlace(expr1) << "\n"
@@ -419,6 +503,7 @@ gen_Code(SLLExpr)
     std::ostringstream ss;
 
     place = identHandler.newTemp();
+    
     ss << expr1->code << "\n"
        << expr2->code << "\n"
        << "mov eax, " << getPlace(expr1) << "\n"
@@ -437,6 +522,7 @@ gen_Code(SubExpr)
     std::ostringstream ss;
 
     place = identHandler.newTemp();
+    std::cout<<"PLACE : "<<place<<"\n";
     ss << expr1->code << "\n"
        << expr2->code << "\n"
        << "mov eax, " << getPlace(expr1) << "\n"
@@ -456,6 +542,7 @@ gen_Code(MulExpr)
     std::ostringstream ss;
 
     place = identHandler.newTemp();
+    std::cout<<"PLACE : "<<place<<"\n";
     ss << expr1->code << "\n"
        << expr2->code << "\n"
        << "mov eax, " << getPlace(expr1) << "\n"
@@ -474,10 +561,11 @@ gen_Code(DivExpr)
     std::ostringstream ss;
 
     place = identHandler.newTemp();
+    std::cout<<"PLACE : "<<place<<"\n";
     ss << expr1->code << "\n"
        << expr2->code << "\n"
        << "mov eax, " << getPlace(expr1) << "\n"
-       << "mov ebx, " << getPlace(expr1) << "\n"
+       << "mov ebx, " << getPlace(expr2) << "\n"
        << "cdq\n"
        << "idiv ebx\n"
        << "mov dword [" << place << "], eax";
@@ -494,10 +582,11 @@ gen_Code(ModExpr)
     std::ostringstream ss;
 
     place = identHandler.newTemp();
+    std::cout<<"PLACE : "<<place<<"\n";
     ss << expr1->code << "\n"
        << expr2->code << "\n"
        << "mov eax, " << getPlace(expr1) << "\n"
-       << "mov ebx, " << getPlace(expr1) << "\n"
+       << "mov ebx, " << getPlace(expr2) << "\n"
        << "cdq\n"
        << "idiv ebx\n"
        << "mov dword [" << place << "], edx";
@@ -523,7 +612,7 @@ gen_Code(LesExpr)
         << expr2->code << "\n"
         << "mov eax, " << getPlace(expr1) << "\n"
         << "cmp eax, " << getPlace(expr2) << "\n"
-        << "jl" << label <<"\n"
+        << "jl " << label <<"\n"
         << "mov eax, 0\n"
         << "jmp " << fin <<"\n"
         << label << ":\n"
@@ -552,7 +641,7 @@ gen_Code(GreExpr)
         << expr2->code << "\n"
         << "mov eax, " << getPlace(expr1) << "\n"
         << "cmp eax, " << getPlace(expr2) << "\n"
-        << "jg" << label <<"\n"
+        << "jg " << label <<"\n"
         << "mov eax, 0\n"
         << "jmp " << fin <<"\n"
         << label << ":\n"
@@ -581,7 +670,7 @@ gen_Code(LeEExpr)
         << expr2->code << "\n"
         << "mov eax, " << getPlace(expr1) << "\n"
         << "cmp eax, " << getPlace(expr2) << "\n"
-        << "jle" << label <<"\n"
+        << "jle " << label <<"\n"
         << "mov eax, 0\n"
         << "jmp " << fin <<"\n"
         << label << ":\n"
@@ -610,7 +699,7 @@ gen_Code(GrEExpr)
         << expr2->code << "\n"
         << "mov eax, " << getPlace(expr1) << "\n"
         << "cmp eax, " << getPlace(expr2) << "\n"
-        << "jge" << label <<"\n"
+        << "jge " << label <<"\n"
         << "mov eax, 0\n"
         << "jmp " << fin <<"\n"
         << label << ":\n"
@@ -639,7 +728,7 @@ gen_Code(EquExpr)
         << expr2->code << "\n"
         << "mov eax, " << getPlace(expr1) << "\n"
         << "cmp eax, " << getPlace(expr2) << "\n"
-        << "je" << label <<"\n"
+        << "je " << label <<"\n"
         << "mov eax, 0\n"
         << "jmp " << fin <<"\n"
         << label << ":\n"
@@ -668,7 +757,7 @@ gen_Code(NEqExpr)
         << expr2->code << "\n"
         << "mov eax, " << getPlace(expr1) << "\n"
         << "cmp eax, " << getPlace(expr2) << "\n"
-        << "jne" << label <<"\n"
+        << "jne " << label <<"\n"
         << "mov eax, 0\n"
         << "jmp " << fin <<"\n"
         << label << ":\n"

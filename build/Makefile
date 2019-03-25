@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named test_parser
+# Target rules for targets named decaf
 
 # Build rule for target.
-test_parser: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 test_parser
-.PHONY : test_parser
+decaf: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 decaf
+.PHONY : decaf
 
 # fast build rule for target.
-test_parser/fast:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/build
-.PHONY : test_parser/fast
+decaf/fast:
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/build
+.PHONY : decaf/fast
 
 Parser.o: Parser.cpp.o
 
@@ -129,7 +129,7 @@ Parser.o: Parser.cpp.o
 
 # target to build an object file
 Parser.cpp.o:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/Parser.cpp.o
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/Parser.cpp.o
 .PHONY : Parser.cpp.o
 
 Parser.i: Parser.cpp.i
@@ -138,7 +138,7 @@ Parser.i: Parser.cpp.i
 
 # target to preprocess a source file
 Parser.cpp.i:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/Parser.cpp.i
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/Parser.cpp.i
 .PHONY : Parser.cpp.i
 
 Parser.s: Parser.cpp.s
@@ -147,7 +147,7 @@ Parser.s: Parser.cpp.s
 
 # target to generate assembly for a file
 Parser.cpp.s:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/Parser.cpp.s
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/Parser.cpp.s
 .PHONY : Parser.cpp.s
 
 ast.o: ast.cpp.o
@@ -156,7 +156,7 @@ ast.o: ast.cpp.o
 
 # target to build an object file
 ast.cpp.o:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/ast.cpp.o
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/ast.cpp.o
 .PHONY : ast.cpp.o
 
 ast.i: ast.cpp.i
@@ -165,7 +165,7 @@ ast.i: ast.cpp.i
 
 # target to preprocess a source file
 ast.cpp.i:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/ast.cpp.i
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/ast.cpp.i
 .PHONY : ast.cpp.i
 
 ast.s: ast.cpp.s
@@ -174,7 +174,7 @@ ast.s: ast.cpp.s
 
 # target to generate assembly for a file
 ast.cpp.s:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/ast.cpp.s
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/ast.cpp.s
 .PHONY : ast.cpp.s
 
 ident_handler.o: ident_handler.cpp.o
@@ -183,7 +183,7 @@ ident_handler.o: ident_handler.cpp.o
 
 # target to build an object file
 ident_handler.cpp.o:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/ident_handler.cpp.o
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/ident_handler.cpp.o
 .PHONY : ident_handler.cpp.o
 
 ident_handler.i: ident_handler.cpp.i
@@ -192,7 +192,7 @@ ident_handler.i: ident_handler.cpp.i
 
 # target to preprocess a source file
 ident_handler.cpp.i:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/ident_handler.cpp.i
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/ident_handler.cpp.i
 .PHONY : ident_handler.cpp.i
 
 ident_handler.s: ident_handler.cpp.s
@@ -201,7 +201,7 @@ ident_handler.s: ident_handler.cpp.s
 
 # target to generate assembly for a file
 ident_handler.cpp.s:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/ident_handler.cpp.s
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/ident_handler.cpp.s
 .PHONY : ident_handler.cpp.s
 
 lexer.o: lexer.cpp.o
@@ -210,7 +210,7 @@ lexer.o: lexer.cpp.o
 
 # target to build an object file
 lexer.cpp.o:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/lexer.cpp.o
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/lexer.cpp.o
 .PHONY : lexer.cpp.o
 
 lexer.i: lexer.cpp.i
@@ -219,7 +219,7 @@ lexer.i: lexer.cpp.i
 
 # target to preprocess a source file
 lexer.cpp.i:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/lexer.cpp.i
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/lexer.cpp.i
 .PHONY : lexer.cpp.i
 
 lexer.s: lexer.cpp.s
@@ -228,7 +228,7 @@ lexer.s: lexer.cpp.s
 
 # target to generate assembly for a file
 lexer.cpp.s:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/lexer.cpp.s
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/lexer.cpp.s
 .PHONY : lexer.cpp.s
 
 main.o: main.cpp.o
@@ -237,7 +237,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/main.cpp.o
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -246,7 +246,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/main.cpp.i
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -255,7 +255,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/test_parser.dir/build.make CMakeFiles/test_parser.dir/main.cpp.s
+	$(MAKE) -f CMakeFiles/decaf.dir/build.make CMakeFiles/decaf.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -265,7 +265,7 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... test_parser"
+	@echo "... decaf"
 	@echo "... edit_cache"
 	@echo "... Parser.o"
 	@echo "... Parser.i"

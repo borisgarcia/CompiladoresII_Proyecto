@@ -17,15 +17,15 @@
   extern int yylex();
   
   int errors;
+  ASTNode * input;
   bool state_ment_boolean;
   bool method_dec_boolean;
   
-  void yyerror(const char *msg) {
+  void yyerror(const char *msg) 
+  {
         std::cerr << "Parsing Error: " <<"Line: "<<lineNo<<"-" <<msg<<'\n';
         errors++;
-  }
-
-  
+  } 
 %}
 
 %union{
@@ -36,7 +36,7 @@
         int int_t;
 }
 
-%type<ast_t> program program_body id mult-field method_decl params params_p block_p var-decl_p parametro for_assign field_decl method-call_params
+%type<ast_t> program program_body id mult-field method-call_params_p method_decl params params_p block_p var-decl_p parametro for_assign field_decl method-call_params
 %type<expr_t> return_expr method-call_expr argument lvalue expr bin-op arith-op rel-op cond-op
 %type<expr_t> eq-op constant
 %type<stmt_t> var-decl statement assign else_opt method-call_stmt block
@@ -85,30 +85,20 @@
 %left "&&"
 %left "||"
 
-
 %%
 
-program: KwClass Id "{" program_body "}"{$$ = new BlockStmt($4);}
-|        KwClass Id "{" "}" {$$=nullptr;}
+program: KwClass Id "{" program_body "}"{input = new Program($4);}
+|        KwClass Id "{" "}" {input=nullptr;}
 ;       
 
-program_body:   program_body field_decl{
-                if(method_dec_boolean)
-                {
-                        yyerror("Can't declare fields after methods!");
-                        exit(0);
-                }
+program_body:   program_body field_decl
+        {
                 addToNodeList($1,$2);$$=$1;
         }
         |       program_body method_decl{
                 addToNodeList($1,$2);$$=$1;
         }
         |       field_decl{
-                if(method_dec_boolean)
-                {
-                        yyerror("Can't declare fields after methods!");
-                        exit(0);
-                }
                 $$ = nullptr; addToNodeList($$,$1);
         }
         |       method_decl{
@@ -121,18 +111,16 @@ field_decl:     type mult-field ";"                 {$$ = new FieldDecStmt_2($1,
 ;
 
 mult-field:     mult-field "," id                            {addToNodeList($1,$3);$$=$1;}
-        |       mult-field "," Id "[" intConstant "]"        {addToNodeList($1,new ArrayDec($3,$5));$$=$1;}
         |       id                                           {$$ = nullptr; addToNodeList($$,$1);}
+        |       mult-field "," Id "[" intConstant "]"        {addToNodeList($1,new ArrayDec($3,$5));$$=$1;}
         |       Id "[" intConstant "]"                       {$$ = nullptr; addToNodeList($$,new ArrayDec($1,$3));}
 ;
 
 method_decl:    type Id "(" params ")" block    {
                                                         $$ = new FnDec($1,$2,$4,$6);
-                                                        method_dec_boolean = true;
                                                 }
         |       KwVoid Id "(" params ")" block  {
                                                         $$ = new FnDec($1,$2,$4,$6);
-                                                        method_dec_boolean = true;
                                                 }
 ;
 
@@ -144,7 +132,7 @@ params_p:       params_p "," parametro    {addToNodeList($1,$3);$$=$1;}
         |       parametro                 {$$ = nullptr; addToNodeList($$,$1);}
 ;
 
-parametro:      type Id {$$=new FnParamsDec($1,$2);}
+parametro:      type Id { $$= new FnParamsDec($1,$2);}
 ;
 
 type:           KwInt   {$$ = $1;}
@@ -156,20 +144,10 @@ block:  "{" block_p "}"     {$$ = new BlockStmt($2);}
 ;
 
 block_p: block_p var-decl{
-                if(state_ment_boolean)
-                {
-                        yyerror("Can't declare variables after statements!");
-                        exit(0);
-                }
                 addToNodeList($1,$2);
                 $$=$1;
         }
         |   var-decl{
-                if(state_ment_boolean)
-                {
-                        yyerror("Can't declare variables after statements!");
-                        exit(0);
-                }
                 $$ = nullptr; 
                 addToNodeList($$,$1);                                                
         }
@@ -231,8 +209,10 @@ method-call_expr:       Id "(" method-call_params ")"    {$$ = new FunctionCallE
                 |       KwRead "(" ")"                   {$$ = new ReadExpr();}
                 |       KwRandom "(" expr ")"            {$$ = new NextIntExpr($3);}
 ;
-
-method-call_params: method-call_params "," expr {addToNodeList($1,$3);$$=$1;}
+method-call_params: method-call_params_p        {$$=$1;}
+        |       %empty                          {$$=nullptr;}
+;
+method-call_params_p: method-call_params "," expr {addToNodeList($1,$3);$$=$1;}
                 |   expr                        {$$ = nullptr; addToNodeList($$,$1);}
 ;
 

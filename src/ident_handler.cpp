@@ -27,6 +27,18 @@ std::string IdentsHandler::registerStrLiteral(const std::string& str) {
     return name;
 }
 
+std::string IdentsHandler::genStrNames()
+{
+    std::ostringstream ss;
+    ss << "\n; String Literals\n\n";
+    for(const auto & s : strLitMap)
+        if(s.first.find("\"") == std::string::npos)
+            ss << s.second << " db \'" << s.first << "\', 0\n";
+        else
+            ss << s.second << " db \'" << s.first << "\', 0\n";
+    return ss.str();
+}
+
 std::string IdentsHandler::genVarNames() {
     std::cout << "; Variables\n";
     for (const auto& s : varNames) {

@@ -21,7 +21,7 @@
     
     using string_t = std::string;
     void addToNodeList(ASTNode *&lst, ASTNode *node);
-
+    
 #line 26 "../src/ast.h"
 
 #include <new>
@@ -227,6 +227,7 @@ public:
 	ASTNode * dec_list;
 
 	virtual bool Func_Decl(IdentsHandler & identHandler);
+	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -458,7 +459,6 @@ public:
 
 	int value;
 
-	virtual bool gen_Code(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;
@@ -1274,6 +1274,7 @@ public:
 	string_t type;
 	ASTNode * list;
 
+	virtual bool Func_Decl(IdentsHandler & identHandler);
 
 	virtual int isA(int kind) const;
 	virtual const char *getKindName() const;

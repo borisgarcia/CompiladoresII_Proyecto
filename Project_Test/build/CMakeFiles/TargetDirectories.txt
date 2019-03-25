@@ -1,0 +1,4 @@
+/home/boris/Desktop/Proyecto/Project_Test/build/CMakeFiles/rebuild_cache.dir
+/home/boris/Desktop/Proyecto/Project_Test/build/CMakeFiles/edit_cache.dir
+/home/boris/Desktop/Proyecto/Project_Test/build/CMakeFiles/ProjectTest.dir
+/home/boris/Desktop/Proyecto/Project_Test/build/CMakeFiles/test.dir

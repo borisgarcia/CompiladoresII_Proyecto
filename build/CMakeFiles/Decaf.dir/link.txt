@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++14  -rdynamic CMakeFiles/Decaf.dir/lexer.cpp.o CMakeFiles/Decaf.dir/Parser.cpp.o CMakeFiles/Decaf.dir/ast.cpp.o CMakeFiles/Decaf.dir/ident_handler.cpp.o CMakeFiles/Decaf.dir/main.cpp.o  -o Decaf 

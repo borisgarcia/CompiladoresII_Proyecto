@@ -4,7 +4,7 @@
 #include "expr_lexer.h"
 
 using namespace std;
-
+extern ASTNode *input;
 extern int yyparse();
 ExprLexer * lex;
 int yylex(){ 
@@ -25,12 +25,34 @@ int main(int argc, char * argv[]){
     }
     
     lex = new ExprLexer(file);    
-   
-    try{
-        yyparse();
-        std::cout<<"Success!\n";
-    }catch(...){
-       std::cout<<"Parsing Error\n";
+    input = nullptr;
+    yyparse();
+    
+    if(input!=nullptr)
+    {
+        IdentsHandler tmpHandler;
+        if (!input->Func_Decl(tmpHandler)) {
+            std::cerr << "Failed to load function declarations\n";
+            return 1;
+        }
+
+        if (!input->gen_Code(tmpHandler)) {
+            std::cerr << "Failed to generate code\n";
+            return 1;
+        }
+        FuncDef *mainFD = tmpHandler.getFuncDef("main");
+
+        if (mainFD == nullptr) {
+            std::cerr << "Function 'main' has not been defined\n";
+            return 1;
+        }
+        std::cout << "global main\n\n"
+                << "extern printf\n\n"
+                << "section .data\n";
+        std::cout << "\nsection .text\n"
+                    << input->code
+                    << '\n';
     }
+
     return 0;
 }
