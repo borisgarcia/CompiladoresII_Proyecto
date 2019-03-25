@@ -24,8 +24,6 @@ Func_Decl(FnDec)
     }
     UPFuncDef funcDef = std::make_unique<FuncDef>(name,type);
     FnParamsDec * temp;
-    if(temp == nullptr)
-        std::cout<<"MIERDAAAAAAAAAAAAA3333333333333333\n";
     nodeList *lst = static_cast<nodeList *>(params);
     while (lst != nullptr) {
         ASTNode *fd = lst->node;

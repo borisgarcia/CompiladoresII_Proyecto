@@ -25,6 +25,8 @@
 %{
     #include "ast.h"
     std::unordered_map<std::string,int> arrays;
+    std::string ContinueLabel = "";
+    std::string BreakLabel = "";
     std::string getPlace(ASTNode * expr)
     {
         if(expr->getKind() == NumExpr_kind)
@@ -181,6 +183,7 @@
 %node PrintExpr Expression =
 {
     Expression * expr;
+    
 }
 
 %node FunctionCallExpr Expression = 
@@ -214,12 +217,9 @@
     Expression * rhs;
 }
 
-%node PrintlnStmt Statement = {
-    Expression * expr;
-}
-
 %node PrintStmt Statement = {
     Expression * expr;
+    bool flag;
 }
 
 %node ReadStmt Statement

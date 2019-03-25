@@ -197,8 +197,8 @@ return_expr: expr   {$$ = $1;}
 ;
 
 method-call_stmt:       Id "(" method-call_params ")"    {$$ = new FunctionCallStmt($1,$3);}
-                |       KwPrint "(" argument ")"         {$$ = new PrintStmt($3);}
-                |       KwPrintln "(" argument ")"       {$$ = new PrintlnStmt($3);}
+                |       KwPrint "(" argument ")"         {$$ = new PrintStmt($3,0);}
+                |       KwPrintln "(" argument ")"       {$$ = new PrintStmt($3,1);}
                 |       KwRead "(" ")"                   {$$ = new ReadStmt();}
                 |       KwRandom "(" expr ")"            {$$ = new NextIntStmt($3);}
 ;

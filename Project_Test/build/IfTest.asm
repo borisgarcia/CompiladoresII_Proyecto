@@ -18,7 +18,7 @@ section .text
 main:
 push ebp
 mov ebp, esp
-sub esp, 0
+sub esp, 16
 
 
 mov eax, 5
@@ -60,8 +60,8 @@ jmp lbl1
 lbl0:
 mov eax, 1
 lbl1:
-mov dword [], eax
-cmp dword [], 0
+mov dword [ebp - 8], eax
+cmp dword [ebp - 8], 0
 je lbl2
 
 push dword [strl4]
@@ -120,8 +120,8 @@ jmp lbl5
 lbl4:
 mov eax, 1
 lbl5:
-mov dword [], eax
-cmp dword [], 0
+mov dword [ebp - 16], eax
+cmp dword [ebp - 16], 0
 je lbl6
 
 push dword [strl4]
@@ -141,7 +141,7 @@ add esp, 4
 
 lbl7:
 __lbl_main_epilog:
-add esp, 0
+add esp, 16
 leave
 ret
 

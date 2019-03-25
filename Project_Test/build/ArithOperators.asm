@@ -2,11 +2,6 @@
 y dd 0
 x dd 0
 ; Temp variables
-PLACE : 
-PLACE : 
-PLACE : 
-PLACE : 
-PLACE : 
 global main
 
 extern printf
@@ -23,7 +18,7 @@ section .text
 main:
 push ebp
 mov ebp, esp
-sub esp, 0
+sub esp, 20
 
 
 mov eax, 9800
@@ -65,8 +60,8 @@ add esp, 4
 
 mov eax, dword [x]
 add eax, dword [y]
-mov dword [], eax
-push dword []
+mov dword [ebp - 4], eax
+push dword [ebp - 4]
 push strl2
 call printf 
 add esp, 4
@@ -81,8 +76,8 @@ add esp, 4
 
 mov eax, dword [x]
 sub eax, dword [y]
-mov dword [], eax
-push dword []
+mov dword [ebp - 8], eax
+push dword [ebp - 8]
 push strl2
 call printf 
 add esp, 4
@@ -97,9 +92,9 @@ add esp, 4
 
 mov eax, dword [x]
 imul eax, dword [y]
-mov dword [], eax
+mov dword [ebp - 12], eax
 
-push dword []
+push dword [ebp - 12]
 push strl2
 call printf 
 add esp, 4
@@ -116,8 +111,8 @@ mov eax, dword [x]
 mov ebx, dword [y]
 cdq
 idiv ebx
-mov dword [], eax
-push dword []
+mov dword [ebp - 16], eax
+push dword [ebp - 16]
 push strl2
 call printf 
 add esp, 4
@@ -134,14 +129,14 @@ mov eax, dword [x]
 mov ebx, dword [y]
 cdq
 idiv ebx
-mov dword [], edx
-push dword []
+mov dword [ebp - 20], edx
+push dword [ebp - 20]
 push strl2
 call printf 
 add esp, 4
 
 __lbl_main_epilog:
-add esp, 0
+add esp, 20
 leave
 ret
 

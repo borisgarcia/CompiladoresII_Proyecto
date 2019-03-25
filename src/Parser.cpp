@@ -1776,13 +1776,13 @@ yyreduce:
 
   case 49:
 #line 200 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
-    {(yyval.stmt_t) = new PrintStmt((yyvsp[-1].expr_t));}
+    {(yyval.stmt_t) = new PrintStmt((yyvsp[-1].expr_t),0);}
 #line 1781 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 50:
 #line 201 "/home/boris/Desktop/Proyecto/src/Parser.y" /* yacc.c:1646  */
-    {(yyval.stmt_t) = new PrintlnStmt((yyvsp[-1].expr_t));}
+    {(yyval.stmt_t) = new PrintStmt((yyvsp[-1].expr_t),1);}
 #line 1787 "../src/Parser.cpp" /* yacc.c:1646  */
     break;
 

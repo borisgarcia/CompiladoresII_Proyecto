@@ -70,16 +70,15 @@ const int WhileStmt_kind = 41;
 const int ForStmt_kind = 42;
 const int IfStmt_kind = 43;
 const int AssignStmt_kind = 44;
-const int PrintlnStmt_kind = 45;
-const int PrintStmt_kind = 46;
-const int ReadStmt_kind = 47;
-const int NextIntStmt_kind = 48;
-const int ReturnStmt_kind = 49;
-const int ContinueStmt_kind = 50;
-const int BreakStmt_kind = 51;
-const int FunctionCallStmt_kind = 52;
-const int VarDecStmt_kind = 53;
-const int BlockStmt_kind = 54;
+const int PrintStmt_kind = 45;
+const int ReadStmt_kind = 46;
+const int NextIntStmt_kind = 47;
+const int ReturnStmt_kind = 48;
+const int ContinueStmt_kind = 49;
+const int BreakStmt_kind = 50;
+const int FunctionCallStmt_kind = 51;
+const int VarDecStmt_kind = 52;
+const int BlockStmt_kind = 53;
 
 class ASTNode;
 class Program;
@@ -125,7 +124,6 @@ class WhileStmt;
 class ForStmt;
 class IfStmt;
 class AssignStmt;
-class PrintlnStmt;
 class PrintStmt;
 class ReadStmt;
 class NextIntStmt;
@@ -149,7 +147,7 @@ private:
 	struct YYNODESTATE_block *blocks__;
 	struct YYNODESTATE_push *push_stack__;
 	int used__;
-#line 153 "../src/ast.h"
+#line 151 "../src/ast.h"
 private:
 
 	static YYNODESTATE *state__;
@@ -1095,36 +1093,16 @@ protected:
 
 };
 
-class PrintlnStmt : public Statement
-{
-public:
-
-	PrintlnStmt(Expression * expr);
-
-public:
-
-	Expression * expr;
-
-	virtual bool gen_Code(IdentsHandler & identHandler);
-
-	virtual int isA(int kind) const;
-	virtual const char *getKindName() const;
-
-protected:
-
-	virtual ~PrintlnStmt();
-
-};
-
 class PrintStmt : public Statement
 {
 public:
 
-	PrintStmt(Expression * expr);
+	PrintStmt(Expression * expr, bool flag);
 
 public:
 
 	Expression * expr;
+	bool flag;
 
 	virtual bool gen_Code(IdentsHandler & identHandler);
 

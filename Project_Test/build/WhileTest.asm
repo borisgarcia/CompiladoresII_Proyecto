@@ -3,10 +3,6 @@ number dd 0
 total dd 0
 count dd 0
 ; Temp variables
-PLACE : 
-PLACE : 
-PLACE : 
-PLACE : 
 global main
 
 extern printf
@@ -23,7 +19,7 @@ section .text
 main:
 push ebp
 mov ebp, esp
-sub esp, 0
+sub esp, 24
 
 
 
@@ -44,21 +40,21 @@ jmp lbl1
 lbl0:
 mov eax, 1
 lbl1:
-mov dword [], eax
-mov eax, dword []
+mov dword [ebp - 8], eax
+mov eax, dword [ebp - 8]
 cmp eax, 0
 je lbl3
 
 
 mov eax, dword [count]
 add eax, 1
-mov dword [], eax
+mov dword [ebp - 12], eax
 
-mov eax, dword []
+mov eax, dword [ebp - 12]
 imul eax, 10
-mov dword [], eax
+mov dword [ebp - 16], eax
 
-mov eax, dword []
+mov eax, dword [ebp - 16]
 mov dword [number], eax
 
 push dword [strl0]
@@ -88,15 +84,15 @@ add esp, 4
 
 mov eax, dword [count]
 add eax, 1
-mov dword [], eax
-mov eax, dword []
+mov dword [ebp - 20], eax
+mov eax, dword [ebp - 20]
 mov dword [count], eax
 
 
 mov eax, dword [total]
 add eax, dword [number]
-mov dword [], eax
-mov eax, dword []
+mov dword [ebp - 24], eax
+mov eax, dword [ebp - 24]
 mov dword [total], eax
 
 jmp lbl2
@@ -115,7 +111,7 @@ call printf
 add esp, 4
 
 __lbl_main_epilog:
-add esp, 0
+add esp, 24
 leave
 ret
 

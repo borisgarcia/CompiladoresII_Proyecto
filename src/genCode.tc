@@ -86,12 +86,34 @@ gen_Code(FunctionCallStmt)
 
 gen_Code(ContinueStmt)
 {
-    
+    if(ContinueLabel != "")
+    {
+        std::ostringstream ss;
+        ss << "jmp " << ContinueLabel << "\n";
+        code = ss.str();
+        return true;
+    }
+    else
+    {
+        std::cerr<<"Error:"<<getLinenum()<<": 'continue' statement not in loop statement\n";
+        exit(1);
+    }
 }
 
 gen_Code(BreakStmt)
 {
-    
+    if(BreakLabel != "")
+    {
+        std::ostringstream ss;
+        ss << "jmp " << BreakLabel << "\n";
+        code = ss.str();
+        return true;
+    }
+    else
+    {
+        std::cerr<<"Error:"<<getLinenum()<<": 'break' statement not in loop statement\n";
+        exit(1);
+    }
 }
 
 gen_Code(AssignStmt) 
@@ -120,11 +142,11 @@ gen_Code(AssignStmt)
 
 gen_Code(FnDec)
 {
+    identHandler.setCurrentFuncDef(name);
+    FuncDef *fd = identHandler.getFuncDef(name);
     if(!block->gen_Code(identHandler))
         return false;
     std::ostringstream ss;
-    identHandler.setCurrentFuncDef(name);
-    FuncDef *fd = identHandler.getFuncDef(name);
 
     ss << name << ":\n"
        << "push ebp\n"
@@ -164,7 +186,7 @@ gen_Code(BlockStmt)
     return true;
 }
 
-gen_Code(PrintlnStmt)
+/*gen_Code(PrintlnStmt)
 {
     if (!expr->gen_Code(identHandler))
         return false;
@@ -187,15 +209,17 @@ gen_Code(PrintlnStmt)
     
     code = ss.str();
     return true;
-}
+}*/
 
 gen_Code(PrintStmt)
 {
     if (!expr->gen_Code(identHandler))
         return false;
     
-    int argsize = 0;
-    std::ostringstream ss, ss_2;
+    /*std::ostringstream ss;
+    std::string ln="";
+    if(flag)ln="ln"
+
 
     if (expr->isA(StringConstantExpr_kind))
         ss_2 << "%s";
@@ -210,21 +234,23 @@ gen_Code(PrintStmt)
        << "call printf \n"
        << "add esp, " << (argsize + 4) << "\n";
     
-    code = ss.str();
+    code = ss.str();*/
     return true;
 }
 
 gen_Code(ReturnStmt) 
 {
+    FuncDef *fd = identHandler.getCurrentFuncDef();
     if (!expr->gen_Code(identHandler) && expr == nullptr)
         return false;
-    
-    std::ostringstream ss;
+    if(fd->getType() == "void")
+    {
+        std::cerr<<"Error line:"<<expr->getLinenum()<<"void function "<<fd->getName()<<" should not return a value\n";
+        exit(1);
+    }
 
-    FuncDef *fd = identHandler.getCurrentFuncDef();
-    
+    std::ostringstream ss;
     ss << expr->code << '\n';
-    //if()
     ss << "mov eax, " << getPlace(expr) << "\n";
     ss << "jmp " << fd->getEpilogLabel();
     code = ss.str();
@@ -424,7 +450,6 @@ gen_Code(AddExpr)
     std::ostringstream ss;
 
     place = identHandler.newTemp();
-    std::cout<<"PLACE : "<<place<<"\n";
     ss << expr1->code << "\n"
        << expr2->code << "\n"
        << "mov eax, " << getPlace(expr1) << "\n"
@@ -522,7 +547,6 @@ gen_Code(SubExpr)
     std::ostringstream ss;
 
     place = identHandler.newTemp();
-    std::cout<<"PLACE : "<<place<<"\n";
     ss << expr1->code << "\n"
        << expr2->code << "\n"
        << "mov eax, " << getPlace(expr1) << "\n"
@@ -542,7 +566,6 @@ gen_Code(MulExpr)
     std::ostringstream ss;
 
     place = identHandler.newTemp();
-    std::cout<<"PLACE : "<<place<<"\n";
     ss << expr1->code << "\n"
        << expr2->code << "\n"
        << "mov eax, " << getPlace(expr1) << "\n"
@@ -561,7 +584,6 @@ gen_Code(DivExpr)
     std::ostringstream ss;
 
     place = identHandler.newTemp();
-    std::cout<<"PLACE : "<<place<<"\n";
     ss << expr1->code << "\n"
        << expr2->code << "\n"
        << "mov eax, " << getPlace(expr1) << "\n"
@@ -582,7 +604,6 @@ gen_Code(ModExpr)
     std::ostringstream ss;
 
     place = identHandler.newTemp();
-    std::cout<<"PLACE : "<<place<<"\n";
     ss << expr1->code << "\n"
        << expr2->code << "\n"
        << "mov eax, " << getPlace(expr1) << "\n"

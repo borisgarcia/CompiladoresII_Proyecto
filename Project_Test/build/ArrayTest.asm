@@ -21,7 +21,7 @@ arr times 10 dd 0
 main:
 push ebp
 mov ebp, esp
-sub esp, 0
+sub esp, 8
 
 
 mov edx, 24
@@ -105,8 +105,8 @@ jmp lbl1
 lbl0:
 mov eax, 1
 lbl1:
-mov dword [], eax
-mov eax, dword []
+mov dword [ebp - 8], eax
+mov eax, dword [ebp - 8]
 cmp eax, 0
 je lbl3
 
@@ -135,7 +135,7 @@ call printf
 add esp, 4
 
 __lbl_main_epilog:
-add esp, 0
+add esp, 8
 leave
 ret
 
