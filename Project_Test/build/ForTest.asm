@@ -1,16 +1,21 @@
 ; Variables
 i dd 0
 ; Temp variables
-
-; String Literals
-
-strl0strl1strl2strl3global main
+global main
 
 extern printf
 
 section .data
 
+; String Literals
+
+strl2 db '%d', 0
+strl3 db 'End of loop', 0
+strl0 db 'i = ', 0
+strl1 db '%s', 0
+
 section .text
+section .data
 
 ; Array Declaration
 
@@ -36,7 +41,7 @@ mov eax, dword [ebp - 8]
 cmp eax, 0
 je lbl3
 
-push dword [strl0]
+push strl0
 push strl1
 call printf 
 add esp, 4
@@ -53,7 +58,7 @@ jmp lbl2
 lbl3:
 
 
-push dword [strl3]
+push strl3
 push strl1
 call printf 
 add esp, 4

@@ -7,8 +7,8 @@ gen_Code(ASTNode)
 gen_Code(Program)
 {
     std::ostringstream ss; 
-    ss << identHandler.genVarNames()
-       << identHandler.genStrNames()
+    ss << "section .data\n"
+       << identHandler.genVarNames()
        << "\n; Array Declaration\n\n";
 
     for(auto arr : arrays )

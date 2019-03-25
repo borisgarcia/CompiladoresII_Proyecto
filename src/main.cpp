@@ -48,7 +48,8 @@ int main(int argc, char * argv[]){
         }
         std::cout << "global main\n\n"
                 << "extern printf\n\n"
-                << "section .data\n";
+                << "section .data\n"
+                << tmpHandler.genConstNames();
         std::cout << "\nsection .text\n"
                     << input->code
                     << '\n';

@@ -3,16 +3,22 @@ number dd 0
 total dd 0
 count dd 0
 ; Temp variables
-
-; String Literals
-
-strl0strl1strl2strl3strl4global main
+global main
 
 extern printf
 
 section .data
 
+; String Literals
+
+strl3 db '] = ', 0
+strl2 db '%d', 0
+strl4 db 'The total is ', 0
+strl0 db 'Number [', 0
+strl1 db '%s', 0
+
 section .text
+section .data
 
 ; Array Declaration
 
@@ -57,7 +63,7 @@ mov dword [ebp - 16], eax
 mov eax, dword [ebp - 16]
 mov dword [number], eax
 
-push dword [strl0]
+push strl0
 push strl1
 call printf 
 add esp, 4
@@ -69,7 +75,7 @@ call printf
 add esp, 4
 
 
-push dword [strl3]
+push strl3
 push strl1
 call printf 
 add esp, 4
@@ -99,7 +105,7 @@ jmp lbl2
 lbl3:
 
 
-push dword [strl4]
+push strl4
 push strl1
 call printf 
 add esp, 4

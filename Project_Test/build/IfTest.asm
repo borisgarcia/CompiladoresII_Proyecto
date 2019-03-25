@@ -2,16 +2,23 @@
 y dd 0
 x dd 0
 ; Temp variables
-
-; String Literals
-
-strl0strl1strl2strl3strl4strl5global main
+global main
 
 extern printf
 
 section .data
 
+; String Literals
+
+strl5 db 'X is not equal to Y\n', 0
+strl2 db '%d', 0
+strl4 db 'X is equal to Y\n', 0
+strl3 db ' Y = ', 0
+strl0 db 'X = ', 0
+strl1 db '%s', 0
+
 section .text
+section .data
 
 ; Array Declaration
 
@@ -27,7 +34,7 @@ mov dword [x], eax
 mov eax, 7
 mov dword [y], eax
 
-push dword [strl0]
+push strl0
 push strl1
 call printf 
 add esp, 4
@@ -39,7 +46,7 @@ call printf
 add esp, 4
 
 
-push dword [strl3]
+push strl3
 push strl1
 call printf 
 add esp, 4
@@ -64,7 +71,7 @@ mov dword [ebp - 8], eax
 cmp dword [ebp - 8], 0
 je lbl2
 
-push dword [strl4]
+push strl4
 push strl1
 call printf 
 add esp, 4
@@ -73,7 +80,7 @@ add esp, 4
 jmp lbl3
 lbl2:
 
-push dword [strl5]
+push strl5
 push strl1
 call printf 
 add esp, 4
@@ -87,7 +94,7 @@ mov dword [x], eax
 mov eax, 456
 mov dword [y], eax
 
-push dword [strl0]
+push strl0
 push strl1
 call printf 
 add esp, 4
@@ -99,7 +106,7 @@ call printf
 add esp, 4
 
 
-push dword [strl3]
+push strl3
 push strl1
 call printf 
 add esp, 4
@@ -124,7 +131,7 @@ mov dword [ebp - 16], eax
 cmp dword [ebp - 16], 0
 je lbl6
 
-push dword [strl4]
+push strl4
 push strl1
 call printf 
 add esp, 4
@@ -133,7 +140,7 @@ add esp, 4
 jmp lbl7
 lbl6:
 
-push dword [strl5]
+push strl5
 push strl1
 call printf 
 add esp, 4

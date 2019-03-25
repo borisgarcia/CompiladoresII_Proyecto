@@ -5,16 +5,18 @@ x dd 0
 a dd 10
 b dd 20
 ; Temp variables
-
-; String Literals
-
-strl0global main
+global main
 
 extern printf
 
 section .data
 
+; String Literals
+
+strl0 db '%d', 0
+
 section .text
+section .data
 
 ; Array Declaration
 

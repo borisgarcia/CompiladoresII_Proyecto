@@ -8,7 +8,7 @@
 
     std::string getPlace(ASTNode * expr)
     {
-        if(expr->getKind() == NumExpr_kind)
+        if(expr->getKind() == NumExpr_kind || expr->getKind() == StringConstantExpr_kind)
             return expr->place;
         else
             return "dword [" + expr->place + "]";
@@ -394,8 +394,8 @@ bool Program::gen_Code(IdentsHandler & identHandler)
 #line 8 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     std::ostringstream ss; 
-    ss << identHandler.genVarNames()
-       << identHandler.genStrNames()
+    ss << "section .data\n"
+       << identHandler.genVarNames()
        << "\n; Array Declaration\n\n";
 
     for(auto arr : arrays )

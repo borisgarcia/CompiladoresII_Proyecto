@@ -30,7 +30,7 @@
 
     std::string getPlace(ASTNode * expr)
     {
-        if(expr->getKind() == NumExpr_kind)
+        if(expr->getKind() == NumExpr_kind || expr->getKind() == StringConstantExpr_kind)
             return expr->place;
         else
             return "dword [" + expr->place + "]";

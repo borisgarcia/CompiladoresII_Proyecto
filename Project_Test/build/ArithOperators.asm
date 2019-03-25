@@ -2,16 +2,26 @@
 y dd 0
 x dd 0
 ; Temp variables
-
-; String Literals
-
-strl0strl1strl2strl3strl4strl5strl6strl7strl8global main
+global main
 
 extern printf
 
 section .data
 
+; String Literals
+
+strl8 db 'Mod ', 0
+strl7 db 'Div ', 0
+strl6 db 'Mul ', 0
+strl1 db '%s', 0
+strl3 db ', Y = ', 0
+strl0 db 'X = ', 0
+strl2 db '%d', 0
+strl4 db 'Add ', 0
+strl5 db 'Sub ', 0
+
 section .text
+section .data
 
 ; Array Declaration
 
@@ -27,7 +37,7 @@ mov dword [x], eax
 mov eax, 324234
 mov dword [y], eax
 
-push dword [strl0]
+push strl0
 push strl1
 call printf 
 add esp, 4
@@ -39,7 +49,7 @@ call printf
 add esp, 4
 
 
-push dword [strl3]
+push strl3
 push strl1
 call printf 
 add esp, 4
@@ -51,7 +61,7 @@ call printf
 add esp, 4
 
 
-push dword [strl4]
+push strl4
 push strl1
 call printf 
 add esp, 4
@@ -67,7 +77,7 @@ call printf
 add esp, 4
 
 
-push dword [strl5]
+push strl5
 push strl1
 call printf 
 add esp, 4
@@ -83,7 +93,7 @@ call printf
 add esp, 4
 
 
-push dword [strl6]
+push strl6
 push strl1
 call printf 
 add esp, 4
@@ -100,7 +110,7 @@ call printf
 add esp, 4
 
 
-push dword [strl7]
+push strl7
 push strl1
 call printf 
 add esp, 4
@@ -118,7 +128,7 @@ call printf
 add esp, 4
 
 
-push dword [strl8]
+push strl8
 push strl1
 call printf 
 add esp, 4

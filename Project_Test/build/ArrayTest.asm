@@ -2,16 +2,21 @@
 i dd 0
 n dd 10
 ; Temp variables
-
-; String Literals
-
-strl0strl1strl2strl3global main
+global main
 
 extern printf
 
 section .data
 
+; String Literals
+
+strl3 db '', 0
+strl2 db '%s', 0
+strl0 db '%d', 0
+strl1 db ' ', 0
+
 section .text
+section .data
 
 ; Array Declaration
 
@@ -118,7 +123,7 @@ call printf
 add esp, 4
 
 
-push dword [strl1]
+push strl1
 push strl2
 call printf 
 add esp, 4
@@ -129,7 +134,7 @@ jmp lbl2
 lbl3:
 
 
-push dword [strl3]
+push strl3
 push strl2
 call printf 
 add esp, 4
