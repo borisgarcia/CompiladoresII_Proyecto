@@ -51,7 +51,6 @@
             lst->last = l;
         }
     }
-
 %}
 
 %node ASTNode %abstract %typedef = {

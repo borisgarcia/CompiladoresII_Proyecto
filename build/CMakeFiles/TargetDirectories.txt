@@ -1,3 +1,0 @@
-/home/boris/Desktop/Proyecto/build/CMakeFiles/rebuild_cache.dir
-/home/boris/Desktop/Proyecto/build/CMakeFiles/decaf.dir
-/home/boris/Desktop/Proyecto/build/CMakeFiles/edit_cache.dir

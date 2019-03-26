@@ -29,8 +29,7 @@
             lst->last = l;
         }
     }
-
-#line 34 "../src/ast.cpp"
+#line 33 "../src/ast.cpp"
 
 #define YYNODESTATE_TRACK_LINES 1
 #define YYNODESTATE_USE_ALLOCATOR 1
@@ -309,7 +308,7 @@ long YYNODESTATE::currLinenum()
 }
 
 #endif
-#line 313 "../src/ast.cpp"
+#line 312 "../src/ast.cpp"
 void *ASTNode::operator new(size_t size__)
 {
 	return YYNODESTATE::getState()->alloc(size__);
@@ -339,14 +338,14 @@ bool ASTNode::Func_Decl(IdentsHandler & identHandler)
 {
     return true;
 }
-#line 343 "../src/ast.cpp"
+#line 342 "../src/ast.cpp"
 
 bool ASTNode::gen_Code(IdentsHandler & identHandler)
 #line 3 "/home/boris/Desktop/Proyecto/src/genCode.tc"
 {
     return true;
 }
-#line 350 "../src/ast.cpp"
+#line 349 "../src/ast.cpp"
 
 int ASTNode::isA(int kind) const
 {
@@ -388,7 +387,7 @@ bool Program::Func_Decl(IdentsHandler & identHandler)
     }
     return true;
 }
-#line 392 "../src/ast.cpp"
+#line 391 "../src/ast.cpp"
 
 bool Program::gen_Code(IdentsHandler & identHandler)
 #line 8 "/home/boris/Desktop/Proyecto/src/genCode.tc"
@@ -414,7 +413,7 @@ bool Program::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 418 "../src/ast.cpp"
+#line 417 "../src/ast.cpp"
 
 int Program::isA(int kind) const
 {
@@ -467,7 +466,7 @@ bool FnDec::Func_Decl(IdentsHandler & identHandler)
     identHandler.setCurrentFuncDef("");
     return true;
 }
-#line 471 "../src/ast.cpp"
+#line 470 "../src/ast.cpp"
 
 bool FnDec::gen_Code(IdentsHandler & identHandler)
 #line 145 "/home/boris/Desktop/Proyecto/src/genCode.tc"
@@ -492,7 +491,7 @@ bool FnDec::gen_Code(IdentsHandler & identHandler)
     identHandler.setCurrentFuncDef("");
     return true;
 }
-#line 496 "../src/ast.cpp"
+#line 495 "../src/ast.cpp"
 
 int FnDec::isA(int kind) const
 {
@@ -564,7 +563,7 @@ bool FieldDecStmt::Func_Decl(IdentsHandler & identHandler)
     }
     return true;
 }
-#line 568 "../src/ast.cpp"
+#line 567 "../src/ast.cpp"
 
 int FieldDecStmt::isA(int kind) const
 {
@@ -614,7 +613,7 @@ bool FieldDecStmt_2::Func_Decl(IdentsHandler & identHandler)
     }
     return true;
 }
-#line 618 "../src/ast.cpp"
+#line 617 "../src/ast.cpp"
 
 int FieldDecStmt_2::isA(int kind) const
 {
@@ -748,7 +747,7 @@ bool NumExpr::gen_Code(IdentsHandler & identHandler)
     place = std::to_string(value);
     return true;    
 }
-#line 752 "../src/ast.cpp"
+#line 751 "../src/ast.cpp"
 
 int NumExpr::isA(int kind) const
 {
@@ -781,7 +780,7 @@ bool StringConstantExpr::gen_Code(IdentsHandler & identHandler)
     place = identHandler.registerStrLiteral(value);
     return true;
 }
-#line 785 "../src/ast.cpp"
+#line 784 "../src/ast.cpp"
 
 int StringConstantExpr::isA(int kind) const
 {
@@ -839,7 +838,7 @@ bool BoolExpr::gen_Code(IdentsHandler & identHandler)
     place = std::to_string(value);
     return true;
 }
-#line 843 "../src/ast.cpp"
+#line 842 "../src/ast.cpp"
 
 int BoolExpr::isA(int kind) const
 {
@@ -933,7 +932,7 @@ bool IdExpr::gen_Code(IdentsHandler & identHandler)
         place = "ebp - " + std::to_string(-Offset);
     return true;
 }
-#line 937 "../src/ast.cpp"
+#line 936 "../src/ast.cpp"
 
 int IdExpr::isA(int kind) const
 {
@@ -977,7 +976,7 @@ bool IdArrayExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 981 "../src/ast.cpp"
+#line 980 "../src/ast.cpp"
 
 int IdArrayExpr::isA(int kind) const
 {
@@ -1054,7 +1053,7 @@ bool NextIntExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1058 "../src/ast.cpp"
+#line 1057 "../src/ast.cpp"
 
 int NextIntExpr::isA(int kind) const
 {
@@ -1090,7 +1089,7 @@ bool ReadExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1094 "../src/ast.cpp"
+#line 1093 "../src/ast.cpp"
 
 int ReadExpr::isA(int kind) const
 {
@@ -1124,7 +1123,7 @@ bool PrintExpr::gen_Code(IdentsHandler & identHandler)
     exit(0);
     return false;
 }
-#line 1128 "../src/ast.cpp"
+#line 1127 "../src/ast.cpp"
 
 int PrintExpr::isA(int kind) const
 {
@@ -1157,7 +1156,7 @@ bool FunctionCallExpr::gen_Code(IdentsHandler & identHandler)
 {
     return true;
 }
-#line 1161 "../src/ast.cpp"
+#line 1160 "../src/ast.cpp"
 
 int FunctionCallExpr::isA(int kind) const
 {
@@ -1209,7 +1208,7 @@ bool NotExpr::gen_Code(IdentsHandler & identHandler)
     return true;
 
 }
-#line 1213 "../src/ast.cpp"
+#line 1212 "../src/ast.cpp"
 
 int NotExpr::isA(int kind) const
 {
@@ -1256,7 +1255,7 @@ bool NegExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1260 "../src/ast.cpp"
+#line 1259 "../src/ast.cpp"
 
 int NegExpr::isA(int kind) const
 {
@@ -1300,7 +1299,7 @@ bool AddExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1304 "../src/ast.cpp"
+#line 1303 "../src/ast.cpp"
 
 int AddExpr::isA(int kind) const
 {
@@ -1344,7 +1343,7 @@ bool SubExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1348 "../src/ast.cpp"
+#line 1347 "../src/ast.cpp"
 
 int SubExpr::isA(int kind) const
 {
@@ -1389,7 +1388,7 @@ bool MulExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1393 "../src/ast.cpp"
+#line 1392 "../src/ast.cpp"
 
 int MulExpr::isA(int kind) const
 {
@@ -1435,7 +1434,7 @@ bool DivExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1439 "../src/ast.cpp"
+#line 1438 "../src/ast.cpp"
 
 int DivExpr::isA(int kind) const
 {
@@ -1481,7 +1480,7 @@ bool SRLExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1485 "../src/ast.cpp"
+#line 1484 "../src/ast.cpp"
 
 int SRLExpr::isA(int kind) const
 {
@@ -1528,7 +1527,7 @@ bool SLLExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1532 "../src/ast.cpp"
+#line 1531 "../src/ast.cpp"
 
 int SLLExpr::isA(int kind) const
 {
@@ -1574,7 +1573,7 @@ bool ModExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1578 "../src/ast.cpp"
+#line 1577 "../src/ast.cpp"
 
 int ModExpr::isA(int kind) const
 {
@@ -1629,7 +1628,7 @@ bool LesExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1633 "../src/ast.cpp"
+#line 1632 "../src/ast.cpp"
 
 int LesExpr::isA(int kind) const
 {
@@ -1684,7 +1683,7 @@ bool GreExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1688 "../src/ast.cpp"
+#line 1687 "../src/ast.cpp"
 
 int GreExpr::isA(int kind) const
 {
@@ -1739,7 +1738,7 @@ bool LeEExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1743 "../src/ast.cpp"
+#line 1742 "../src/ast.cpp"
 
 int LeEExpr::isA(int kind) const
 {
@@ -1794,7 +1793,7 @@ bool GrEExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1798 "../src/ast.cpp"
+#line 1797 "../src/ast.cpp"
 
 int GrEExpr::isA(int kind) const
 {
@@ -1849,7 +1848,7 @@ bool EquExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1853 "../src/ast.cpp"
+#line 1852 "../src/ast.cpp"
 
 int EquExpr::isA(int kind) const
 {
@@ -1904,7 +1903,7 @@ bool NEqExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1908 "../src/ast.cpp"
+#line 1907 "../src/ast.cpp"
 
 int NEqExpr::isA(int kind) const
 {
@@ -1948,7 +1947,7 @@ bool AndExpr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1952 "../src/ast.cpp"
+#line 1951 "../src/ast.cpp"
 
 int AndExpr::isA(int kind) const
 {
@@ -1994,7 +1993,7 @@ bool Or_Expr::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 1998 "../src/ast.cpp"
+#line 1997 "../src/ast.cpp"
 
 int Or_Expr::isA(int kind) const
 {
@@ -2029,7 +2028,7 @@ bool WhileStmt::Func_Decl(IdentsHandler & identHandler)
         return false;
     return true;
 }
-#line 2033 "../src/ast.cpp"
+#line 2032 "../src/ast.cpp"
 
 bool WhileStmt::gen_Code(IdentsHandler & identHandler)
 #line 315 "/home/boris/Desktop/Proyecto/src/genCode.tc"
@@ -2055,7 +2054,7 @@ bool WhileStmt::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 2059 "../src/ast.cpp"
+#line 2058 "../src/ast.cpp"
 
 int WhileStmt::isA(int kind) const
 {
@@ -2092,7 +2091,7 @@ bool ForStmt::Func_Decl(IdentsHandler & identHandler)
         return false;
     return true;
 }
-#line 2096 "../src/ast.cpp"
+#line 2095 "../src/ast.cpp"
 
 bool ForStmt::gen_Code(IdentsHandler & identHandler)
 #line 269 "/home/boris/Desktop/Proyecto/src/genCode.tc"
@@ -2140,7 +2139,7 @@ bool ForStmt::gen_Code(IdentsHandler & identHandler)
   return true;
   
 }
-#line 2144 "../src/ast.cpp"
+#line 2143 "../src/ast.cpp"
 
 int ForStmt::isA(int kind) const
 {
@@ -2178,7 +2177,7 @@ bool IfStmt::Func_Decl(IdentsHandler & identHandler)
         return false;
     return true;
 }
-#line 2182 "../src/ast.cpp"
+#line 2181 "../src/ast.cpp"
 
 bool IfStmt::gen_Code(IdentsHandler & identHandler)
 #line 238 "/home/boris/Desktop/Proyecto/src/genCode.tc"
@@ -2211,7 +2210,7 @@ bool IfStmt::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 2215 "../src/ast.cpp"
+#line 2214 "../src/ast.cpp"
 
 int IfStmt::isA(int kind) const
 {
@@ -2263,7 +2262,7 @@ bool AssignStmt::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 2267 "../src/ast.cpp"
+#line 2266 "../src/ast.cpp"
 
 int AssignStmt::isA(int kind) const
 {
@@ -2319,7 +2318,7 @@ bool PrintStmt::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 2323 "../src/ast.cpp"
+#line 2322 "../src/ast.cpp"
 
 int PrintStmt::isA(int kind) const
 {
@@ -2351,7 +2350,7 @@ bool ReadStmt::gen_Code(IdentsHandler & identHandler)
     std::cerr << "Line: "<< this->getLinenum() << ": error: expression result unused!" << std::endl;
     exit(0);
 }
-#line 2355 "../src/ast.cpp"
+#line 2354 "../src/ast.cpp"
 
 int ReadStmt::isA(int kind) const
 {
@@ -2384,7 +2383,7 @@ bool NextIntStmt::gen_Code(IdentsHandler & identHandler)
     std::cerr << "Line: "<< expr->getLinenum() << ": error: expression result unused!" << std::endl;
     return false;
 }
-#line 2388 "../src/ast.cpp"
+#line 2387 "../src/ast.cpp"
 
 int NextIntStmt::isA(int kind) const
 {
@@ -2431,7 +2430,7 @@ bool ReturnStmt::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 2435 "../src/ast.cpp"
+#line 2434 "../src/ast.cpp"
 
 int ReturnStmt::isA(int kind) const
 {
@@ -2474,7 +2473,7 @@ bool ContinueStmt::gen_Code(IdentsHandler & identHandler)
         exit(1);
     }
 }
-#line 2478 "../src/ast.cpp"
+#line 2477 "../src/ast.cpp"
 
 int ContinueStmt::isA(int kind) const
 {
@@ -2517,7 +2516,7 @@ bool BreakStmt::gen_Code(IdentsHandler & identHandler)
         exit(1);
     }
 }
-#line 2521 "../src/ast.cpp"
+#line 2520 "../src/ast.cpp"
 
 int BreakStmt::isA(int kind) const
 {
@@ -2591,7 +2590,7 @@ bool FunctionCallStmt::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 2595 "../src/ast.cpp"
+#line 2594 "../src/ast.cpp"
 
 int FunctionCallStmt::isA(int kind) const
 {
@@ -2642,7 +2641,7 @@ bool VarDecStmt::Func_Decl(IdentsHandler & identHandler)
     }
     return true;
 }
-#line 2646 "../src/ast.cpp"
+#line 2645 "../src/ast.cpp"
 
 int VarDecStmt::isA(int kind) const
 {
@@ -2682,7 +2681,7 @@ bool BlockStmt::Func_Decl(IdentsHandler & identHandler)
     }
     return true;
 }
-#line 2686 "../src/ast.cpp"
+#line 2685 "../src/ast.cpp"
 
 bool BlockStmt::gen_Code(IdentsHandler & identHandler)
 #line 168 "/home/boris/Desktop/Proyecto/src/genCode.tc"
@@ -2707,7 +2706,7 @@ bool BlockStmt::gen_Code(IdentsHandler & identHandler)
     code = ss.str();
     return true;
 }
-#line 2711 "../src/ast.cpp"
+#line 2710 "../src/ast.cpp"
 
 int BlockStmt::isA(int kind) const
 {
